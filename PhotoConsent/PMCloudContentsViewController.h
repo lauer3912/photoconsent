@@ -14,15 +14,13 @@
 
 @interface PMCloudContentsViewController : UICollectionViewController <MBProgressHUDDelegate>
 
-{
-    
-    MBProgressHUD *HUD;
-    MBProgressHUD *refreshHUD;
-}
 @property (strong, nonatomic) NSMutableArray *allImages;
 @property (strong, nonatomic) NSCache *cachedImages;
 @property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
 @property (weak,nonatomic) IBOutlet UIBarButtonItem  *refreshBtn;
+
+@property (strong, nonatomic) NSNumber* dataArrayDidChange;
+
 - (IBAction)completeConsent:(UIStoryboardSegue *)segue;
 - (void) clearCollectionView;
 

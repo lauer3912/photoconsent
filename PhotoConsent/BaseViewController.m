@@ -24,15 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE
 //
+// Modified January 2014 by Podmedics (Alex Rafferty)
+//
+//
 
 #import "BaseViewController.h"
 #import "PMAppDelegate.h"
 #import "PMCameraDelegate.h"
 #import "MyPageViewController.h"
+#import "PMLoginActivityDelegate.h"
 
 
 @interface BaseViewController ()
 @property (strong, nonatomic) PMCameraDelegate* delegateInstance;
+@property (strong, nonatomic) PMLoginActivityDelegate* loginActivityDelegate;
 @end
 
 @implementation BaseViewController
@@ -64,22 +69,50 @@
     CGPoint center = CGPointMake(tabbarSize.width/2, tabbarSize.height/2);
     center.y = center.y - 9.5;
     button.center = center;
+    button.tag = 27;
     
     [self.tabBar addSubview:button];
+    
+}
+
+
+
+#pragma mark - loginAlert alertview delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != 0) {
+    
+    
+    }
 }
 
 - (void)centerItemTapped {
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"kCenterTabbarItemTapped" object:nil];
     
-    if (!_delegateInstance) {
-         _delegateInstance = [[PMCameraDelegate alloc] init];
-    }
-   
-    _cameraDelegate = _delegateInstance; 
     if ([UIImagePickerController isSourceTypeAvailable:
          UIImagePickerControllerSourceTypeCamera] == YES){
         
-        if ([_cameraDelegate respondsToSelector:@selector(startCamera:)]) {
+        
+        if (self.selectedIndex == 1) {
+            if (![PFUser currentUser]) {
+                if (!_loginActivityDelegate) 
+                    _loginActivityDelegate = [[PMLoginActivityDelegate alloc] init];
+                
+                
+                _activityDelegate = _loginActivityDelegate;
+                
+                if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)])
+                    [_activityDelegate showActivitySheet:self];
+                
+            }
+            
+        }
+        
+        if (!_delegateInstance) {
+            _delegateInstance = [[PMCameraDelegate alloc] init];
+        }
+        _cameraDelegate = _delegateInstance;
+
+          if ([_cameraDelegate respondsToSelector:@selector(startCamera:)]) {
          //determine the currently selected tab on tabbar. If user is scrolling through individual photos pop back to root viewcontroller before sending the viewcontroller to the camera delegate
             
             UINavigationController *navController = (UINavigationController*)self.selectedViewController;
@@ -88,6 +121,7 @@
                 [navController popToRootViewControllerAnimated:NO];
             }
          
+            
             [_cameraDelegate startCamera:navController.topViewController];
             
             

@@ -10,6 +10,10 @@
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "PMCloudContentsViewController.h"
+#import "PMConsentDetailViewController.h"
+#import "PMCompleteViewController.h"
+#import "ConsentStore.h"
+#import "Consent.h"
 
 
 @interface PMCameraRollActivity ()
@@ -18,6 +22,7 @@
 
 @property (strong, nonatomic) UIImage *image;
 @property (strong, nonatomic) NSString *referenceID;
+@property (strong, nonatomic) NSURL *assetURL;
 
 @end
 
@@ -119,6 +124,12 @@
         referenceID.delegate = self;
         [referenceID setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [referenceID show];
+        
+        //Get the ALAsset URL
+        
+        _assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+        
+        
     }
     
     
@@ -133,14 +144,34 @@
 #pragma mark - referenceID alertview delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != -1) {
+    if (buttonIndex != 0) {
         _referenceID = [[alertView textFieldAtIndex:0] text];
         
         cloudPhoto(_image, _referenceID, dispatch_get_main_queue(), ^(id userPhoto) {
             
-            PMCloudContentsViewController *cloudController = (PMCloudContentsViewController*)_senderController;
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            NSUInteger consentIndex = [self consentIndex];
+            if (consentIndex != NSNotFound) {
+                NSArray *deviceConsents = [[ConsentStore sharedDeviceConsents] allDeviceConsents];
+                Consent *deviceConsent = [deviceConsents objectAtIndex:consentIndex];
+                
+                //copy details of deviceConsent to userPhoto  object
+                [self copyConsentToPFObject:userPhoto fromDeviceConsent:deviceConsent];
+                
+                PMCompleteViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"completeConsent"];
+                [vc setUserPhoto:userPhoto];
+                [[_senderController navigationController] pushViewController:vc animated:YES];
+                    
+            } else
+            {
+                //go through the standard cloud consent process
+               
+                PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
+                [vc setUserPhoto:userPhoto];
+                [[_senderController navigationController] pushViewController:vc animated:NO];
+                
+            }
             
-            [cloudController performSegueWithIdentifier:@"goToConsentScreens" sender:userPhoto];
             
         });
         
@@ -150,8 +181,37 @@
         
     }
     
+}
+
+- (NSUInteger) consentIndex {
     
+    __block NSUInteger index = NSNotFound;
     
+    [[[ConsentStore sharedDeviceConsents] allDeviceConsents] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSLog(@"idx=%d obj = %@\n deviceConsent URL = %@\nCamera Roll Asset URL = %@",idx, obj,[(Consent*)obj assetURL], _assetURL );
+        if ([ [(Consent*)obj assetURL] isEqual:_assetURL]) {
+            index = idx;
+            *stop = YES;
+        }
+    }];
+    
+    return index;
+}
+
+
+- (void) copyConsentToPFObject:(PFObject*)userPhoto fromDeviceConsent:(Consent*)deviceConsent {
+    
+    [userPhoto setValue:deviceConsent.patientName forKey:@"patientName"];
+    [userPhoto setValue:deviceConsent.patientEmail forKey:@"patientEmail"];
+    [userPhoto setValue:deviceConsent.Assessment forKey:@"Assessment"];
+    [userPhoto setValue:deviceConsent.Education forKey:@"Education"];
+    [userPhoto setValue:deviceConsent.Publication forKey:@"Publication"];
+    
+    NSData *signatureData = [deviceConsent.consentSignature copy];
+    
+    PFFile *signatureFile = [PFFile fileWithName:@"Signature.jpg" data:signatureData];
+    [userPhoto setObject:signatureFile forKey:@"consentSignature"];
     
     
 }

@@ -29,7 +29,7 @@
 
 - (NSString *)activityType {
     
-    return @"logoutkActivityType";
+    return @"loginActivityType";
 }
 
 - (NSString *)activityTitle {
@@ -129,20 +129,34 @@
                                    delegate:nil
                           cancelButtonTitle:@"ok"
                           otherButtonTitles:nil] show];
-    }
-    
+    } 
     return informationComplete;
 }
 
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-    [self activityDidFinish:YES];    // Dismisses the PFSignUpViewController
+       // Dismisses the PFSignUpViewController
+    //show disclaimer again even though already acknowledged on first app use
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
+    
+    [avc setModalPresentationStyle:UIModalPresentationFullScreen];
+    [signUpController presentViewController:avc animated:YES completion:^{
+        
+        double delayInSeconds = 10.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self activityDidFinish:YES];
+        });
+        
+        
+    }];
+    
 }
 
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
     NSLog(@"Failed to sign up...");
-    [self activityDidFinish:YES];
 }
 
 // Sent to the delegate when the sign up screen is dismissed.
@@ -150,8 +164,6 @@
     NSLog(@"User dismissed the signUpViewController");
     [self activityDidFinish:YES];
 }
-
-
 
 
 

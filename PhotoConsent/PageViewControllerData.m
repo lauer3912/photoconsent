@@ -48,6 +48,8 @@
 #import "PageViewControllerData.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Parse/Parse.h>
+#import "PMFunctions.h"
+
 
 @implementation PageViewControllerData
 
@@ -69,6 +71,7 @@
 
 - (UIImage *)photoAtIndex:(NSUInteger)index
 {
+    //used only for ALAsset
     
     id photo = [_photoAssets objectAtIndex:index];
     if ([photo isKindOfClass:[ALAsset class]]) {
@@ -79,14 +82,7 @@
         return [UIImage imageWithCGImage:[assetRepresentation fullResolutionImage]
                                    scale:[assetRepresentation scale]
                              orientation:(UIImageOrientation)ALAssetOrientationUp];
-    } else {
-        
-        //photo is PFObject of class userPhoto
-        PFFile *theImage = [(PFObject*)photo objectForKey:@"imageFile"];
-        return [UIImage imageWithData:[theImage getData]];
-        
-    }
-
+    } else return nil;
 }
 
 - (id)objectAtIndex:(NSUInteger)index

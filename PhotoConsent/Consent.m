@@ -41,7 +41,7 @@
         _Assessment = [aDecoder decodeObjectForKey:@"Assessment"];
         _Education = [aDecoder decodeObjectForKey:@"Education"];
         _Publication = [aDecoder decodeObjectForKey:@"Publication"];
-        _created = [aDecoder decodeObjectForKey:@"created"];
+        _createdAt = [aDecoder decodeObjectForKey:@"created"];
         _imageFile = [aDecoder decodeObjectForKey:@"imageFile"];
         _consentSignature = [aDecoder decodeObjectForKey:@"consentSignature"];
         _assetURL = [aDecoder decodeObjectForKey:@"assetURL"];
@@ -58,7 +58,7 @@
     [anEncoder encodeObject:_Assessment forKey:@"Assessment"];
     [anEncoder encodeObject:_Education forKey:@"Education"];
     [anEncoder encodeObject:_Publication forKey:@"Publication"];
-    [anEncoder encodeObject:_created forKey:@"created"];
+    [anEncoder encodeObject:_createdAt forKey:@"created"];
     [anEncoder encodeObject:_imageFile forKey:@"imageFile"];
     [anEncoder encodeObject:_consentSignature forKey:@"consentSignature"];
     [anEncoder encodeObject:_assetURL forKey:@"assetURL"];
@@ -77,6 +77,10 @@
 + (Consent *)getConsent
 {
     return [NSKeyedUnarchiver unarchiveObjectWithFile:[self getPathToArchive]];
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return self;
 }
 
 

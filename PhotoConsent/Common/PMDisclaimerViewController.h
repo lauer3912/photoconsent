@@ -10,6 +10,6 @@
 
 @interface PMDisclaimerViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UITextView *disclaimerTextView;
+@property (strong, nonatomic) UIActivity* activity;
 
 @end

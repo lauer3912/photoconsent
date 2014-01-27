@@ -14,4 +14,6 @@
 
 @property (strong, nonatomic) id userPhoto;
 
+- (IBAction)completeAndUpload:(id)sender;
+
 @end

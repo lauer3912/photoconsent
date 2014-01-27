@@ -17,5 +17,8 @@
 @property (nonatomic, strong) NSMutableArray *assets;
 @property (nonatomic, strong) ALAssetsGroup *assetsGroup;
 @property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
+@property (weak,nonatomic) IBOutlet UIBarButtonItem  *refreshBtn;
+
+@property (strong, nonatomic) NSNumber* dataArrayDidChange;
 
 @end

@@ -29,7 +29,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	[_ib_assessmentSwitch addTarget:self action:@selector(consentSwitchChange:) forControlEvents:UIControlEventValueChanged];
+    [_ib_educationSwitch addTarget:self action:@selector(consentSwitchChange:) forControlEvents:UIControlEventValueChanged];
+    [_ib_publicationSwitch addTarget:self action:@selector(consentSwitchChange:) forControlEvents:UIControlEventValueChanged];
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    
+}
+
+
+- (void) consentSwitchChange:(UISwitch*)sender {
+    
+    if (sender.isOn)
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+    else
+        if ((_ib_assessmentSwitch.isOn + _ib_educationSwitch.isOn + _ib_publicationSwitch.isOn) > 0) {
+            [self.navigationItem.rightBarButtonItem setEnabled:YES];
+        } else
+            [self.navigationItem.rightBarButtonItem setEnabled:NO];
+        
+        
+        
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -43,6 +62,11 @@
     
     _publicationLabel.layer.borderColor = [UIColor grayColor].CGColor;
     _publicationLabel.layer.borderWidth = 2.0;
+    
+    [self.tabBarController.tabBar setUserInteractionEnabled:NO];
+    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
+    [centerButton setEnabled:NO];
+
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -68,6 +92,11 @@
     [alert show];
 }
 
+- (IBAction)cancelBtn:(id)sender {
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 - (IBAction)pressedNextButton:(UIBarButtonItem *)sender {
     // set consent details for assessment, education and publication and then pass to next VC
     [_userPhoto setValue:[NSNumber numberWithBool:_ib_assessmentSwitch.on] forKey:@"Assessment"];
@@ -76,5 +105,9 @@
     
     [self performSegueWithIdentifier:@"goToBasicDetailsView" sender:_userPhoto];
 }
+
+
+
+
 
 @end

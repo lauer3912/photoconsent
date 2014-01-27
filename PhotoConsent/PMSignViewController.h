@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
+@class RMCanvas, RMCanvasView, RMPainter;
+
 @interface PMSignViewController : UIViewController
 
 @property (strong, nonatomic) id userPhoto;
+
+
+@property (strong, nonatomic) RMCanvas *canvas;
+@property (weak, nonatomic) IBOutlet  RMCanvasView *canvasView;
+@property (strong, nonatomic) RMPainter *painter;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButton;
 
 @end

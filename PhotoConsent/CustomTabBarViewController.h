@@ -14,6 +14,8 @@
 
 @property (nonatomic) BOOL allowLandscape;
 
+
+
 - (void)setCallButton;
 - (void)setAddButton;
 

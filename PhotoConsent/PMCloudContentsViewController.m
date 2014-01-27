@@ -1,4 +1,5 @@
 //
+//
 //  PMCloudContentsViewController.m
 //  Photoconsent
 //
@@ -17,7 +18,7 @@
 #import "TLTransitionAnimator.h"
 #import "PMActivityDelegate.h"
 
-@interface PMCloudContentsViewController () <UITabBarControllerDelegate, UIViewControllerTransitioningDelegate>
+@interface PMCloudContentsViewController ()
 @property (strong, nonatomic)  UILabel *emptyLabel;
 
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
@@ -25,6 +26,10 @@
 @end
 
 @implementation PMCloudContentsViewController
+{
+    MBProgressHUD *HUD;
+    MBProgressHUD *refreshHUD;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,30 +45,36 @@
     [super viewDidLoad];
     _allImages = [[NSMutableArray alloc] init];
     self.title = @"Cloud";
+    _dataArrayDidChange = @0;
+    
     if ([PFUser currentUser]) {
         [self loadAndCacheObjects];
     }
 }
-   
+
 
 - (void) showEmptyLabel {
-    
-    if (!_emptyLabel) {
-        _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
+    if (refreshHUD) {
+        if (_emptyLabel) {
+            [_emptyLabel removeFromSuperview];
+        }
+        return;
     }
-    
-    _emptyLabel.backgroundColor = [UIColor clearColor];
-    [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
-
     
     if (_allImages) {
         
         if (_allImages.count == 0) {
+            if (!_emptyLabel) {
+                _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
+                _emptyLabel.backgroundColor = [UIColor clearColor];
+                [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
+            }
             
             if ([PFUser currentUser])
+                
                 [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No photos to display"]]];
             else
-                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not connected"]]];
+                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not logged inted"]]];
             
             [self.view addSubview:_emptyLabel];
             
@@ -73,25 +84,30 @@
                 _emptyLabel = nil;
             }
     } else
+        //if not logged in
         if (![PFUser currentUser]) {
             if (_emptyLabel) {
                 [_emptyLabel removeFromSuperview];
             }
-
+            if (!_emptyLabel) {
+                _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
+                _emptyLabel.backgroundColor = [UIColor clearColor];
+                [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
+            }
             
-            [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not connected"]]];
+            [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not logged in"]]];
             [self.view addSubview:_emptyLabel];
         }
     
 }
 - (void) loadAndCacheObjects {
-  
+    
     [self showHUD];
     
     cloudRefresh(_allImages, dispatch_get_main_queue(), ^(NSMutableArray *allPhotos) {
         
         
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (!_cachedImages) {
                 _cachedImages = [NSCache new];
             }
@@ -114,10 +130,15 @@
                     
                 }];
             }];
+            
+            _dataArrayDidChange = @0;//= NO
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.collectionView reloadData];
-                if (refreshHUD)
+                if (refreshHUD) {
                     [refreshHUD hide:YES];
+                    refreshHUD = nil;
+                }
                 [self showEmptyLabel];
                 
             });
@@ -131,6 +152,7 @@
 
 - (void)showHUD {
     
+    
     refreshHUD = [[MBProgressHUD alloc] initWithView:self.view];
     if (refreshHUD) {
         // Register for HUD callbacks so we can remove it from the window at the right time
@@ -140,13 +162,15 @@
         [refreshHUD show:YES];
         
         // Make the customViews 37 by 37 pixels for best results (those are the bounds of the build-in progress indicators)
-        refreshHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkmark"]];
+        refreshHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark"]];
         
         // Set custom view mode
         refreshHUD.mode = MBProgressHUDModeCustomView;
+        
         [self.view addSubview:refreshHUD];
+        [self showEmptyLabel];
     }
-
+    
     
     
 }
@@ -154,18 +178,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([PFUser currentUser]) {
-        if (!_allImages) {
-            _allImages = [[NSMutableArray alloc] init];
-            [self loadAndCacheObjects];
-            [self.refreshBtn setEnabled:YES];
-        } else {
-            [self.collectionView reloadData];
-            [self showEmptyLabel];
-        }
-    } else
-        [self clearCollectionView];
-        
+    
+    [self.tabBarController.tabBar setUserInteractionEnabled:YES];
+    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
+    [centerButton setEnabled:YES];
+    
     
 }
 
@@ -190,7 +207,8 @@
     }
     [self showEmptyLabel];
     [self.refreshBtn setEnabled:NO];
-
+    _dataArrayDidChange = @0;//= NO
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -202,6 +220,24 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if ([PFUser currentUser]) {
+        if (!_allImages) {
+            _allImages = [[NSMutableArray alloc] init];
+            [self loadAndCacheObjects];
+            
+            [self.refreshBtn setEnabled:YES];
+        } else {
+            if (_dataArrayDidChange.boolValue == YES) {
+                [self.collectionView reloadData];
+                _dataArrayDidChange = @0; //= NO
+            }
+            [self showEmptyLabel];
+        }
+    } else
+        [self clearCollectionView];
+    
+    
 }
 
 
@@ -214,7 +250,7 @@
     
 }
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    NSLog(@"all images count - %d", _allImages.count);
+    NSLog(@"all images count - %lu", (unsigned long)_allImages.count);
     return [_allImages count];
 }
 
@@ -226,50 +262,63 @@
     
     UICollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
-
+    
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:kImageViewTag];
     NSNumber *index = [NSNumber numberWithInteger:indexPath.row];
     NSPurgeableData *imageData = [_cachedImages objectForKey:index];
-
     
-        if (!imageData) {
+    
+    if (!imageData) {
+        
+        PFObject *eachObject = [_allImages objectAtIndex:indexPath.row];
+        PFFile *theImage = [eachObject objectForKey:@"imageFile"];
+        
+        [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             
-            PFObject *eachObject = [_allImages objectAtIndex:indexPath.row];
-            PFFile *theImage = [eachObject objectForKey:@"imageFile"];
-            
-            [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
-                dispatch_async(queue, ^{
-                    NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-                    
-                    [_cachedImages setObject:purgeableData forKey:index cost:data.length];
-                    
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        
-                            imageView.image = [UIImage imageWithData:purgeableData];
-                            [imageData endContentAccess];
-                            [imageData discardContentIfPossible];
-                            [cell setNeedsLayout];
-                    });
-                    
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
+            dispatch_async(queue, ^{
+                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    imageView.image = [UIImage imageWithData:purgeableData];
+                    [cell setNeedsLayout];
                 });
-                    
-            }];
-
-            
-        } else
-    
-            if ([imageData beginContentAccess]) {
-                imageView.image = [UIImage imageWithData:imageData];
+                [_cachedImages setObject:purgeableData forKey:index cost:data.length];
                 [imageData endContentAccess];
                 [imageData discardContentIfPossible];
-                [cell setNeedsLayout];
-            }
+                
+            });
+            
+        }];
+        
+        
+    } else
+        
+        if ([imageData beginContentAccess]) {
+            imageView.image = [UIImage imageWithData:imageData];
+            [imageData endContentAccess];
+            [imageData discardContentIfPossible];
+            [cell setNeedsLayout];
+        }
     
     return cell;
     
 }
 
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    //prevent the image being selected if it is still loading in the background
+    PFObject* obj = [_allImages objectAtIndex:indexPath.row];
+    NSDate* objectCreatedTime = [obj valueForKey:@"createdAt"];
+    if (objectCreatedTime == NULL) {
+    
+        return NO;
+    }
+    return YES;
+    
+    
+}
 
 #pragma mark - Segue support
 
@@ -282,15 +331,11 @@
         
         // start viewing the image at the appropriate cell index
         MyPageViewController *pageViewController = [segue destinationViewController];
+        
+            
         NSIndexPath *selectedCell = [self.collectionView indexPathsForSelectedItems][0];
         pageViewController.startingIndex = selectedCell.row;
-       
-      
-    }
-    else if ([segue.identifier isEqualToString:@"goToConsentScreens"]) {
-        PMConsentDetailViewController *controller = segue.destinationViewController;
-        controller.userPhoto = sender;
-     
+        
     }
 }
 
@@ -411,8 +456,8 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                     
                 });
             }
-           
-         }];
+            
+        }];
         
     });
     
@@ -429,102 +474,6 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 }
 
 
-#pragma mark - PFLogInViewControllerDelegate
-
-- (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
-{
-    // Check if both fields are completed
-    if (username && password && username.length != 0 && password.length != 0) {
-        return YES; // Begin login process
-    }
-    
-    [[[UIAlertView alloc] initWithTitle:@"Missing Information"
-                                message:@"Make sure you fill out all of the information!"
-                               delegate:nil
-                      cancelButtonTitle:@"ok"
-                      otherButtonTitles:nil] show];
-    return NO; // Interrupt login process
-}
-
-// Sent to the delegate when a PFUser is logged in.
-- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
-
-// Sent to the delegate when the log in attempt fails.
-- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
-    NSLog(@"Failed to log in...");
-}
-
-// Sent to the delegate when the log in screen is dismissed.
-- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController {
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
-
-#pragma mark - PFSignUpViewControllerDelegate
-
-// Sent to the delegate to determine whether the sign up request should be submitted to the server.
-- (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info {
-    BOOL informationComplete = YES;
-    
-    // loop through all of the submitted data
-    for (id key in info) {
-        NSString *field = [info objectForKey:key];
-        if (!field || field.length == 0) { // check completion
-            informationComplete = NO;
-            break;
-        }
-    }
-    
-    // Display an alert if a field wasn't completed
-    if (!informationComplete) {
-        [[[UIAlertView alloc] initWithTitle:@"Missing Information"
-                                    message:@"Make sure you fill out all of the information!"
-                                   delegate:nil
-                          cancelButtonTitle:@"ok"
-                          otherButtonTitles:nil] show];
-    }
-    
-    return informationComplete;
-}
-
-// Sent to the delegate when a PFUser is signed up.
-- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-    [self dismissViewControllerAnimated:YES completion:nil]; // Dismiss the PFSignUpViewController
-}
-
-// Sent to the delegate when the sign up attempt fails.
-- (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
-    NSLog(@"Failed to sign up...");
-}
-
-// Sent to the delegate when the sign up screen is dismissed.
-- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
-    NSLog(@"User dismissed the signUpViewController");
-}
-
-
-
-#pragma mark - UIViewControllerTransitioningDelegate NOT USED
-- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext {
-    return 0.5f;
-}
-
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
-                                                                  presentingController:(UIViewController *)presenting
-                                                                      sourceController:(UIViewController *)source {
-    
-    TLTransitionAnimator *animator = [TLTransitionAnimator new];
-    animator.presenting = YES;
-    return animator;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    TLTransitionAnimator *animator = [TLTransitionAnimator new];
-    return animator;
-}
 
 #pragma mark - AtrributedString method
 -(NSAttributedString*) attributedStringForText: (NSString*)string {

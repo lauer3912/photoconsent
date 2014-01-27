@@ -11,16 +11,20 @@
 #import "MyPageViewController.h"
 #import "PageViewControllerData.h"
 #import "PMConsentDetailViewController.h"
+#import  "PMCompleteViewController.h"
 #import "PMDisclaimerViewController.h"
 #import "ConsentStore.h"
 #import "Consent.h"
 #import "PMTextConstants.h"
-#import "TLTransitionAnimator.h"
 #import "PMActivityDelegate.h"
 #import "PMFunctions.h"
 
 
-@interface AlbumContentsViewController () <UITabBarControllerDelegate,UIViewControllerTransitioningDelegate>
+@interface AlbumContentsViewController ()
+{
+   id assetChangedNotification;
+}
+
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
 @property (strong, nonatomic)  UILabel *emptyLabel;
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
@@ -35,9 +39,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
+	_dataArrayDidChange = @1; // set to yes as want to run loadAssets when loading
     self.title = @"Album";
     [self checkDisclaimer];
+    
+    [self addAssetChangeNotification];
+}
+
+
+- (void) addAssetChangeNotification {
+    //receive notifcation when a photo is added to the album, that is, when the user adds an image to the cloud which is then also added to the album
+    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    self->assetChangedNotification = [center addObserverForName:@"NotificationDidSaveToAlbum" object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+        
+            [self albumRefresh:note];
+    }];
+    
+}
+- (void)dealloc {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:self->assetChangedNotification];
 }
 
 -(void) loadAssets {
@@ -52,7 +75,7 @@
     else if (_assets.count > 0)
         [_assets removeAllObjects];
     
-    
+    NSLog(@"START LOAD ASSETS:Device consent count = %lu", (unsigned long)[[ConsentStore sharedDeviceConsents] allDeviceConsents].count );
     [_assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAlbum usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
         NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
         if ([name isEqualToString:@"PhotoConsent"]) {
@@ -83,7 +106,7 @@
             
             if ([_assets count] < [[ConsentStore sharedDeviceConsents] allDeviceConsents].count > 0) {
                 
-                NSLog(@"START:Device consent count = %d", [[ConsentStore sharedDeviceConsents] allDeviceConsents].count );
+                
                 
                 // delete orphan deviceConsents
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -110,20 +133,22 @@
                         
                     }]; // end of consents enumeration
                     [[ConsentStore sharedDeviceConsents] saveChanges];
-                    NSLog(@"END:Device consent count = %d", [[ConsentStore sharedDeviceConsents] allDeviceConsents].count );
+                    
                     
                 }); //end of dispatch
                 
             }
-            
+            _dataArrayDidChange = @0;
             *stop = YES;
             
         }
         
+        
+        
     } failureBlock:^(NSError *error) {
         NSLog(@"access denied to PhotoConsent album \n  %@", [[error userInfo] valueForKey:NSLocalizedDescriptionKey]);
     }];
-    
+    NSLog(@"END:Device consent count = %lu", (unsigned long)[[ConsentStore sharedDeviceConsents] allDeviceConsents].count );
     
 }
 
@@ -131,13 +156,20 @@
     
     [super viewWillAppear:animated];
     
+    [self.tabBarController.tabBar setUserInteractionEnabled:YES];
+    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
+    [centerButton setEnabled:YES];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
-     [self loadAssets];
-   
+    if (_dataArrayDidChange.boolValue == YES) {
+        [self loadAssets];
+    }
+    
+    
     
 }
 
@@ -166,20 +198,20 @@ static const int kImageViewTag = 1; // the image view inside the collection view
         ALAssetRepresentation *assetRepresentation = [asset defaultRepresentation];
         
         UIImage *defaultImage = [UIImage imageWithCGImage:[assetRepresentation fullResolutionImage]                                   scale: [assetRepresentation scale] orientation:(UIImageOrientation)ALAssetOrientationUp];
-    /*
-        CGImageRef imageRef = [asset thumbnail];
-        UIImage *image = [UIImage imageWithCGImage:imageRef];
-        UIImage *defaultImage =  resizeImage(image, CGSizeMake(60.0, 60.0));
-     */
+        /*
+         CGImageRef imageRef = [asset thumbnail];
+         UIImage *image = [UIImage imageWithCGImage:imageRef];
+         UIImage *defaultImage =  resizeImage(image, CGSizeMake(60.0, 60.0));
+         */
         dispatch_sync(dispatch_get_main_queue(), ^{
             // load the asset for this cell
-         
+            
             UIImageView *imageView = (UIImageView *)[cell viewWithTag:kImageViewTag];
             imageView.image = defaultImage;
             [cell setNeedsLayout];
         });
     });
-
+    
     return cell;
 }
 
@@ -195,7 +227,8 @@ static const int kImageViewTag = 1; // the image view inside the collection view
         
         // start viewing the image at the appropriate cell index
         MyPageViewController *pageViewController = [segue destinationViewController];
-       
+        
+        
         NSIndexPath *selectedCell = [self.collectionView indexPathsForSelectedItems][0];
         pageViewController.startingIndex = selectedCell.row;
     }
@@ -203,7 +236,7 @@ static const int kImageViewTag = 1; // the image view inside the collection view
         PMConsentDetailViewController *controller = segue.destinationViewController;
         controller.userPhoto = sender;
     }
-
+    
 }
 
 #pragma mark - Unwind
@@ -227,6 +260,10 @@ static const int kImageViewTag = 1; // the image view inside the collection view
     
     
 }
+#pragma mark -  IBAction buttons pressed
+- (IBAction)albumRefresh:(id)sender {
+    [self loadAssets];
+}
 
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     
@@ -240,27 +277,6 @@ static const int kImageViewTag = 1; // the image view inside the collection view
     return attrMutableString;
 }
 
-
-#pragma mark - UIViewControllerTransitioningDelegate
-- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext {
-    return 0.5f;
-}
-
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
-                                                                  presentingController:(UIViewController *)presenting
-                                                                      sourceController:(UIViewController *)source {
-    
-    TLTransitionAnimator *animator = [TLTransitionAnimator new];
-    animator.presenting = YES;
-    return animator;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    TLTransitionAnimator *animator = [TLTransitionAnimator new];
-    return animator;
-}
-
 - (void)checkDisclaimer {
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -269,7 +285,7 @@ static const int kImageViewTag = 1; // the image view inside the collection view
     if (![disclaimerAcknowledged boolValue] == YES) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
         UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
-       // avc.transitioningDelegate = self;
+        
         [avc setModalPresentationStyle:UIModalPresentationFullScreen];
         [self presentViewController:avc animated:YES completion:^{
             

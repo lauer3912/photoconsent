@@ -17,6 +17,7 @@
 #import <Parse/Parse.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "PMConsentActivity.h"
+#import "PMMessageActivity.h"
 #import "PMConsentViewController.h"
 #import "Consent.h"
 #import "ConsentStore.h"
@@ -27,7 +28,7 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 
 @interface MyPageViewController ()
-<UIActionSheetDelegate,UIActivityItemSource, UINavigationControllerDelegate>
+<UIActionSheetDelegate,UIActivityItemSource>
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *trashBtn;
 @property (strong, nonatomic) ALAsset *assetToDelete;
 @property (strong, nonatomic) UIImage *imageForEmail;
@@ -49,8 +50,31 @@
     _currentIndex = _startingIndex;
     [self displayViewControllerAtIndex:_currentIndex];
     
+    
 }
 
+-(void) flagAssetRemoved {
+    
+    UIViewController *senderController = self.navigationController.viewControllers[0];
+    [senderController setValue:@1 forKey:@"dataArrayDidChange"];
+
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //keep a direct reference to asset arrays in the cloud and album viewControllers
+    if ([self.parentViewController.title isEqualToString:@"Cloud"]) {
+        UINavigationController *cloudController = (UINavigationController*)self.parentViewController;
+        PMCloudContentsViewController* vc = (PMCloudContentsViewController*)cloudController.viewControllers[0];
+        [[PageViewControllerData sharedInstance] setPhotoAssets:[vc allImages]];
+    } else {
+        UINavigationController *albumController = (UINavigationController*)self.parentViewController;
+        AlbumContentsViewController* vc = (AlbumContentsViewController*)albumController.viewControllers[0];
+        [[PageViewControllerData sharedInstance] setPhotoAssets:[vc assets]];
+        }
+ 
+    
+}
 
 #pragma mark - datasource
 
@@ -72,6 +96,7 @@
                       }
           ];
          [_trashBtn setEnabled:[self canBeDeleted:index]];
+             
     }
 
 }
@@ -82,18 +107,32 @@
 {
     NSUInteger index = vc.pageIndex;
     _currentIndex = index;
-    [_trashBtn setEnabled:[self canBeDeleted:index]];
     
-    return [PhotoViewController photoViewControllerForPageIndex:(index - 1)];;
+    if (index == 0) {
+        return nil;
+    } else {
+        index--;
+       
+        [_trashBtn setEnabled:[self canBeDeleted:index]];
+        return [PhotoViewController photoViewControllerForPageIndex:(index)];
+    }
+    
+
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(PhotoViewController *)vc
 {
     NSUInteger index = vc.pageIndex;
     _currentIndex = index;
-    [_trashBtn setEnabled:[self canBeDeleted:index]];
-   
-    return [PhotoViewController photoViewControllerForPageIndex:(index + 1)];
+    
+    int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1);
+    if (index == indexMax) {
+        return nil;
+    } else {
+        index ++;
+        [_trashBtn setEnabled:[self canBeDeleted:index]];
+        return [PhotoViewController photoViewControllerForPageIndex:(index)];
+    }
 }
 
 - (BOOL) canBeDeleted:(NSInteger)index {
@@ -146,10 +185,10 @@
          
              if (succeeded) {
                  //remove the object from allImages in the presenting viewController and also the cache
-                 [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
+                 
                  NSCache *cachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedImages];
                  [cachedImages removeObjectForKey:[NSNumber numberWithInteger:_currentIndex]];
-                 
+              
                  [self displayPrevPhoto];
                 
              
@@ -163,54 +202,57 @@
     } else if ([obj isKindOfClass:[ALAsset class]]) {
         _assetToDelete = (ALAsset*)obj; // need this as the assetURL returned in the completionblock will be nil if the image is deleted
         
+        
+         __weak MyPageViewController* weakSelf = self;
         NSURL* assetToDeleteURL = [_assetToDelete valueForProperty:ALAssetPropertyAssetURL];
         [_assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
             if (error != nil) {
                 NSLog(@"Error deleting photo");
             } else {
                 //PHOTO REMOVED FROM ALBUM so delete the matching device Consent
-
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                
-                    [[[ConsentStore sharedDeviceConsents] allDeviceConsents] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                       
-                        if ([ [(Consent*)obj assetURL] isEqual:assetToDeleteURL]) {
-                            [[ConsentStore sharedDeviceConsents] deleteDeviceConsent:obj];
-                            [[ConsentStore sharedDeviceConsents] saveChanges];
-                            *stop = YES;
-                        }
-                    }];
-                    NSLog(@"deviceConsent count = %d", [[[ConsentStore sharedDeviceConsents] allDeviceConsents] count]);
-                }); //end of dispatch
-                
+                [[[ConsentStore sharedDeviceConsents] allDeviceConsents] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                   
+                    if ([ [(Consent*)obj assetURL] isEqual:assetToDeleteURL]) {
+                        [[ConsentStore sharedDeviceConsents] deleteDeviceConsent:obj];
+                        [[ConsentStore sharedDeviceConsents] saveChanges];
+                        *stop = YES;
+                    }
+                }];
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [weakSelf displayPrevPhoto];
+                });
             }
-                
         }];
         
-        [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
-        [self displayPrevPhoto];
-        
-       
     }
 }
+
 
 - (void) displayPrevPhoto {
+    
+    [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
+     [self flagAssetRemoved];
     if ([[PageViewControllerData sharedInstance].photoAssets count] == 0) {
-       
+        
         [self.navigationController popToRootViewControllerAnimated:YES];
-        [_trashBtn setEnabled:NO];
         _currentIndex = NSNotFound;
         
-
+        
     } else {
+        
         if (_currentIndex == [[PageViewControllerData sharedInstance].photoAssets count])
             _currentIndex --;
-        [self displayViewControllerAtIndex:_currentIndex];
+    
+        NSArray* photoViewControllers = @[ [PhotoViewController photoViewControllerForPageIndex:_currentIndex]];
+        
+        [self setViewControllers:photoViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+        }];
         
     }
-        
     
 }
+
 
 #pragma mark UIActivityViewController
 - (IBAction)openActivitySheet:(id)sender
@@ -218,16 +260,27 @@
     PMConsentActivity *consentActivity = [PMConsentActivity new];
     __block  UIActivityViewController *activityViewController;
     
-    id consent = [self activityViewController:activityViewController itemForActivityType:@"consentActivity"];
+    id consent = [self activityViewController:activityViewController itemForActivityType:@"consentActivityType"];
     __block  NSMutableArray *consentActivityItems =  [NSMutableArray arrayWithArray:@[consent]];
-
+ 
+    //url for text message
+    //URL  was no more successful than passing NSData in getting image attached to SMS message
+    /*
+    NSURL *assetURL = [self urlForAsset];
+    if (assetURL) {
+        [consentActivityItems addObject:assetURL];
+    }
+    */
     
+    PMMessageActivity *messageActivity = [PMMessageActivity new];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         itemForEmailActivity([self currentObj], @"consentSignature", ^(id emailPhoto) {
+            if (emailPhoto) {
+                [consentActivityItems addObject:emailPhoto];
+            }
             
-            [consentActivityItems addObject:emailPhoto];
             [consentActivityItems addObject:[self activityViewController:activityViewController subjectForActivityType:UIActivityTypeMail]];
             [consentActivityItems addObject:[self activityViewController:activityViewController dataTypeIdentifierForActivityType:UIActivityTypeMail]];
             
@@ -235,22 +288,20 @@
                 
                 itemForEmailActivity([self currentObj], @"imageFile", ^(id emailPhoto) {
                     [consentActivityItems addObject:emailPhoto];
-                    [consentActivityItems addObject:kPMTextConstants_Assessment];
-                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:consentActivityItems   applicationActivities:@[consentActivity]];
-                    
+                    [consentActivityItems addObject:@"Please review"];
+                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:consentActivityItems   applicationActivities:@[consentActivity,messageActivity]];
                     
                     activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard, UIActivityTypePrint];
                     
                     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
                         
-                        if ([activityType isEqualToString:@"activityConsent"]) {
+                        if ([activityType isEqualToString:@"consentActivityType"]) {
                             NSLog(@"Consent Activity completion handler has fired");
                         }
                         
                     };
                     
                     activityViewController.completionHandler = completionBlock;
-                    
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -266,6 +317,17 @@
 });
     
     
+    
+}
+
+
+- (NSURL*)urlForAsset {
+    
+    id currentObj = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
+    if ([currentObj isKindOfClass:[ALAsset class]]) {
+        return [(ALAsset*)currentObj valueForProperty:ALAssetPropertyAssetURL];
+    } else
+        return nil;
     
 }
 
@@ -291,6 +353,8 @@
     
 }
 
+
+
 void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPhoto)) {
     
     
@@ -301,7 +365,7 @@ void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPh
             NSData *lessData;
             if ([key isEqualToString:@"imageFile"]) {
                lessData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(320.0, 480.0)), 0.5f);
-             //  image = [UIImage imageWithData:lessData];
+             
                 block(lessData);
             } else
             
@@ -330,22 +394,27 @@ void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPh
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
 
     id currentObj = [self currentObj];
-    return [NSString stringWithFormat:@"Reference ID:%@\n\n%@\n\n%@\n\n%@", [currentObj valueForKey:@"referenceID"],kPMTextConstants_Assessment,kPMTextConstants_Education,kPMTextConstants_Publication];
-    
-    
+    return [NSString stringWithFormat:@"Reference ID:%@", [currentObj valueForKey:@"referenceID"]];
     
 }
 
 
 - (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType {
     
-    id value;
+    __block id value;
     
-    if ([activityType isEqualToString:@"consentActivity"]) {
-        
+    if ([activityType isEqualToString:@"consentActivityType"])
         value = [self currentObj];
-    }
     
+    if ([activityType isEqualToString:@"messageActivityType"]) {
+       
+        id theCurrentObject = [self currentObj];
+        itemForEmailActivity(theCurrentObject, @"imageFile", ^(id emailPhoto) {
+           
+            value = @[@"See attached image",emailPhoto];
+        });
+
+    }
     return value;
    
     

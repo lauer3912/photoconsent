@@ -53,7 +53,7 @@
 
 - (NSArray *)allDeviceConsents
 {
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"created" ascending:YES];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:NO];
     NSArray *descriptors = [NSArray arrayWithObjects:descriptor, nil];
     return [allDeviceConsents sortedArrayUsingDescriptors:descriptors];
 }
@@ -74,7 +74,10 @@
 
 - (Consent*)addDeviceConsent:(Consent *)deviceConsent
 {
-    [allDeviceConsents addObject:deviceConsent];
+    if (deviceConsent) {
+         [allDeviceConsents addObject:deviceConsent];
+    }
+   
     return deviceConsent;
     
 }
@@ -84,5 +87,6 @@
     [allDeviceConsents removeObject:deviceConsent];
     
 }
+
 
 @end

@@ -45,7 +45,7 @@
         [self performSegueWithIdentifier:@"goToSignView" sender:nil];
     } else {
         // show an error message to let the patient know they need to complete this information
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please make sure that you enter your name and email address before proceeding" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your name and email address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
 }

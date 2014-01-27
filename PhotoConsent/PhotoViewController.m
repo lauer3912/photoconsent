@@ -59,7 +59,7 @@
 
 + (PhotoViewController *)photoViewControllerForPageIndex:(NSUInteger)pageIndex
 {
-    if (pageIndex < [[PageViewControllerData sharedInstance] photoCount] | pageIndex == NSNotFound)
+    if (pageIndex < [[PageViewControllerData sharedInstance] photoCount] )
     {
         return [[self alloc] initWithPageIndex:pageIndex];
     }
@@ -91,11 +91,8 @@
     
 }
 
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     // set the navigation bar's title to indicate which photo index we are viewing,
     // note that our parent is MyPageViewController
     
@@ -105,7 +102,15 @@
         
         
     }
-        
+    
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+
 }
 
 

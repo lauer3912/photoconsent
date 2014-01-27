@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Consent : NSObject <NSCoding>
+@interface Consent : NSObject <NSCoding, NSCopying>
 
 
 @property (strong, nonatomic) NSString *referenceID;
@@ -17,7 +17,7 @@
 @property (strong, nonatomic) NSNumber *Assessment;
 @property (strong, nonatomic) NSNumber *Education;
 @property (strong, nonatomic) NSNumber *Publication;
-@property (strong, nonatomic)  NSDate *created;
+@property (strong, nonatomic)  NSDate *createdAt;
 @property (strong, nonatomic)  NSData *imageFile;
 @property (strong, nonatomic)  NSData *consentSignature;
 @property (strong, nonatomic)  NSURL *assetURL;
@@ -28,5 +28,7 @@
 - (id) initWithReference:(NSString*)referenceID imageFile:(NSData*)imageFile;
 - (Consent *)initWithCoder:(NSCoder *)aDecoder;
 - (void)encodeWithCoder:(NSCoder *)anEncoder;
+
+- (id)copyWithZone:(NSZone *)zone;
 
 @end

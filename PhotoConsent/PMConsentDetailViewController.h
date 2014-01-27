@@ -11,18 +11,22 @@
 
 @interface PMConsentDetailViewController : UIViewController
 
-@property (strong, nonatomic) IBOutlet UISwitch *ib_assessmentSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *ib_educationSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *ib_publicationSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *ib_assessmentSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *ib_educationSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *ib_publicationSwitch;
 
-@property (strong, nonatomic) IBOutlet UIButton *assessmentLabel;
-@property (strong, nonatomic) IBOutlet UIButton *educationLabel;
-@property (strong, nonatomic) IBOutlet UIButton *publicationLabel;
+@property (weak, nonatomic) IBOutlet UIButton *assessmentLabel;
+@property (weak, nonatomic) IBOutlet UIButton *educationLabel;
+@property (weak, nonatomic) IBOutlet UIButton *publicationLabel;
+
+
 
 @property (strong, nonatomic) id userPhoto;
 
 - (IBAction)onAssessment:(id)sender;
 - (IBAction)onEducation:(id)sender;
 - (IBAction)onPublication:(id)sender;
+- (IBAction)cancelBtn:(id)sender;
+- (IBAction)pressedNextButton:(id)sender;
 
 @end

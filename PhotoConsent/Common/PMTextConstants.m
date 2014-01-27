@@ -16,6 +16,23 @@ NSString *const kPMTextConstants_Publication = @"I consent for this medical phot
 
 NSString *const kPMTextConstants_Disclaimer = @"  The creators of PhotoConsent take no responsibility for the use and storage of photos taken with this software. The purpose of the app is to assist healthcare professionals with the assessment of patients and provide resources for medical education and publication. By using this app you agree to abide by the General Medical Council guidance on: 'Making and using visual and audio recordings of patients'; 'Consent'; and '0-18 years: guidance for all doctors'. It is the responsibility of the user to explain to patients the uses and storage of the photos and we strongly recommend that users ensure appropriate security precautions are taken, including password and passcode protection, to protect patient data.";
 
+
+NSString *const kPMTextConstants_Disclaimer0 = @"By agreeing to use this app, you expressly acknowledge that PhotoConsent takes no responsibility for the use and/or storage of media taken by this app.";
+
+NSString *const kPMTextConstants_Disclaimer1 = @"The user agrees to abide by the guidance set forth in GMC guidance on:";
+
+NSString *const kPMTextConstants_Disclaimer2 = @"Making and using visual and audio recordings of patients";
+NSString *const kPMTextConstants_Disclaimer3 = @"Consent";
+NSString *const kPMTextConstants_Disclaimer4 = @"0-18 years: guidance for all doctors";
+NSString *const kPMTextConstants_Disclaimer5 = @"Doctors' use of social media (2013)";
+
+NSString *const kPMTextConstants_Disclaimer6 = @"It is the responsibility of the user of this app to explain all uses and storage of media and items to the patient.";
+
+NSString *const kPMTextConstants_Disclaimer7 = @"PhotoConsent recommends the user of this app to ensure that appropriate security precautions, like password protection on the device, are used to protect patient data in line with clinical information governance.";
+
+NSString *const kPMTextConstants_Disclaimer8 = @"This app may contain links to other sites. PhotoConsent make no representations, guarantees or promises regarding these other sites, which are not controlled by or affiliated with us.";
+
+
 NSString *const kPMTextConstants_PhotoConsent = @"This is a place holder for consent details ... ";
 
 

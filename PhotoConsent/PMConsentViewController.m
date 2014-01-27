@@ -39,73 +39,14 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - MFMailComposeViewControllerDelegate
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    [controller dismissViewControllerAnimated:YES completion:nil];
-}
 
 #pragma mark - IBAction
 
 - (IBAction)didPressCancelButton:(UIBarButtonItem *)sender {
     //important to end the activity
     [_activityConsent activityDidFinish:YES];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
-/*
-- (IBAction)onExportMail:(id)sender {
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        composer.mailComposeDelegate = self;
-        
-        // setup the content for the email
-        NSMutableString *emailBody = [NSMutableString stringWithFormat:@"<p><strong>Consent details for medical image taken with the Photoconsent app</strong></p>"];
-        
-        // add basic patient details
-        NSString *patientName = [NSString stringWithFormat:@"<p><strong>Patient Name</strong>: %@</p>", [_m_selectedPhoto valueForKey:@"patientName"]];
-        NSString *patientEmail = [NSString stringWithFormat:@"<p><strong>Patient Email</strong>: %@ <p>", [_m_selectedPhoto valueForKey:@"patientEmail"]];
-        [emailBody appendString:patientName];
-        [emailBody appendString:patientEmail];
-        
-        // create the content of the consent
-        BOOL isAssessment = [[_m_selectedPhoto valueForKey:@"Assessment"] boolValue];
-        BOOL isEducation = [[_m_selectedPhoto valueForKey:@"Education"] boolValue];
-        BOOL isPublication = [[_m_selectedPhoto valueForKey:@"Publication"] boolValue];
-        
-        if (isAssessment) {
-            NSString *assessment = [NSString stringWithFormat:@"<p>%@<p>", kText_Assessment];
-            [emailBody appendString:assessment];
-        }
-        if (isEducation) {
-            NSString *education = [NSString stringWithFormat:@"<p>%@</p>", kText_Education];
-            [emailBody appendString:education];
-        }
-        if (isPublication) {
-            NSString *publication = [NSString stringWithFormat:@"<p>%@</p>", kText_Publication];
-            [emailBody appendString:publication];
-        }
-
-        // set the message body
-        [composer setMessageBody:emailBody isHTML:YES];
-        
-        // add the signature
-        PFFile *signImage = [_m_selectedPhoto valueForKey:@"consentSignature"];
-        NSData *signatureData = [signImage getData];
-        [composer addAttachmentData:signatureData mimeType:@"image/jpeg" fileName:@"consent_signature.jpg"];
-        
-        PFFile *theImage = [_m_selectedPhoto valueForKey:@"imageFile"];
-        NSData *imageData;
-        imageData = [theImage getData];
-        [composer addAttachmentData:imageData mimeType:@"image/jpeg" fileName:@"medical_image.jpg"];
-        
-        [self presentViewController:composer animated:YES completion:nil];
-    } else {
-        UIAlertView *noMailAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sorry. This device cannot send mail" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [noMailAlert show];
-    }
-
-}
-*/
 
 #pragma mark - tableview datasource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -122,7 +63,7 @@
 #pragma mark - tableview delegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSString *dateString = @"  /  /    ";
+    __block NSString* dateString;
     UITableViewCell *cell= [tableView dequeueReusableCellWithIdentifier:@"consentCell"];
     if (indexPath.section == 0) {
         [cell setUserInteractionEnabled:NO];
@@ -130,20 +71,50 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(140.0, 40.0, 140.0, 65.0)];
         UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 115.0, 120.0)];
         //imageView of photo
+
         if ([_m_selectedPhoto isKindOfClass:[PFObject class]]) {
-            PFFile *theImage = [_m_selectedPhoto valueForKey:@"imageFile"];
-            iv.image =  resizeImage([UIImage imageWithData:[theImage getData]], iv.bounds.size);
             
-            PFFile *signImage = [_m_selectedPhoto valueForKey:@"consentSignature"];
-            NSData *imageData = [signImage getData];
-            imageView.image = resizeImage([UIImage imageWithData:imageData], imageView.bounds.size);
+                //get the image using Parse background block
+                PFFile *theImage = [_m_selectedPhoto valueForKey:@"imageFile"];
+                
+                [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    
+                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
+                    
+                    dispatch_async(queue, ^{
+                       UIImage *image = [UIImage imageWithData:data];
+                       image = resizeImage(image, iv.bounds.size);
+                        
+                        ////get the signature using Parse background block
+                       PFFile *signImage = [_m_selectedPhoto valueForKey:@"consentSignature"];
+                       [signImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                          
+                           dispatch_async(queue, ^{
+                           
+                              UIImage *signatureImage = [UIImage imageWithData:data];
+                              resizeImage(signatureImage, imageView.bounds.size);
+                           
+                           
+                              dispatch_sync(dispatch_get_main_queue(), ^{
+                               imageView.image = signatureImage;
+                               
+                              });
+                               
+                           });
+                           
+                        }]; //end Parse getdata for signature
+                        
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            
+                            iv.image = image;
+                        });
+                        
+                    }); //end imagefile dispatch
+                    
+                    
+                }]; //end Parse getdata for imageFile
+                
             
-            NSDate *created = [_m_selectedPhoto valueForKey:@"createdAt"];
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateStyle:NSDateFormatterShortStyle];
-            dateString = [formatter stringFromDate:created];
-            
-           
             
         } else {
             NSData *theImage = [_m_selectedPhoto valueForKey:@"imageFile"];
@@ -152,17 +123,19 @@
             NSData *signImage = [_m_selectedPhoto valueForKey:@"consentSignature"];
             imageView.image = resizeImage([UIImage imageWithData:signImage], imageView.bounds.size);
            
-            // show the date created
-            NSDate *created = [_m_selectedPhoto valueForKey:@"created"];
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateStyle:NSDateFormatterShortStyle];
-            dateString = [formatter stringFromDate:created];
+            
             
         }
         
         [cell.contentView addSubview:iv];
         [cell.contentView addSubview:imageView];
         
+        // show the date created
+        NSDate *createdAt = [_m_selectedPhoto valueForKey:@"createdAt"];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        dateString = [formatter stringFromDate:createdAt];
+
         UILabel *stringLabel = [[UILabel alloc] initWithFrame:CGRectMake(130.0, 10.0, 130.0, 20.0)];
         [stringLabel setBackgroundColor:[UIColor clearColor]];
         [stringLabel setTextAlignment:NSTextAlignmentLeft];
@@ -178,6 +151,10 @@
                 if ([[_m_selectedPhoto valueForKey:@"Assessment"] boolValue]) {
                     cell.userInteractionEnabled = YES;
                     [cell setAccessoryType:UITableViewCellAccessoryDetailButton];
+                    cell.imageView.image = [UIImage imageNamed:@"icon-check"];
+                } else {
+                   [cell setAccessoryType:UITableViewCellAccessoryNone];
+                    [cell.textLabel setAlpha:0.25];
                 }
                 
                 break;
@@ -186,6 +163,10 @@
                 if ([[_m_selectedPhoto valueForKey:@"Education"] boolValue]) {
                     cell.userInteractionEnabled = YES;
                     [cell setAccessoryType:UITableViewCellAccessoryDetailButton];
+                    cell.imageView.image = [UIImage imageNamed:@"icon-check"];
+                } else {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                     [cell.textLabel setAlpha:0.25];
                 }
                 break;
             case 2:
@@ -193,6 +174,10 @@
                 if ([[_m_selectedPhoto valueForKey:@"Publication"] boolValue]) {
                     cell.userInteractionEnabled = YES;
                     [cell setAccessoryType:UITableViewCellAccessoryDetailButton];
+                     cell.imageView.image = [UIImage imageNamed:@"icon-check"];
+                } else  {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                   [cell.textLabel setAlpha:0.25];
                 }
                 break;
             default:
@@ -284,10 +269,9 @@
    if (section == 1) {
         NSString *reference = [_m_selectedPhoto valueForKey:@"referenceID"];
      
-//       NSAssert(reference, @"ReferenceID cannot be nil");
-     
         UILabel *stringLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0., 260., 40.0)];
         [stringLabel setBackgroundColor:[UIColor clearColor]];
+        stringLabel.numberOfLines = 2;
         [stringLabel setTextAlignment:NSTextAlignmentLeft];
         [stringLabel setAttributedText:[self attributedStringForText:(NSString*)reference]];
         [footerView addSubview:stringLabel];
@@ -299,7 +283,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 & indexPath.row == 0) {
-        [cell setBackgroundColor:[UIColor lightGrayColor]];
+        [cell setBackgroundColor:[UIColor whiteColor]];
     
     }
     

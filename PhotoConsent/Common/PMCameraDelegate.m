@@ -11,7 +11,7 @@
 #import "AlbumContentsViewController.h"
 #import "Consent.h"
 #import "PMFunctions.h"
-
+#import "PMConsentDetailViewController.h"
 
 @interface PMCameraDelegate () <UIAlertViewDelegate>
 {
@@ -49,54 +49,72 @@
     // Access the uncropped image from info dictionary
     _image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     UIAlertView *referenceID = [[UIAlertView alloc] initWithTitle:@"Reference Identifier" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Done",nil];
-    referenceID.delegate = self;
     [referenceID setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [referenceID show];
     
    
 }
 
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+     [picker dismissViewControllerAnimated:YES completion:^{
+    
+     }];
+}
+
 #pragma mark - referenceID alertview delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != -1) {
+    if (buttonIndex != 0) {
         _referenceID = [[alertView textFieldAtIndex:0] text];
-       
-    } else _referenceID = @"Not Assigned";
+        // Dismiss picker, resize image and start the consent process
+        
+        
+        
+        [cameraController dismissViewControllerAnimated:YES completion:^{
+            
+            if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
+                
+
+                cloudPhoto(_image, _referenceID, dispatch_get_main_queue(), ^(id userPhoto) {
+                    
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                    PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
+                    [vc setUserPhoto:userPhoto];
+                    [[_senderController navigationController] pushViewController:vc animated:NO];
+                });
+                
+                
+            } else if ([_senderController isKindOfClass:[AlbumContentsViewController class]]) {
+                
+                
+                //store a smaller version of the image for verification
+                NSData *imageData = UIImageJPEGRepresentation(resizeImage(_image, CGSizeMake(640.0, 960.0)), 1.0f);
+                
+                
+                Consent *userPhoto = [[Consent alloc] initWithReference:_referenceID imageFile:imageData];
+                
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
+                [vc setUserPhoto:userPhoto];
+                [[_senderController navigationController] pushViewController:vc animated:NO];
+                
+                
+                
+            }
+                        
+        }];
+        
+    
+    } else {
+        
+        [cameraController dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+        
+    }
     
       
-    // Dismiss picker, resize image and start the consent process
-    [cameraController dismissViewControllerAnimated:YES completion:^{
-        
-        if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
-            
-            
-            
-            
-            cloudPhoto(_image, _referenceID, dispatch_get_main_queue(), ^(id userPhoto) {
-                
-                PMCloudContentsViewController *cloudController = (PMCloudContentsViewController*)_senderController;
-                
-                [cloudController performSegueWithIdentifier:@"goToConsentScreens" sender:userPhoto];
-                
-            });
-            
-            
-        } else if ([_senderController isKindOfClass:[AlbumContentsViewController class]]) {
-            
-            AlbumContentsViewController *albumController = (AlbumContentsViewController*)_senderController;
-            
-            //store a smaller version of the image for verification
-            NSData *imageData = UIImageJPEGRepresentation(resizeImage(_image, CGSizeMake(640.0, 960.0)), 1.0f);
-
-            
-            Consent *userPhoto = [[Consent alloc] initWithReference:_referenceID imageFile:imageData];
-            [albumController performSegueWithIdentifier:@"goToConsentScreens" sender:(Consent*)userPhoto];
-        }
-        
-    }];
-    
-}
+    }
 
 
 @end

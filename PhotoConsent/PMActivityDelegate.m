@@ -16,12 +16,19 @@
 #import "PMLoginActivity.h"
 #import <Parse/Parse.h>
 #import "PMCloudContentsViewController.h"
+#import "PMMessageActivity.h"
+#import "PMSubjectProvider.h"
+#import "PMDisclaimerActivity.h"
+#import "PMAccountActivity.h"
 
 
 @interface PMActivityDelegate ()
 <UIActivityItemSource, PMLogoutActivityProtocol>
 @property (strong, nonatomic) id senderController;
 @property (strong, nonatomic) UIActivity *feedbackActivity;
+@property (strong, nonatomic) UIActivity *disclaimerActivity;
+@property (strong, nonatomic) UIActivity *messageActivity;
+@property (strong, nonatomic) UIActivity *accountActivity;
 @property (strong, nonatomic) UIActivity *cameraRollActivity;
 @property (strong, nonatomic) id logActivity;
 
@@ -58,54 +65,46 @@
 
 - (void)showActivitySheet:(id)sender
 {
- 
+    UIActivityViewController *activityViewController;
     _senderController = sender;
     
     _feedbackActivity = [PMFeedbackActivity new];
-   
+    _disclaimerActivity = [PMDisclaimerActivity new];
     _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
-    
+    _accountActivity = [PMAccountActivity new];
     _consentDetailsActivity = [PMConsentDetailsActivity new];
-    // set the logged in user's email to show at the top
+   
+    NSString *subject = [self activityViewController:activityViewController subjectForActivityType:UIActivityTypeMail];
     
-    UIActivityViewController *activityViewController;
+    NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:UIActivityTypeMessage];
+    
     
     if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
         PFUser *user = [PFUser currentUser];
         if (user) {
             _logActivity = [PMLogoutActivity new];
             [_logActivity setDelegate:self];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_feedbackActivity,_logActivity,_cameraRollActivity,_consentDetailsActivity]];
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity, _logActivity,_cameraRollActivity,_consentDetailsActivity,_disclaimerActivity,_accountActivity]];
             
         } else {
             _logActivity = [PMLoginActivity new];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_feedbackActivity,_logActivity,_consentDetailsActivity]];
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity,  _logActivity,_consentDetailsActivity,_disclaimerActivity, _accountActivity]];
         }
     } else
-        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_feedbackActivity,_consentDetailsActivity]];
-    
-    
+        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity, _consentDetailsActivity,_disclaimerActivity,_accountActivity]];
     
     
     activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint];
     
     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
         
-        if ([activityType isEqualToString:@"feedbackActivityType"]) {
-            NSLog(@"completion block did run for feedBackActivity");
+        if ([activityType isEqualToString:UIActivityTypeMail]) {
+            NSLog(@"UIActivityTypeMail completion block shows subject was %@", subject);
         }
         
     };
     
     activityViewController.completionHandler = completionBlock;
-    
-    [self activityViewControllerPlaceholderItem:activityViewController];
-    
-    [self activityViewController:activityViewController subjectForActivityType:UIActivityTypeMail];
-    
-    [self activityViewController:activityViewController itemForActivityType:UIActivityTypeMail];
-    [self activityViewController:activityViewController itemForActivityType:UIActivityTypePostToFacebook];
-    [self activityViewController:activityViewController itemForActivityType:UIActivityTypePostToTwitter];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         //iPhone, present activity view controller as is
@@ -119,10 +118,13 @@
 
 
 #pragma mark UIActivityItemSource protocol methods
+
+
 - (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
     
-    return @"Placeholder";
+    return @"";
 }
+
 
 - (UIImage *)activityViewController:(UIActivityViewController *)activityViewController thumbnailImageForActivityType:(NSString *)activityType suggestedSize:(CGSize)size {
     
@@ -133,9 +135,9 @@
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
     
     if ([activityType isEqualToString:UIActivityTypeMail])
-       return @"Subject string returned";
+       return @"PhotoConsent v2.0";
     else
-        return @"No subject";
+        return @"";
      
 }
 
@@ -144,13 +146,9 @@
     
     
     id string;
-    if ([activityType isEqualToString:UIActivityTypeMail])
-        string = @"Mailing news about Photoconsent - the secure app for gaining medical consent for patient images";
-    else if ([activityType isEqualToString:UIActivityTypePostToFacebook])
-        string =  @"Checkout Photoconsent - the secure app for gaining medical consent for patient images";
-    else if ([activityType isEqualToString:UIActivityTypePostToTwitter])
+    if ([activityType isEqualToString:UIActivityTypeMessage])
         string = @"Checkout Photoconsent - the secure app for gaining medical consent for patient images";
-    
+        
     return string;
     
     
@@ -168,6 +166,7 @@
     
     return value;
 }
+
 #pragma mark - logout activity delegate called on activityDidFinish
 
 - (void) userDidLogout:(id) sender {

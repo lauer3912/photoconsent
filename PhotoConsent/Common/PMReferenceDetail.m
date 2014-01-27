@@ -42,10 +42,7 @@
     } else
     if ([self.title isEqualToString:@"Publication"])  {
         [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_Publication]];
-    } else
-    if ([self.title isEqualToString:@"Disclaimer"])  {
-        [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_Disclaimer]];
-    }
+    } 
     
 }
 

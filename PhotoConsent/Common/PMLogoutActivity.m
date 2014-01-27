@@ -27,7 +27,7 @@
 
 - (NSString *)activityType {
     
-    return @"logoutkActivityType";
+    return @"logoutActivityType";
 }
 
 - (NSString *)activityTitle {

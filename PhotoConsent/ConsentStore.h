@@ -22,4 +22,6 @@
 - (Consent*)addDeviceConsent:(Consent *)deviceConsent;
 - (void)deleteDeviceConsent:(Consent *)deviceConsent;
 
+
+
 @end
