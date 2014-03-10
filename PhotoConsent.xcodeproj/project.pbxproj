@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+<<<<<<< HEAD
 		E428C75618B26FF4002C1391 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75518B26FF4002C1391 /* Default-568h@2x.png */; };
 		E428C75918B2703C002C1391 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75718B2703C002C1391 /* Default.png */; };
 		E428C75A18B2703C002C1391 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75818B2703C002C1391 /* Default@2x.png */; };
@@ -15,6 +16,9 @@
 		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
 		E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */; };
 		E4756E3918B102E8000A05BE /* RMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3718B102E8000A05BE /* RMCustomSegue.m */; };
+=======
+		2B6D2A371896C4DA005ACAC5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB661883F0E50064E331 /* Parse.framework */; };
+>>>>>>> 54187d4d5a4f19a84bd577c826fe3d4e74ce0a32
 		E478DB351883EF370064E331 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB341883EF370064E331 /* Foundation.framework */; };
 		E478DB371883EF370064E331 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB361883EF370064E331 /* CoreGraphics.framework */; };
 		E478DB391883EF370064E331 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB381883EF370064E331 /* UIKit.framework */; };
@@ -233,7 +237,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				E4B0A95918980E6C00265349 /* Parse.framework in Frameworks */,
+=======
+				2B6D2A371896C4DA005ACAC5 /* Parse.framework in Frameworks */,
+>>>>>>> 54187d4d5a4f19a84bd577c826fe3d4e74ce0a32
 				E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */,
 				E478DC1D1883FCAA0064E331 /* libsqlite3.dylib in Frameworks */,
 				E478DC1E1883FCAA0064E331 /* libz.1.1.3.dylib in Frameworks */,
@@ -512,8 +520,11 @@
 		E478DC2518840CF20064E331 /* Animators */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */,
 				E4756E2F18B0FAE1000A05BE /* TLTransitionAnimator.h */,
+=======
+>>>>>>> 54187d4d5a4f19a84bd577c826fe3d4e74ce0a32
 			);
 			name = Animators;
 			sourceTree = "<group>";
@@ -920,6 +931,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/alexrafferty/PhotoConsent,
+					/Users/Edward/Projects/iOS/photoconsent,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
@@ -939,6 +951,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/alexrafferty/PhotoConsent,
+					/Users/Edward/Projects/iOS/photoconsent,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
