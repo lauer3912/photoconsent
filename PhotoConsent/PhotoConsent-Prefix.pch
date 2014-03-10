@@ -13,5 +13,4 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#import "UIImage+iPhone5.h"
-#import "UINavigationBar+CustomImage.h"
+//#import "UIImage+iPhone5.h"

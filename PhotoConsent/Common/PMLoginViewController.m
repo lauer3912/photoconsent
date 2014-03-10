@@ -30,7 +30,7 @@
 	
     // set the login label
     PMLogoLabel *label = [[PMLogoLabel alloc] init];
-    label.text = @"Photoconsent";
+    label.text = @"PhotoConsent";
     [label sizeToFit];
     self.logInView.logo = label;
 }

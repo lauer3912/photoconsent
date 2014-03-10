@@ -72,6 +72,8 @@
     if (self != nil)
     {
         _pageIndex = pageIndex;
+        self.view.backgroundColor = [UIColor whiteColor];
+        
     }
     return self;
 }

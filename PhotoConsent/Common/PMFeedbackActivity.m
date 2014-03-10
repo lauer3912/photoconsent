@@ -18,7 +18,7 @@
 
 + (UIActivityCategory)activityCategory {
     
-    return UIActivityCategoryAction;
+    return UIActivityCategoryShare;
 }
 
 - (NSString *)activityType {

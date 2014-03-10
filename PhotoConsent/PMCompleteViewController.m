@@ -64,8 +64,8 @@
     [super viewWillAppear:animated];
     
     [self.tabBarController.tabBar setUserInteractionEnabled:NO];
-    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
-    [centerButton setEnabled:NO];
+//    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
+//    [centerButton setEnabled:NO];
 }
 
 - (void) showPurposeLabels {

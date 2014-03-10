@@ -8,10 +8,13 @@
 
 #import "PMSubjectProvider.h"
 
+
 @implementation PMSubjectProvider
-//not used
+
 - (id)item {
-    return @"PhotoConsent v2.0";
+    
+    return @"PhotoConsent";
+    
 }
 
 

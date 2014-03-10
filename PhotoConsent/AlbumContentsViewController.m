@@ -11,18 +11,21 @@
 #import "MyPageViewController.h"
 #import "PageViewControllerData.h"
 #import "PMConsentDetailViewController.h"
-#import  "PMCompleteViewController.h"
+#import "PMCompleteViewController.h"
 #import "PMDisclaimerViewController.h"
 #import "ConsentStore.h"
 #import "Consent.h"
 #import "PMTextConstants.h"
-#import "PMActivityDelegate.h"
 #import "PMFunctions.h"
+#import "TLTransitionAnimator.h"
+#import "PMActivityDelegate.h"
+#import "PMMenuViewController.h"
+#import "PMReferenceViewController.h"
 
-
-@interface AlbumContentsViewController ()
+@interface AlbumContentsViewController ()  <UIViewControllerTransitioningDelegate, shareActivityProtocol>
 {
-   id assetChangedNotification;
+   
+    id assetChangedNotification;
 }
 
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -235,6 +238,9 @@ static const int kImageViewTag = 1; // the image view inside the collection view
     else if ([segue.identifier isEqualToString:@"goToConsentScreens"]) {
         PMConsentDetailViewController *controller = segue.destinationViewController;
         controller.userPhoto = sender;
+    } else if ([segue.identifier isEqualToString:@"showPanel"]) {
+        PMMenuViewController *controller = segue.destinationViewController;
+        [controller setDelegate:self];
     }
     
 }
@@ -245,25 +251,52 @@ static const int kImageViewTag = 1; // the image view inside the collection view
     //    NSLog(@"Consent completed");
 }
 
-#pragma mark - action Button pressed
-- (IBAction)actionButton:(id)sender {
-    
-    if (!_delegateInstance) {
-        _delegateInstance = [[PMActivityDelegate alloc] init];
-    }
-    
-    _activityDelegate = _delegateInstance;
-    
-    if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
-        [_activityDelegate showActivitySheet:self];
-    }
-    
-    
-}
+
 #pragma mark -  IBAction buttons pressed
 - (IBAction)albumRefresh:(id)sender {
     [self loadAssets];
 }
+
+#pragma mark  - shareActivity portocol delegate methods
+- (void) shareActivity {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (!_delegateInstance) {
+            _delegateInstance = [[PMActivityDelegate alloc] init];
+        }
+        
+        _activityDelegate = _delegateInstance;
+        
+        if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
+            [_activityDelegate showActivitySheet:self];
+        }
+    }];
+   
+}
+
+- (void) showConsentTypes {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+    
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        
+        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"referenceTableViewController"];
+        [self presentViewController:nvc animated:YES completion:nil];
+    
+    }];
+}
+
+
+- (void) showDisclaimer {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+    
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
+        [self presentViewController:avc animated:YES completion:nil];
+    }];
+}
+
 
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     
@@ -291,7 +324,30 @@ static const int kImageViewTag = 1; // the image view inside the collection view
             
         }];
     }
+    
 }
+
+#pragma mark - Transitioning Delegate Methods
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext {
+    return 0.2f;
+}
+
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                  presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source {
+    
+    TLTransitionAnimator *animator = [TLTransitionAnimator new];
+    animator.presenting = YES;
+    return animator;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    TLTransitionAnimator *animator = [TLTransitionAnimator new];
+    return animator;
+}
+
+
 
 
 @end

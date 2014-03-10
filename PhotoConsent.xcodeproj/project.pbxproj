@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E428C75618B26FF4002C1391 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75518B26FF4002C1391 /* Default-568h@2x.png */; };
+		E428C75918B2703C002C1391 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75718B2703C002C1391 /* Default.png */; };
+		E428C75A18B2703C002C1391 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75818B2703C002C1391 /* Default@2x.png */; };
+		E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */; };
+		E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */; };
+		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
+		E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */; };
+		E4756E3918B102E8000A05BE /* RMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3718B102E8000A05BE /* RMCustomSegue.m */; };
 		E478DB351883EF370064E331 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB341883EF370064E331 /* Foundation.framework */; };
 		E478DB371883EF370064E331 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB361883EF370064E331 /* CoreGraphics.framework */; };
 		E478DB391883EF370064E331 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB381883EF370064E331 /* UIKit.framework */; };
@@ -17,9 +25,7 @@
 		E478DB501883EF370064E331 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB381883EF370064E331 /* UIKit.framework */; };
 		E478DB581883EF370064E331 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E478DB561883EF370064E331 /* InfoPlist.strings */; };
 		E478DB5A1883EF380064E331 /* PhotoConsentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB591883EF380064E331 /* PhotoConsentTests.m */; };
-		E478DB671883F0E50064E331 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB661883F0E50064E331 /* Parse.framework */; };
 		E478DB691883F1B10064E331 /* PhotoConsent.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E478DB681883F1B10064E331 /* PhotoConsent.xcassets */; };
-		E478DBB61883F2100064E331 /* ATDismissModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB6D1883F20F0064E331 /* ATDismissModalSegue.m */; };
 		E478DBB71883F2100064E331 /* PMCameraDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */; };
 		E478DBB81883F2100064E331 /* PMCameraRollActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB711883F20F0064E331 /* PMCameraRollActivity.m */; };
 		E478DBB91883F2100064E331 /* PMConsentActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB731883F20F0064E331 /* PMConsentActivity.m */; };
@@ -36,9 +42,7 @@
 		E478DBC41883F2100064E331 /* PMReferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8A1883F20F0064E331 /* PMReferenceViewController.m */; };
 		E478DBC51883F2100064E331 /* PMSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8C1883F20F0064E331 /* PMSignUpViewController.m */; };
 		E478DBC61883F2100064E331 /* PMTextConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8E1883F20F0064E331 /* PMTextConstants.m */; };
-		E478DBC71883F2100064E331 /* TLTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB901883F20F0064E331 /* TLTransitionAnimator.m */; };
 		E478DBC81883F2100064E331 /* AlbumContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB911883F20F0064E331 /* AlbumContentsViewController.m */; };
-		E478DBCA1883F2100064E331 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E478DB941883F20F0064E331 /* InfoPlist.strings */; };
 		E478DBCB1883F2100064E331 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E478DB961883F20F0064E331 /* MainStoryboard.storyboard */; };
 		E478DBCC1883F2100064E331 /* PMConsentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB981883F20F0064E331 /* PMConsentViewController.m */; };
 		E478DBCD1883F2100064E331 /* PMCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB991883F2100064E331 /* PMCompleteViewController.m */; };
@@ -48,7 +52,6 @@
 		E478DBD11883F2100064E331 /* PMSignViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA11883F2100064E331 /* PMSignViewController.m */; };
 		E478DBD21883F2100064E331 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA21883F2100064E331 /* BaseViewController.m */; };
 		E478DBD31883F2100064E331 /* PMConsentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */; };
-		E478DBD41883F2100064E331 /* PMTouchTrackerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA41883F2100064E331 /* PMTouchTrackerView.m */; };
 		E478DBD51883F2100064E331 /* PMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA51883F2100064E331 /* PMAppDelegate.m */; };
 		E478DBD61883F2100064E331 /* ConsentStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA61883F2100064E331 /* ConsentStore.m */; };
 		E478DBD71883F2100064E331 /* CustomTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA71883F2100064E331 /* CustomTabBarViewController.m */; };
@@ -60,7 +63,6 @@
 		E478DBED1883F2600064E331 /* ImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBDF1883F2600064E331 /* ImageScrollView.m */; };
 		E478DBEE1883F2600064E331 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = E478DBE01883F2600064E331 /* iTunesArtwork */; };
 		E478DBF21883F2600064E331 /* UIImage+iPhone5.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBE61883F2600064E331 /* UIImage+iPhone5.m */; };
-		E478DBF31883F2600064E331 /* UINavigationBar+CustomImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBE81883F2600064E331 /* UINavigationBar+CustomImage.m */; };
 		E478DBF41883F2600064E331 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBEA1883F2600064E331 /* MBProgressHUD.m */; };
 		E478DC061883F4FA0064E331 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFC1883F4FA0064E331 /* Accounts.framework */; };
 		E478DC071883F4FA0064E331 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFD1883F4FA0064E331 /* AdSupport.framework */; };
@@ -73,10 +75,15 @@
 		E478DC0F1883F4FA0064E331 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC051883F4FA0064E331 /* SystemConfiguration.framework */; };
 		E478DC111883F5580064E331 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC101883F5580064E331 /* CoreLocation.framework */; };
 		E478DC141883F58E0064E331 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC121883F58E0064E331 /* Social.framework */; };
-		E478DC151883F58E0064E331 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC131883F58E0064E331 /* StoreKit.framework */; };
 		E478DC1D1883FCAA0064E331 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1B1883FCAA0064E331 /* libsqlite3.dylib */; };
 		E478DC1E1883FCAA0064E331 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1C1883FCAA0064E331 /* libz.1.1.3.dylib */; };
 		E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1F1883FCF70064E331 /* QuartzCore.framework */; };
+		E4B0A95918980E6C00265349 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB661883F0E50064E331 /* Parse.framework */; };
+		E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */; };
+		E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */; };
+		E4F4C0F2188E62DC00B006E1 /* RMCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0ED188E62DC00B006E1 /* RMCanvas.m */; };
+		E4F4C0F3188E62DC00B006E1 /* RMCanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0EF188E62DC00B006E1 /* RMCanvasView.m */; };
+		E4F4C0F4188E62DC00B006E1 /* RMPainter.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0F1188E62DC00B006E1 /* RMPainter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +97,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E428C75518B26FF4002C1391 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		E428C75718B2703C002C1391 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Photoconsent/PhotoConsent.xcassets/Default.png; sourceTree = SOURCE_ROOT; };
+		E428C75818B2703C002C1391 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDimmableCollectionView.h; sourceTree = "<group>"; };
+		E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDimmableCollectionView.m; sourceTree = "<group>"; };
+		E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTransitionAnimator.m; sourceTree = "<group>"; };
+		E4756E2F18B0FAE1000A05BE /* TLTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLTransitionAnimator.h; sourceTree = "<group>"; };
+		E4756E3118B0FBF0000A05BE /* PMMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMMenuViewController.h; sourceTree = "<group>"; };
+		E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMMenuViewController.m; sourceTree = "<group>"; };
+		E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATDismissModalSegue.m; sourceTree = "<group>"; };
+		E4756E3518B0FF3C000A05BE /* ATDismissModalSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATDismissModalSegue.h; sourceTree = "<group>"; };
+		E4756E3718B102E8000A05BE /* RMCustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMCustomSegue.m; sourceTree = "<group>"; };
+		E4756E3818B102E8000A05BE /* RMCustomSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMCustomSegue.h; sourceTree = "<group>"; };
 		E478DB311883EF370064E331 /* PhotoConsent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoConsent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E478DB341883EF370064E331 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E478DB361883EF370064E331 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -106,8 +126,6 @@
 		E478DB661883F0E50064E331 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		E478DB681883F1B10064E331 /* PhotoConsent.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PhotoConsent.xcassets; path = Photoconsent/PhotoConsent.xcassets; sourceTree = SOURCE_ROOT; };
 		E478DB6A1883F20F0064E331 /* PMCloudContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMCloudContentsViewController.h; path = Photoconsent/PMCloudContentsViewController.h; sourceTree = SOURCE_ROOT; };
-		E478DB6C1883F20F0064E331 /* ATDismissModalSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATDismissModalSegue.h; sourceTree = "<group>"; };
-		E478DB6D1883F20F0064E331 /* ATDismissModalSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATDismissModalSegue.m; sourceTree = "<group>"; };
 		E478DB6E1883F20F0064E331 /* PMCameraDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMCameraDelegate.h; path = ../Photoconsent/Common/PMCameraDelegate.h; sourceTree = "<group>"; };
 		E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMCameraDelegate.m; path = ../Photoconsent/Common/PMCameraDelegate.m; sourceTree = "<group>"; };
 		E478DB701883F20F0064E331 /* PMCameraRollActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMCameraRollActivity.h; sourceTree = "<group>"; };
@@ -141,8 +159,6 @@
 		E478DB8C1883F20F0064E331 /* PMSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSignUpViewController.m; sourceTree = "<group>"; };
 		E478DB8D1883F20F0064E331 /* PMTextConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMTextConstants.h; sourceTree = "<group>"; };
 		E478DB8E1883F20F0064E331 /* PMTextConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMTextConstants.m; sourceTree = "<group>"; };
-		E478DB8F1883F20F0064E331 /* TLTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLTransitionAnimator.h; sourceTree = "<group>"; };
-		E478DB901883F20F0064E331 /* TLTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTransitionAnimator.m; sourceTree = "<group>"; };
 		E478DB911883F20F0064E331 /* AlbumContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlbumContentsViewController.m; path = Photoconsent/AlbumContentsViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DB951883F20F0064E331 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		E478DB971883F20F0064E331 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
@@ -158,7 +174,6 @@
 		E478DBA11883F2100064E331 /* PMSignViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMSignViewController.m; path = Photoconsent/PMSignViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA21883F2100064E331 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseViewController.m; path = Photoconsent/BaseViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMConsentDetailViewController.m; path = Photoconsent/PMConsentDetailViewController.m; sourceTree = SOURCE_ROOT; };
-		E478DBA41883F2100064E331 /* PMTouchTrackerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMTouchTrackerView.m; path = Photoconsent/PMTouchTrackerView.m; sourceTree = SOURCE_ROOT; };
 		E478DBA51883F2100064E331 /* PMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMAppDelegate.m; path = Photoconsent/PMAppDelegate.m; sourceTree = SOURCE_ROOT; };
 		E478DBA61883F2100064E331 /* ConsentStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConsentStore.m; path = Photoconsent/ConsentStore.m; sourceTree = SOURCE_ROOT; };
 		E478DBA71883F2100064E331 /* CustomTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomTabBarViewController.m; path = Photoconsent/CustomTabBarViewController.m; sourceTree = SOURCE_ROOT; };
@@ -175,7 +190,6 @@
 		E478DBB21883F2100064E331 /* PMCompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMCompleteViewController.h; path = Photoconsent/PMCompleteViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBB31883F2100064E331 /* PMConsentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMConsentDetailViewController.h; path = Photoconsent/PMConsentDetailViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBB41883F2100064E331 /* PMSignViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMSignViewController.h; path = Photoconsent/PMSignViewController.h; sourceTree = SOURCE_ROOT; };
-		E478DBB51883F2100064E331 /* PMTouchTrackerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMTouchTrackerView.h; path = Photoconsent/PMTouchTrackerView.h; sourceTree = SOURCE_ROOT; };
 		E478DBDB1883F2600064E331 /* PageViewControllerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PageViewControllerData.m; path = Photoconsent/PageViewControllerData.m; sourceTree = SOURCE_ROOT; };
 		E478DBDC1883F2600064E331 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoViewController.m; path = Photoconsent/PhotoViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBDD1883F2600064E331 /* ImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageScrollView.h; path = Photoconsent/ImageScrollView.h; sourceTree = SOURCE_ROOT; };
@@ -185,8 +199,6 @@
 		E478DBE11883F2600064E331 /* CustomTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomTabBarViewController.h; path = Photoconsent/CustomTabBarViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBE51883F2600064E331 /* UIImage+iPhone5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+iPhone5.h"; path = "Photoconsent/UIImage+iPhone5.h"; sourceTree = SOURCE_ROOT; };
 		E478DBE61883F2600064E331 /* UIImage+iPhone5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+iPhone5.m"; path = "Photoconsent/UIImage+iPhone5.m"; sourceTree = SOURCE_ROOT; };
-		E478DBE71883F2600064E331 /* UINavigationBar+CustomImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+CustomImage.h"; path = "Photoconsent/UINavigationBar+CustomImage.h"; sourceTree = SOURCE_ROOT; };
-		E478DBE81883F2600064E331 /* UINavigationBar+CustomImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+CustomImage.m"; path = "Photoconsent/UINavigationBar+CustomImage.m"; sourceTree = SOURCE_ROOT; };
 		E478DBE91883F2600064E331 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = Photoconsent/MBProgressHUD.h; sourceTree = SOURCE_ROOT; };
 		E478DBEA1883F2600064E331 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = Photoconsent/MBProgressHUD.m; sourceTree = SOURCE_ROOT; };
 		E478DBFC1883F4FA0064E331 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -201,10 +213,19 @@
 		E478DC051883F4FA0064E331 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E478DC101883F5580064E331 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E478DC121883F58E0064E331 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		E478DC131883F58E0064E331 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E478DC1B1883FCAA0064E331 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E478DC1C1883FCAA0064E331 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		E478DC1F1883FCF70064E331 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDisclaimerActivity.h; sourceTree = "<group>"; };
+		E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDisclaimerActivity.m; sourceTree = "<group>"; };
+		E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMLoginActivityDelegate.h; path = Photoconsent/PMLoginActivityDelegate.h; sourceTree = SOURCE_ROOT; };
+		E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMLoginActivityDelegate.m; path = Photoconsent/PMLoginActivityDelegate.m; sourceTree = SOURCE_ROOT; };
+		E4F4C0EC188E62DC00B006E1 /* RMCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCanvas.h; path = Photoconsent/RMCanvas.h; sourceTree = SOURCE_ROOT; };
+		E4F4C0ED188E62DC00B006E1 /* RMCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCanvas.m; path = Photoconsent/RMCanvas.m; sourceTree = SOURCE_ROOT; };
+		E4F4C0EE188E62DC00B006E1 /* RMCanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCanvasView.h; path = Photoconsent/RMCanvasView.h; sourceTree = SOURCE_ROOT; };
+		E4F4C0EF188E62DC00B006E1 /* RMCanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCanvasView.m; path = Photoconsent/RMCanvasView.m; sourceTree = SOURCE_ROOT; };
+		E4F4C0F0188E62DC00B006E1 /* RMPainter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMPainter.h; path = Photoconsent/RMPainter.h; sourceTree = SOURCE_ROOT; };
+		E4F4C0F1188E62DC00B006E1 /* RMPainter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMPainter.m; path = Photoconsent/RMPainter.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,11 +233,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4B0A95918980E6C00265349 /* Parse.framework in Frameworks */,
 				E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */,
 				E478DC1D1883FCAA0064E331 /* libsqlite3.dylib in Frameworks */,
 				E478DC1E1883FCAA0064E331 /* libz.1.1.3.dylib in Frameworks */,
 				E478DC141883F58E0064E331 /* Social.framework in Frameworks */,
-				E478DC151883F58E0064E331 /* StoreKit.framework in Frameworks */,
 				E478DC111883F5580064E331 /* CoreLocation.framework in Frameworks */,
 				E478DC061883F4FA0064E331 /* Accounts.framework in Frameworks */,
 				E478DC071883F4FA0064E331 /* AdSupport.framework in Frameworks */,
@@ -230,7 +251,6 @@
 				E478DB371883EF370064E331 /* CoreGraphics.framework in Frameworks */,
 				E478DB351883EF370064E331 /* Foundation.framework in Frameworks */,
 				E478DB391883EF370064E331 /* UIKit.framework in Frameworks */,
-				E478DB671883F0E50064E331 /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +267,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E426AE67189160BC0039968B /* ALAssetsLibrary+PhotoAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				E478DBAD1883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m */,
+				E478DBAE1883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.h */,
+			);
+			name = "ALAssetsLibrary+PhotoAlbum";
+			sourceTree = "<group>";
+		};
+		E426AE68189161300039968B /* ReferenceViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E478DB761883F20F0064E331 /* PMDisclaimerViewController.h */,
+				E478DB771883F20F0064E331 /* PMDisclaimerViewController.m */,
+				E478DB851883F20F0064E331 /* PMPurposeViewController.h */,
+				E478DB861883F20F0064E331 /* PMPurposeViewController.m */,
+				E478DB871883F20F0064E331 /* PMReferenceDetail.h */,
+				E478DB881883F20F0064E331 /* PMReferenceDetail.m */,
+				E478DB891883F20F0064E331 /* PMReferenceViewController.h */,
+				E478DB8A1883F20F0064E331 /* PMReferenceViewController.m */,
+				E4756E3118B0FBF0000A05BE /* PMMenuViewController.h */,
+				E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */,
+			);
+			name = ReferenceViewControllers;
+			sourceTree = "<group>";
+		};
 		E478DB281883EF370064E331 = {
 			isa = PBXGroup;
 			children = (
@@ -274,7 +320,6 @@
 				E478DC1B1883FCAA0064E331 /* libsqlite3.dylib */,
 				E478DC1C1883FCAA0064E331 /* libz.1.1.3.dylib */,
 				E478DC121883F58E0064E331 /* Social.framework */,
-				E478DC131883F58E0064E331 /* StoreKit.framework */,
 				E478DC101883F5580064E331 /* CoreLocation.framework */,
 				E478DBFC1883F4FA0064E331 /* Accounts.framework */,
 				E478DBFD1883F4FA0064E331 /* AdSupport.framework */,
@@ -298,11 +343,10 @@
 		E478DB3A1883EF370064E331 /* PhotoConsent */ = {
 			isa = PBXGroup;
 			children = (
-				E478DBA51883F2100064E331 /* PMAppDelegate.m */,
 				E478DBA81883F2100064E331 /* PMAppDelegate.h */,
+				E478DBA51883F2100064E331 /* PMAppDelegate.m */,
 				E478DB6B1883F20F0064E331 /* General */,
 				E478DB931883F20F0064E331 /* en.lproj */,
-				E478DC2618840D660064E331 /* Consent Process */,
 				E478DB681883F1B10064E331 /* PhotoConsent.xcassets */,
 				E478DB3B1883EF370064E331 /* Supporting Files */,
 			);
@@ -333,6 +377,9 @@
 		E478DB541883EF370064E331 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E428C75718B2703C002C1391 /* Default.png */,
+				E428C75818B2703C002C1391 /* Default@2x.png */,
+				E428C75518B26FF4002C1391 /* Default-568h@2x.png */,
 				E478DB551883EF370064E331 /* PhotoConsentTests-Info.plist */,
 				E478DB561883EF370064E331 /* InfoPlist.strings */,
 			);
@@ -343,14 +390,12 @@
 			isa = PBXGroup;
 			children = (
 				E478DC2418840CAA0064E331 /* Activities */,
+				E478DC2918840EBD0064E331 /* Segues */,
 				E478DC2518840CF20064E331 /* Animators */,
-				E478DC21188409E80064E331 /* Categories */,
 				E478DC2218840BB80064E331 /* CollectionViewControllers */,
 				E478DC2A18840EFD0064E331 /* Common */,
 				E478DC2818840E8A0064E331 /* Protocols */,
 				E478DC2C18840F950064E331 /* ViewControllers */,
-				E478DC2318840C400064E331 /* Individual Photo */,
-				E478DC2918840EBD0064E331 /* Segues */,
 			);
 			name = General;
 			path = Photoconsent/Common;
@@ -395,21 +440,11 @@
 			name = "UIImage+iPhone5";
 			sourceTree = "<group>";
 		};
-		E478DC191883F7930064E331 /* UINavigationBar+CustomImage */ = {
-			isa = PBXGroup;
-			children = (
-				E478DBE71883F2600064E331 /* UINavigationBar+CustomImage.h */,
-				E478DBE81883F2600064E331 /* UINavigationBar+CustomImage.m */,
-			);
-			name = "UINavigationBar+CustomImage";
-			sourceTree = "<group>";
-		};
 		E478DC1A1883F7C00064E331 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				E478DC21188409E80064E331 /* Categories */,
 				E478DC161883F6CB0064E331 /* Custom Tab Bar */,
-				E478DC181883F7520064E331 /* UIImage+iPhone5 */,
-				E478DC191883F7930064E331 /* UINavigationBar+CustomImage */,
 				E478DC171883F72A0064E331 /* MBProgressHUD */,
 			);
 			name = Library;
@@ -419,11 +454,10 @@
 		E478DC21188409E80064E331 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				E478DBAD1883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m */,
-				E478DBAE1883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.h */,
+				E478DC181883F7520064E331 /* UIImage+iPhone5 */,
+				E426AE67189160BC0039968B /* ALAssetsLibrary+PhotoAlbum */,
 			);
 			name = Categories;
-			path = ../../PhotoConsent;
 			sourceTree = "<group>";
 		};
 		E478DC2218840BB80064E331 /* CollectionViewControllers */ = {
@@ -443,8 +477,8 @@
 			children = (
 				E478DBDD1883F2600064E331 /* ImageScrollView.h */,
 				E478DBDF1883F2600064E331 /* ImageScrollView.m */,
-				E478DB9F1883F2100064E331 /* MyPageViewController.m */,
 				E478DBA01883F2100064E331 /* MyPageViewController.h */,
+				E478DB9F1883F2100064E331 /* MyPageViewController.m */,
 				E478DBAB1883F2100064E331 /* PageViewControllerData.h */,
 				E478DBDB1883F2600064E331 /* PageViewControllerData.m */,
 				E478DBDE1883F2600064E331 /* PhotoViewController.h */,
@@ -469,6 +503,8 @@
 				E478DB791883F20F0064E331 /* PMFeedbackActivity.m */,
 				E478DB821883F20F0064E331 /* PMLogoutActivity.h */,
 				E478DB831883F20F0064E331 /* PMLogoutActivity.m */,
+				E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */,
+				E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -476,8 +512,8 @@
 		E478DC2518840CF20064E331 /* Animators */ = {
 			isa = PBXGroup;
 			children = (
-				E478DB8F1883F20F0064E331 /* TLTransitionAnimator.h */,
-				E478DB901883F20F0064E331 /* TLTransitionAnimator.m */,
+				E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */,
+				E4756E2F18B0FAE1000A05BE /* TLTransitionAnimator.h */,
 			);
 			name = Animators;
 			sourceTree = "<group>";
@@ -485,24 +521,24 @@
 		E478DC2618840D660064E331 /* Consent Process */ = {
 			isa = PBXGroup;
 			children = (
-				E478DBAF1883F2100064E331 /* PMBasicDetailsViewController.m */,
 				E478DBB11883F2100064E331 /* PMBasicDetailsViewController.h */,
+				E478DBAF1883F2100064E331 /* PMBasicDetailsViewController.m */,
 				E478DBAC1883F2100064E331 /* PMConsentViewController.h */,
 				E478DB981883F20F0064E331 /* PMConsentViewController.m */,
 				E478DBB21883F2100064E331 /* PMCompleteViewController.h */,
 				E478DB991883F2100064E331 /* PMCompleteViewController.m */,
-				E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */,
 				E478DBB31883F2100064E331 /* PMConsentDetailViewController.h */,
+				E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */,
 				E478DBB01883F2100064E331 /* ConsentStore.h */,
 				E478DBA61883F2100064E331 /* ConsentStore.m */,
 				E478DBAA1883F2100064E331 /* Consent.h */,
 				E478DBA91883F2100064E331 /* Consent.m */,
 				E478DBB41883F2100064E331 /* PMSignViewController.h */,
 				E478DBA11883F2100064E331 /* PMSignViewController.m */,
-				E478DBB51883F2100064E331 /* PMTouchTrackerView.h */,
-				E478DBA41883F2100064E331 /* PMTouchTrackerView.m */,
+				E4F4C0F5188E62EF00B006E1 /* TouchTracker */,
 			);
 			name = "Consent Process";
+			path = ../../PhotoConsent;
 			sourceTree = "<group>";
 		};
 		E478DC2718840E1D0064E331 /* Delegates */ = {
@@ -512,6 +548,8 @@
 				E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */,
 				E478DB9C1883F2100064E331 /* PMActivityDelegate.h */,
 				E478DB9B1883F2100064E331 /* PMActivityDelegate.m */,
+				E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */,
+				E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */,
 			);
 			name = Delegates;
 			path = ../../PhotoConsent;
@@ -528,8 +566,10 @@
 		E478DC2918840EBD0064E331 /* Segues */ = {
 			isa = PBXGroup;
 			children = (
-				E478DB6C1883F20F0064E331 /* ATDismissModalSegue.h */,
-				E478DB6D1883F20F0064E331 /* ATDismissModalSegue.m */,
+				E4756E3718B102E8000A05BE /* RMCustomSegue.m */,
+				E4756E3818B102E8000A05BE /* RMCustomSegue.h */,
+				E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */,
+				E4756E3518B0FF3C000A05BE /* ATDismissModalSegue.h */,
 			);
 			name = Segues;
 			sourceTree = "<group>";
@@ -543,6 +583,8 @@
 				E478DB811883F20F0064E331 /* PMLogoLabel.m */,
 				E478DB8D1883F20F0064E331 /* PMTextConstants.h */,
 				E478DB8E1883F20F0064E331 /* PMTextConstants.m */,
+				E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */,
+				E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -561,18 +603,26 @@
 		E478DC2C18840F950064E331 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E478DC2618840D660064E331 /* Consent Process */,
 				E478DC2718840E1D0064E331 /* Delegates */,
+				E478DC2318840C400064E331 /* Individual Photo */,
 				E478DC2B18840F6B0064E331 /* SignInViewControllers */,
-				E478DB761883F20F0064E331 /* PMDisclaimerViewController.h */,
-				E478DB771883F20F0064E331 /* PMDisclaimerViewController.m */,
-				E478DB851883F20F0064E331 /* PMPurposeViewController.h */,
-				E478DB861883F20F0064E331 /* PMPurposeViewController.m */,
-				E478DB871883F20F0064E331 /* PMReferenceDetail.h */,
-				E478DB881883F20F0064E331 /* PMReferenceDetail.m */,
-				E478DB891883F20F0064E331 /* PMReferenceViewController.h */,
-				E478DB8A1883F20F0064E331 /* PMReferenceViewController.m */,
+				E426AE68189161300039968B /* ReferenceViewControllers */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E4F4C0F5188E62EF00B006E1 /* TouchTracker */ = {
+			isa = PBXGroup;
+			children = (
+				E4F4C0EC188E62DC00B006E1 /* RMCanvas.h */,
+				E4F4C0ED188E62DC00B006E1 /* RMCanvas.m */,
+				E4F4C0EE188E62DC00B006E1 /* RMCanvasView.h */,
+				E4F4C0EF188E62DC00B006E1 /* RMCanvasView.m */,
+				E4F4C0F0188E62DC00B006E1 /* RMPainter.h */,
+				E4F4C0F1188E62DC00B006E1 /* RMPainter.m */,
+			);
+			name = TouchTracker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -620,9 +670,17 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = PM;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = PM;
 				TargetAttributes = {
+					E478DB301883EF370064E331 = {
+						DevelopmentTeam = EC35S3QLS3;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
+					};
 					E478DB4B1883EF370064E331 = {
 						TestTargetID = E478DB301883EF370064E331;
 					};
@@ -654,7 +712,6 @@
 				E478DB3F1883EF370064E331 /* InfoPlist.strings in Resources */,
 				E478DBEE1883F2600064E331 /* iTunesArtwork in Resources */,
 				E478DBCB1883F2100064E331 /* MainStoryboard.storyboard in Resources */,
-				E478DBCA1883F2100064E331 /* InfoPlist.strings in Resources */,
 				E478DB691883F1B10064E331 /* PhotoConsent.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -663,7 +720,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E428C75A18B2703C002C1391 /* Default@2x.png in Resources */,
 				E478DB581883EF370064E331 /* InfoPlist.strings in Resources */,
+				E428C75918B2703C002C1391 /* Default.png in Resources */,
+				E428C75618B26FF4002C1391 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,44 +735,50 @@
 			buildActionMask = 2147483647;
 			files = (
 				E478DBDA1883F2100064E331 /* PMBasicDetailsViewController.m in Sources */,
+				E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */,
+				E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */,
 				E478DB411883EF370064E331 /* main.m in Sources */,
 				E478DBC51883F2100064E331 /* PMSignUpViewController.m in Sources */,
 				E478DBED1883F2600064E331 /* ImageScrollView.m in Sources */,
-				E478DBF31883F2600064E331 /* UINavigationBar+CustomImage.m in Sources */,
 				E478DBCC1883F2100064E331 /* PMConsentViewController.m in Sources */,
 				E478DBC41883F2100064E331 /* PMReferenceViewController.m in Sources */,
 				E478DBD61883F2100064E331 /* ConsentStore.m in Sources */,
-				E478DBD41883F2100064E331 /* PMTouchTrackerView.m in Sources */,
+				E4F4C0F4188E62DC00B006E1 /* RMPainter.m in Sources */,
 				E478DBF21883F2600064E331 /* UIImage+iPhone5.m in Sources */,
 				E478DBBB1883F2100064E331 /* PMDisclaimerViewController.m in Sources */,
 				E478DBB91883F2100064E331 /* PMConsentActivity.m in Sources */,
 				E478DBBF1883F2100064E331 /* PMLoginViewController.m in Sources */,
 				E478DBC31883F2100064E331 /* PMReferenceDetail.m in Sources */,
 				E478DBC61883F2100064E331 /* PMTextConstants.m in Sources */,
+				E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */,
 				E478DBB81883F2100064E331 /* PMCameraRollActivity.m in Sources */,
 				E478DBB71883F2100064E331 /* PMCameraDelegate.m in Sources */,
-				E478DBC71883F2100064E331 /* TLTransitionAnimator.m in Sources */,
 				E478DBC01883F2100064E331 /* PMLogoLabel.m in Sources */,
 				E478DBC11883F2100064E331 /* PMLogoutActivity.m in Sources */,
 				E478DBBE1883F2100064E331 /* PMLoginActivity.m in Sources */,
 				E478DBC81883F2100064E331 /* AlbumContentsViewController.m in Sources */,
-				E478DBB61883F2100064E331 /* ATDismissModalSegue.m in Sources */,
+				E4F4C0F2188E62DC00B006E1 /* RMCanvas.m in Sources */,
 				E478DBBC1883F2100064E331 /* PMFeedbackActivity.m in Sources */,
 				E478DBEB1883F2600064E331 /* PageViewControllerData.m in Sources */,
 				E478DBD51883F2100064E331 /* PMAppDelegate.m in Sources */,
 				E478DBBA1883F2100064E331 /* PMConsentDetailsActivity.m in Sources */,
+				E4756E3918B102E8000A05BE /* RMCustomSegue.m in Sources */,
 				E478DBD21883F2100064E331 /* BaseViewController.m in Sources */,
 				E478DBD91883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				E478DBC21883F2100064E331 /* PMPurposeViewController.m in Sources */,
 				E478DBD11883F2100064E331 /* PMSignViewController.m in Sources */,
 				E478DBD01883F2100064E331 /* MyPageViewController.m in Sources */,
+				E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */,
 				E478DBCF1883F2100064E331 /* PMActivityDelegate.m in Sources */,
 				E478DBCD1883F2100064E331 /* PMCompleteViewController.m in Sources */,
+				E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */,
 				E478DBCE1883F2100064E331 /* PMCloudContentsViewController.m in Sources */,
 				E478DBD71883F2100064E331 /* CustomTabBarViewController.m in Sources */,
 				E478DBF41883F2600064E331 /* MBProgressHUD.m in Sources */,
+				E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */,
 				E478DBBD1883F2100064E331 /* PMFunctions.m in Sources */,
 				E478DBD81883F2100064E331 /* Consent.m in Sources */,
+				E4F4C0F3188E62DC00B006E1 /* RMCanvasView.m in Sources */,
 				E478DBD31883F2100064E331 /* PMConsentDetailViewController.m in Sources */,
 				E478DBEC1883F2600064E331 /* PhotoViewController.m in Sources */,
 			);
@@ -776,7 +842,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -807,6 +872,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -815,7 +881,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -828,7 +893,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vroom Mobile Apps Limited (EC35S3QLS3)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -839,6 +904,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -848,16 +915,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/alexrafferty/Documents/photoconsent,
 					/Users/alexrafferty/PhotoConsent,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -866,16 +934,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/alexrafferty/Documents/photoconsent,
 					/Users/alexrafferty/PhotoConsent,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -883,7 +952,6 @@
 		E478DB611883EF380064E331 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PhotoConsent.app/PhotoConsent";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -906,7 +974,6 @@
 		E478DB621883EF380064E331 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PhotoConsent.app/PhotoConsent";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -941,6 +1008,7 @@
 				E478DB5F1883EF380064E331 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E478DB601883EF380064E331 /* Build configuration list for PBXNativeTarget "PhotoConsentTests" */ = {
 			isa = XCConfigurationList;
@@ -949,6 +1017,7 @@
 				E478DB621883EF380064E331 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -17,7 +17,6 @@
 #import <Parse/Parse.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "PMConsentActivity.h"
-#import "PMMessageActivity.h"
 #import "PMConsentViewController.h"
 #import "Consent.h"
 #import "ConsentStore.h"
@@ -26,6 +25,10 @@
 #import "PMTextConstants.h"
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
+
+
+
+
 
 @interface MyPageViewController ()
 <UIActionSheetDelegate,UIActivityItemSource>
@@ -257,46 +260,45 @@
 #pragma mark UIActivityViewController
 - (IBAction)openActivitySheet:(id)sender
 {
+   
+    
     PMConsentActivity *consentActivity = [PMConsentActivity new];
     __block  UIActivityViewController *activityViewController;
     
-    id consent = [self activityViewController:activityViewController itemForActivityType:@"consentActivityType"];
-    __block  NSMutableArray *consentActivityItems =  [NSMutableArray arrayWithArray:@[consent]];
- 
-    //url for text message
-    //URL  was no more successful than passing NSData in getting image attached to SMS message
-    /*
-    NSURL *assetURL = [self urlForAsset];
-    if (assetURL) {
-        [consentActivityItems addObject:assetURL];
-    }
-    */
-    
-    PMMessageActivity *messageActivity = [PMMessageActivity new];
-    
+    id currentObj = [self currentObj];
+  
+    __block  NSMutableArray *shareActivityItems =  [NSMutableArray array];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        itemForEmailActivity([self currentObj], @"consentSignature", ^(id emailPhoto) {
+        id consent = [self activityViewController:activityViewController itemForActivityType:@"consentActivityType"];
+        [shareActivityItems addObject:consent];
+        
+        imageDataForEmailActivity(currentObj, @"consentSignature", ^(id emailPhoto) {
             if (emailPhoto) {
-                [consentActivityItems addObject:emailPhoto];
+                
+                [shareActivityItems addObject:emailPhoto];
             }
-            
-            [consentActivityItems addObject:[self activityViewController:activityViewController subjectForActivityType:UIActivityTypeMail]];
-            [consentActivityItems addObject:[self activityViewController:activityViewController dataTypeIdentifierForActivityType:UIActivityTypeMail]];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 
-                itemForEmailActivity([self currentObj], @"imageFile", ^(id emailPhoto) {
-                    [consentActivityItems addObject:emailPhoto];
-                    [consentActivityItems addObject:@"Please review"];
-                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:consentActivityItems   applicationActivities:@[consentActivity,messageActivity]];
+                imageDataForEmailActivity([self currentObj], @"imageFile", ^(id emailPhoto) {
+                    [shareActivityItems addObject:emailPhoto];
                     
-                    activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard, UIActivityTypePrint];
                     
+                    [shareActivityItems addObject:[self activityViewController:activityViewController itemForActivityType:UIActivityTypeMail]];
+                    
+                    
+                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:shareActivityItems  applicationActivities:@[consentActivity]];
+ 
+                    activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeMessage, UIActivityTypePostToFacebook,UIActivityTypePostToTwitter];
+                    
+                    [activityViewController setValue:@"Image from PhotoConsent" forKey:@"subject"];
+                    
+                    //set up the completion handler but not used
                     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
                         
-                        if ([activityType isEqualToString:@"consentActivityType"]) {
-                            NSLog(@"Consent Activity completion handler has fired");
+                        if ([activityType isEqualToString:UIActivityTypeMail]) {
+                            NSLog(@"Mail activity completion handler has fired");
                         }
                         
                     };
@@ -314,10 +316,7 @@
                 }); //end signature dispatch
             }); // end imageFile dispatch
       });
-});
-    
-    
-    
+    });
 }
 
 
@@ -355,8 +354,7 @@
 
 
 
-void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPhoto)) {
-    
+void imageDataForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPhoto)) {
     
     if ([currentObj isKindOfClass:[PFObject class]]) {
         PFFile *signImage = [currentObj valueForKey:key];
@@ -365,14 +363,12 @@ void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPh
             NSData *lessData;
             if ([key isEqualToString:@"imageFile"]) {
                lessData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(320.0, 480.0)), 0.5f);
-             
                 block(lessData);
             } else
-            
                 block(data);
             
         }];
-    } else {
+    } else
     
         if ([currentObj isKindOfClass:[Consent class]]) {
             NSData *signatureData = [currentObj valueForKey:key];
@@ -380,21 +376,20 @@ void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPh
         }
         
         
-    }
-    
 }
 
 
 #pragma mark UIActivityItemSource protocol methods
+
 - (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
     
-   return @"Placeholder";
+    return nil;
 }
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
-
-    id currentObj = [self currentObj];
-    return [NSString stringWithFormat:@"Reference ID:%@", [currentObj valueForKey:@"referenceID"]];
+    
+        return nil;
+  
     
 }
 
@@ -403,18 +398,15 @@ void itemForEmailActivity(id currentObj, NSString* key, void (^block)(id emailPh
     
     __block id value;
     
+
+    if ([activityType isEqualToString:UIActivityTypeMail])
+        value = [NSString stringWithFormat:@"Reference:%@", [[self currentObj] valueForKey:@"referenceID"]];
+    
+    
+    
     if ([activityType isEqualToString:@"consentActivityType"])
         value = [self currentObj];
-    
-    if ([activityType isEqualToString:@"messageActivityType"]) {
        
-        id theCurrentObject = [self currentObj];
-        itemForEmailActivity(theCurrentObject, @"imageFile", ^(id emailPhoto) {
-           
-            value = @[@"See attached image",emailPhoto];
-        });
-
-    }
     return value;
    
     

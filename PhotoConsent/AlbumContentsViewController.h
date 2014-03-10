@@ -11,14 +11,14 @@
 #import "MBProgressHUD.h"
 #import "PMPhotoConsentProtocol.h"
 
+
 @interface AlbumContentsViewController : UICollectionViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, MBProgressHUDDelegate>
 
 
 @property (nonatomic, strong) NSMutableArray *assets;
 @property (nonatomic, strong) ALAssetsGroup *assetsGroup;
-@property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
 @property (weak,nonatomic) IBOutlet UIBarButtonItem  *refreshBtn;
-
+@property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
 @property (strong, nonatomic) NSNumber* dataArrayDidChange;
 
 @end

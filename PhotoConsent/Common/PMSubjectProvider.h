@@ -10,6 +10,9 @@
 
 @interface PMSubjectProvider : UIActivityItemProvider
 
+@property (strong,nonatomic) UIActivityViewController* activityViewController;
+
+
 -(id)item;
 
 @end

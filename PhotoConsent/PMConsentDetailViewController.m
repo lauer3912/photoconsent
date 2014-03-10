@@ -53,6 +53,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+   
+    [super viewWillAppear:animated];
     // add a border to consent form labels
     _assessmentLabel.layer.borderColor = [UIColor grayColor].CGColor;
     _assessmentLabel.layer.borderWidth = 2.0;
@@ -64,8 +66,8 @@
     _publicationLabel.layer.borderWidth = 2.0;
     
     [self.tabBarController.tabBar setUserInteractionEnabled:NO];
-    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
-    [centerButton setEnabled:NO];
+//    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
+//    [centerButton setEnabled:NO];
 
 }
 

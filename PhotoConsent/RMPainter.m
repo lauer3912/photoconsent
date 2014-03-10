@@ -88,7 +88,7 @@
         case UIGestureRecognizerStateEnded:
             
             //enable the Next button when user signature exceeds 50
-            if (locationCount > 50) {
+            if (locationCount > 2) {
                 [[(PMSignViewController*)_canvas.viewController nextButton] setEnabled:YES];
                 locationCount = 0;
             }

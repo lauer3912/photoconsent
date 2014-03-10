@@ -39,6 +39,7 @@
 
 // Create a custom UIButton and add it to the center of our tab bar
 -(void) addCenterButtonWithOptions:(NSDictionary *)options;
+
 @property (weak,nonatomic) id<PMPhotoConsentProtocol> cameraDelegate;
 
 

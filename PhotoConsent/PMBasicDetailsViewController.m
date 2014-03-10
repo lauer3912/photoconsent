@@ -32,6 +32,12 @@
     self.emailInputField.delegate = self;
 }
 
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tabBarController.tabBar setUserInteractionEnabled:NO];
+}
+
 #pragma mark - Actions
 
 - (IBAction)pressedNextButton:(id)sender {

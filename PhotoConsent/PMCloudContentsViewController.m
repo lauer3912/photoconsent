@@ -15,7 +15,6 @@
 #import "PMCompleteViewController.h"
 #import "PMConsentDetailViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "TLTransitionAnimator.h"
 #import "PMActivityDelegate.h"
 
 @interface PMCloudContentsViewController ()
@@ -91,7 +90,7 @@
             }
             if (!_emptyLabel) {
                 _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
-                _emptyLabel.backgroundColor = [UIColor clearColor];
+                _emptyLabel.backgroundColor = self.collectionView.backgroundColor;
                 [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
             }
             

@@ -16,23 +16,15 @@
 #import "PMLoginActivity.h"
 #import <Parse/Parse.h>
 #import "PMCloudContentsViewController.h"
-#import "PMMessageActivity.h"
-#import "PMSubjectProvider.h"
 #import "PMDisclaimerActivity.h"
-#import "PMAccountActivity.h"
 
 
 @interface PMActivityDelegate ()
 <UIActivityItemSource, PMLogoutActivityProtocol>
 @property (strong, nonatomic) id senderController;
 @property (strong, nonatomic) UIActivity *feedbackActivity;
-@property (strong, nonatomic) UIActivity *disclaimerActivity;
-@property (strong, nonatomic) UIActivity *messageActivity;
-@property (strong, nonatomic) UIActivity *accountActivity;
 @property (strong, nonatomic) UIActivity *cameraRollActivity;
 @property (strong, nonatomic) id logActivity;
-
-@property (strong, nonatomic) UIActivity *consentDetailsActivity;
 
 
 @end
@@ -65,46 +57,48 @@
 
 - (void)showActivitySheet:(id)sender
 {
-    UIActivityViewController *activityViewController;
-    _senderController = sender;
-    
-    _feedbackActivity = [PMFeedbackActivity new];
-    _disclaimerActivity = [PMDisclaimerActivity new];
-    _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
-    _accountActivity = [PMAccountActivity new];
-    _consentDetailsActivity = [PMConsentDetailsActivity new];
    
-    NSString *subject = [self activityViewController:activityViewController subjectForActivityType:UIActivityTypeMail];
+    //this uses UIActivityController to provide sharing services - but as at iOS7 still some issues when relying solely on the system controller
     
-    NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:UIActivityTypeMessage];
+    UIActivityViewController *activityViewController;
     
+    // initialise two custom services
+    _feedbackActivity = [PMFeedbackActivity new];
+    _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
+   
     
+    NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
+    
+    //check if sender is album or cloud
+    _senderController = sender;
     if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
         PFUser *user = [PFUser currentUser];
         if (user) {
             _logActivity = [PMLogoutActivity new];
             [_logActivity setDelegate:self];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity, _logActivity,_cameraRollActivity,_consentDetailsActivity,_disclaimerActivity,_accountActivity]];
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity,_cameraRollActivity]];
             
         } else {
             _logActivity = [PMLoginActivity new];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity,  _logActivity,_consentDetailsActivity,_disclaimerActivity, _accountActivity]];
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity]];
         }
     } else
-        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity, _consentDetailsActivity,_disclaimerActivity,_accountActivity]];
+        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity]];
     
+    NSMutableArray *excludedActivityTypes = [NSMutableArray arrayWithArray:@[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint,UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMessage]];
     
-    activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint];
+    //exclude mail service if they cannot be sent
+    if (![MFMailComposeViewController canSendMail])
+        [excludedActivityTypes addObject:UIActivityTypeMail];
+    
+    activityViewController.excludedActivityTypes = excludedActivityTypes;
     
     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
-        
-        if ([activityType isEqualToString:UIActivityTypeMail]) {
-            NSLog(@"UIActivityTypeMail completion block shows subject was %@", subject);
-        }
-        
+        //completion code here
     };
     
     activityViewController.completionHandler = completionBlock;
+    [activityViewController setValue:@"PhotoConsent" forKey:@"subject"];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         //iPhone, present activity view controller as is
@@ -122,7 +116,7 @@
 
 - (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
     
-    return @"";
+    return nil;
 }
 
 
@@ -134,23 +128,15 @@
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
     
-    if ([activityType isEqualToString:UIActivityTypeMail])
-       return @"PhotoConsent v2.0";
-    else
-        return @"";
-     
+    return @"PhotoConsent";
 }
 
 
 - (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType {
     
-    
-    id string;
-    if ([activityType isEqualToString:UIActivityTypeMessage])
-        string = @"Checkout Photoconsent - the secure app for gaining medical consent for patient images";
+    id text = @"Checkout Photoconsent - the secure app for gaining medical consent for patient images";
         
-    return string;
-    
+    return text;
     
     
 }

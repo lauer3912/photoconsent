@@ -47,10 +47,7 @@
         [segue.destinationViewController setTitle:@"Disclaimer"];
 
     }
-    if ([segue.identifier isEqualToString:@"photoconsent"]) {
-        [segue.destinationViewController setTitle:@"PhotoConsent"];
-        
-    }
+    
     if ([segue.identifier isEqualToString:@"assessment"]) {
         [segue.destinationViewController setTitle:@"Assessment"];
         

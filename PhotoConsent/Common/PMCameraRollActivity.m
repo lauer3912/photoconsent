@@ -189,7 +189,6 @@
     
     [[[ConsentStore sharedDeviceConsents] allDeviceConsents] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        NSLog(@"idx=%d obj = %@\n deviceConsent URL = %@\nCamera Roll Asset URL = %@",idx, obj,[(Consent*)obj assetURL], _assetURL );
         if ([ [(Consent*)obj assetURL] isEqual:_assetURL]) {
             index = idx;
             *stop = YES;

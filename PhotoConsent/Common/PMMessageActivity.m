@@ -11,17 +11,29 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 
 @interface PMMessageActivity () <MFMessageComposeViewControllerDelegate>
-@property (nonatomic, strong) NSArray* activityItems;
-@property (strong, nonatomic) NSURL* assetURL;
 
 @property (strong, nonatomic) NSData *imageData;
+@property (strong, nonatomic) NSData *signData;
 @property (strong, nonatomic) NSString *dataTypeIdentifier;
 @property (strong, nonatomic) NSString *body;
-
+@property (strong, nonatomic) MFMessageComposeViewController *messageComposer;
 @end
 
 
+
+
 @implementation PMMessageActivity
+
+- (id) init {
+    
+    
+    if ((self = [super self])) {
+        _messageComposer = [[MFMessageComposeViewController alloc] init];
+        
+    }
+    return self;
+   
+}
 
 + (UIActivityCategory)activityCategory {
     
@@ -52,18 +64,51 @@
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     
     //6 activity items get passed in, namely: consent (Consent class), signature data, subject, dataTypeIdentifier, image data, and text (for body)
-    _activityItems = activityItems;
+   
+    CFStringRef UTI = kUTTypeJPEG;
+    _dataTypeIdentifier = (__bridge_transfer NSString *)(UTI);
     [activityItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        if (idx == 4) {
-             _imageData = (NSData*)obj;
+
+        if (idx == 1) {
+            _signData = (NSData*)obj;
+            
+            if ([MFMessageComposeViewController canSendAttachments]) {
+                if ([MFMessageComposeViewController isSupportedAttachmentUTI:_dataTypeIdentifier]) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        [_messageComposer addAttachmentData:_signData typeIdentifier:@"public.data" filename:@"Signature.jpeg"];
+                    
+                    });
+                }
+            
+            }
+            
         }
+                if (idx == 4) {
+             _imageData = (NSData*)obj;
+            
+            if ([MFMessageComposeViewController canSendAttachments]) {
+                if ([MFMessageComposeViewController isSupportedAttachmentUTI:_dataTypeIdentifier]) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        [_messageComposer addAttachmentData:_imageData typeIdentifier:@"public.data" filename:@"Image.jpeg"];
+                        
+                    });
+                }
+                        }
+            
+        }
+        
   
         if (idx == 5) {
             _body = (NSString*)obj;
         }
         if (idx == 3) {
-            _dataTypeIdentifier = (NSString*)obj;
+            
+            
+          //  CFStringRef UTI = kUTTypeJPEG;
+          //  _dataTypeIdentifier = (__bridge_transfer NSString *)(UTI);
         }
         
     }];
@@ -72,35 +117,15 @@
 - (UIViewController *)activityViewController {
     
     if ([MFMessageComposeViewController canSendText]) {
-       
-        MFMessageComposeViewController *messageComposer = [[MFMessageComposeViewController alloc] init];
-        messageComposer.messageComposeDelegate = self;
-        [messageComposer setBody:_body];
+        
+        _messageComposer.messageComposeDelegate = self;
+        
         if ([MFMessageComposeViewController canSendSubject] )
-            [messageComposer setSubject:@"PhotoConsent"];
+            [_messageComposer setSubject:@"PhotoConsent"];
         
-        [messageComposer setBody:_body];
-        return messageComposer;
+        [_messageComposer setBody:_body];
+         return _messageComposer;
         
-        /* - adding image attachment is not working jan 27,2014
-        BOOL didAddAttachment = NO;
-        if ([MFMessageComposeViewController canSendAttachments]) {
-            if ([MFMessageComposeViewController isSupportedAttachmentUTI:_dataTypeIdentifier]) {
-                
-                didAddAttachment = [messageComposer addAttachmentData:_imageData typeIdentifier:_dataTypeIdentifier filename:@"photoconsent.jpeg"];
-                
-            }
-            if (didAddAttachment) {
-                
-                NSLog(@"Attachments %@", messageComposer.attachments );
-                return messageComposer;
-            }
-            else
-                return nil;
-        } else
-            return nil;
-    
-       */
     } else
         return nil;
 }
