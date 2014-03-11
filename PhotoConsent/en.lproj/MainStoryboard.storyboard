@@ -88,7 +88,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
                                 <rect key="frame" x="40" y="106" width="241" height="330"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -119,7 +119,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" alpha="0.49999999999999961" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-iF-1BQ">
+                            <button opaque="NO" alpha="0.49999999999999961" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-iF-1BQ">
                                 <rect key="frame" x="40" y="392" width="241" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -135,7 +135,7 @@
                                     <action selector="emailPatientConsent:" destination="0fa-bz-Ruy" eventType="touchUpInside" id="b5s-Iz-JmB"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Zol-Hn-fka">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Zol-Hn-fka">
                                 <rect key="frame" x="20" y="457" width="280" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
@@ -968,7 +968,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ioK-g0-qpd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="856" y="997"/>
+            <point key="canvasLocation" x="904" y="1333"/>
         </scene>
         <!--My Page View Controller-->
         <scene sceneID="0lD-by-i2d">
@@ -985,7 +985,7 @@
         <scene sceneID="Lkz-2V-ru4">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="hUN-iZ-Mfv" customClass="PMCloudContentsViewController" sceneMemberID="viewController">
-                    <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="RHo-5v-AHj">
+                    <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="RHo-5v-AHj" customClass="PMDimmableCollectionView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1026,7 +1026,12 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Cloud" id="ho2-dY-Tbq">
-                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="Kzp-Co-q8J">
+                        <barButtonItem key="leftBarButtonItem" image="settings-tabicon" id="rOA-ed-pZC">
+                            <connections>
+                                <segue destination="70j-Y3-8V7" kind="custom" identifier="showPanel" customClass="RMCustomSegue" id="aok-kn-h3C"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Kzp-Co-q8J">
                             <connections>
                                 <action selector="actionButton:" destination="hUN-iZ-Mfv" id="I5y-Uy-Bmn"/>
                             </connections>
@@ -1129,7 +1134,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1257" y="1524"/>
+            <point key="canvasLocation" x="1227" y="618"/>
         </scene>
     </scenes>
     <resources>
@@ -1144,8 +1149,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="XV0-C1-ynB"/>
-        <segue reference="IQS-nu-ENs"/>
+        <segue reference="aok-kn-h3C"/>
+        <segue reference="h7o-yn-AaZ"/>
         <segue reference="Oju-nm-dUv"/>
     </inferredMetricsTieBreakers>
 </document>

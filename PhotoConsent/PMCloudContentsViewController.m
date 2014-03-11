@@ -16,11 +16,18 @@
 #import "PMConsentDetailViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "PMActivityDelegate.h"
+#import "PMMenuViewController.h"
+#import "TLTransitionAnimator.h"
+#import "PMCameraDelegate.h"
+#import "PMLoginActivityDelegate.h"
 
-@interface PMCloudContentsViewController ()
+
+@interface PMCloudContentsViewController () <shareActivityProtocol>
 @property (strong, nonatomic)  UILabel *emptyLabel;
 
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
+@property (strong, nonatomic) PMCameraDelegate* cameraDelegateInstance;
+@property (strong, nonatomic) PMLoginActivityDelegate* loginActivityDelegate;
 
 @end
 
@@ -43,7 +50,11 @@
 {
     [super viewDidLoad];
     _allImages = [[NSMutableArray alloc] init];
-    self.title = @"Cloud";
+ //   self.title = @"Cloud";
+    
+    
+    [self.navigationItem setTitleView: [self titleView]];
+    
     _dataArrayDidChange = @0;
     
     if ([PFUser currentUser]) {
@@ -51,6 +62,69 @@
     }
 }
 
+- (UIView*)titleView {
+    
+    UIView *titleView = [UIView new];
+    titleView.frame = CGRectMake(0.0, 0.0, 80., 44.0);
+//    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., 80., 44.0)];
+//    [title setAttributedText:[self attributedStringForText:@"Camera"]];
+     
+    UIButton *cameraBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *image = [UIImage imageNamed:@"714-camera"];
+    
+    [cameraBtn setImage:image forState:UIControlStateNormal];
+    [cameraBtn addTarget:self action:@selector(useCamera:) forControlEvents:UIControlEventTouchUpInside];
+    cameraBtn.frame = CGRectMake(20.0, 0.0, 40., 40.);
+    
+//    [titleView addSubview:title];
+    [titleView addSubview:cameraBtn];
+    return titleView;
+}
+
+- (IBAction)useCamera:(id)sender {
+    if ([UIImagePickerController isSourceTypeAvailable:
+         UIImagePickerControllerSourceTypeCamera] == YES){
+        
+        
+        
+        if (![PFUser currentUser]) {
+            if (!_loginActivityDelegate)
+                _loginActivityDelegate = [[PMLoginActivityDelegate alloc] init];
+            
+            
+            _activityDelegate = _loginActivityDelegate;
+            
+            if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)])
+                [_activityDelegate showActivitySheet:self];
+            
+        }
+            
+        
+        if (!_cameraDelegateInstance) {
+            _cameraDelegateInstance = [[PMCameraDelegate alloc] init];
+        }
+        _cameraDelegate = _cameraDelegateInstance;
+        
+        if ([_cameraDelegate respondsToSelector:@selector(startCamera:)]) {
+            //determine the currently selected tab on tabbar. If user is scrolling through individual photos pop back to root viewcontroller before sending the viewcontroller to the camera delegate
+            
+            UINavigationController *navController = (UINavigationController*)self.navigationController;
+            
+            if ([navController.topViewController isKindOfClass:[MyPageViewController class]]) {
+                [navController popToRootViewControllerAnimated:NO];
+            }
+            
+            
+            [_cameraDelegate startCamera:navController.topViewController];
+            
+            
+        }
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sorry but this device does not have a camera" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+
+}
 
 - (void) showEmptyLabel {
     if (refreshHUD) {
@@ -205,7 +279,7 @@
         }];
     }
     [self showEmptyLabel];
-    [self.refreshBtn setEnabled:NO];
+   
     _dataArrayDidChange = @0;//= NO
     
 }
@@ -225,7 +299,7 @@
             _allImages = [[NSMutableArray alloc] init];
             [self loadAndCacheObjects];
             
-            [self.refreshBtn setEnabled:YES];
+            
         } else {
             if (_dataArrayDidChange.boolValue == YES) {
                 [self.collectionView reloadData];
@@ -335,7 +409,11 @@
         NSIndexPath *selectedCell = [self.collectionView indexPathsForSelectedItems][0];
         pageViewController.startingIndex = selectedCell.row;
         
+    } else if ([segue.identifier isEqualToString:@"showPanel"]) {
+        PMMenuViewController *controller = segue.destinationViewController;
+        [controller setDelegate:self];
     }
+
 }
 
 #pragma mark - Unwind
@@ -344,13 +422,6 @@
     //    NSLog(@"Consent completed");
 }
 
-#pragma mark -  IBAction buttons pressed
-- (IBAction)cloudRefresh:(id)sender {
-    if ([PFUser currentUser]) {
-        [self loadAndCacheObjects];
-    }
-    
-}
 
 - (IBAction)actionButton:(id)sender {
     
@@ -472,17 +543,77 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     HUD = nil;
 }
 
+#pragma mark  - shareActivity portocol delegate methods
+- (void) shareActivity {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (!_delegateInstance) {
+            _delegateInstance = [[PMActivityDelegate alloc] init];
+        }
+        
+        _activityDelegate = _delegateInstance;
+        
+        if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
+            [_activityDelegate showActivitySheet:self];
+        }
+    }];
+    
+}
+
+- (void) showConsentTypes {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        
+        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"referenceTableViewController"];
+        [self presentViewController:nvc animated:YES completion:nil];
+        
+    }];
+}
+
+
+- (void) showDisclaimer {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
+        [self presentViewController:avc animated:YES completion:nil];
+    }];
+}
+
+#pragma mark - Transitioning Delegate Methods
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext {
+    return 0.2f;
+}
+
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source {
+    
+    TLTransitionAnimator *animator = [TLTransitionAnimator new];
+    animator.presenting = YES;
+    return animator;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    TLTransitionAnimator *animator = [TLTransitionAnimator new];
+    return animator;
+}
+
+
 
 
 #pragma mark - AtrributedString method
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     
-    UIColor *foregroundColour = [UIColor lightGrayColor];
+    UIColor *foregroundColour = [UIColor darkTextColor];
     
     NSMutableAttributedString *attrMutableString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", string]];
     
     NSRange range = [[attrMutableString string] rangeOfString:string];
-    [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour, NSFontAttributeName:[UIFont boldSystemFontOfSize:17.0]} range:range];
+    [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour, NSFontAttributeName:[UIFont systemFontOfSize:17.0], NSTextEffectAttributeName:NSTextEffectLetterpressStyle} range:range];
     
     return attrMutableString;
 }

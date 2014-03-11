@@ -17,7 +17,7 @@
 @property (strong, nonatomic) NSMutableArray *allImages;
 @property (strong, nonatomic) NSCache *cachedImages;
 @property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
-@property (weak,nonatomic) IBOutlet UIBarButtonItem  *refreshBtn;
+@property (weak,nonatomic) id<PMPhotoConsentProtocol> cameraDelegate;
 
 @property (strong, nonatomic) NSNumber* dataArrayDidChange;
 

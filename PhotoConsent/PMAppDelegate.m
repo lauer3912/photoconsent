@@ -18,7 +18,16 @@
                   clientKey:@"Tx62CaFBE2yPpmKKo8KqylOBnxhfVrSTrjO7O44f"];
     
     [self setStandardUserDefaults];
-      
+    
+    [_window setTintColor:[UIColor lightTextColor]];
+    
+    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    UIColor *orange = [UIColor colorWithRed:1.0 green:140.0/255.0 blue:0 alpha:1.0];
+   
+    [[UINavigationBar appearance] setBarTintColor:orange];
+    [[UICollectionView appearance] setBackgroundColor:turquoise];
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+         
     return YES;
 }
 							

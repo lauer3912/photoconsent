@@ -66,17 +66,11 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //keep a direct reference to asset arrays in the cloud and album viewControllers
-    if ([self.parentViewController.title isEqualToString:@"Cloud"]) {
-        UINavigationController *cloudController = (UINavigationController*)self.parentViewController;
-        PMCloudContentsViewController* vc = (PMCloudContentsViewController*)cloudController.viewControllers[0];
-        [[PageViewControllerData sharedInstance] setPhotoAssets:[vc allImages]];
-    } else {
-        UINavigationController *albumController = (UINavigationController*)self.parentViewController;
-        AlbumContentsViewController* vc = (AlbumContentsViewController*)albumController.viewControllers[0];
-        [[PageViewControllerData sharedInstance] setPhotoAssets:[vc assets]];
-        }
- 
     
+    UINavigationController *cloudController = (UINavigationController*)self.parentViewController;
+    PMCloudContentsViewController* vc = (PMCloudContentsViewController*)cloudController.viewControllers[0];
+    [[PageViewControllerData sharedInstance] setPhotoAssets:[vc allImages]];
+        
 }
 
 #pragma mark - datasource
