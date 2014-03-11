@@ -10,9 +10,9 @@
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
 #import "PMPhotoConsentProtocol.h"
+#import "PMRefreshActivity.h"
 
-
-@interface PMCloudContentsViewController : UICollectionViewController <MBProgressHUDDelegate>
+@interface PMCloudContentsViewController : UICollectionViewController <MBProgressHUDDelegate,PMRefreshActivityProtocol>
 
 @property (strong, nonatomic) NSMutableArray *allImages;
 @property (strong, nonatomic) NSCache *cachedImages;
@@ -23,5 +23,6 @@
 
 - (IBAction)completeConsent:(UIStoryboardSegue *)segue;
 - (void) clearCollectionView;
+- (void) loadAndCacheObjects;
 
 @end

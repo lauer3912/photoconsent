@@ -11,6 +11,7 @@
 #import "PMConsentActivity.h"
 #import "PMFeedbackActivity.h"
 #import "PMLogoutActivity.h"
+#import "PMRefreshActivity.h"
 #import "PMCameraRollActivity.h"
 #import "PMConsentDetailsActivity.h"
 #import "PMLoginActivity.h"
@@ -22,8 +23,9 @@
 @interface PMActivityDelegate ()
 <UIActivityItemSource, PMLogoutActivityProtocol>
 @property (strong, nonatomic) id senderController;
-@property (strong, nonatomic) UIActivity *feedbackActivity;
-@property (strong, nonatomic) UIActivity *cameraRollActivity;
+@property (strong, nonatomic) PMFeedbackActivity *feedbackActivity;
+@property (strong, nonatomic) PMCameraRollActivity *cameraRollActivity;
+@property (strong, nonatomic) PMRefreshActivity *refreshActivity;
 @property (strong, nonatomic) id logActivity;
 
 
@@ -65,7 +67,7 @@
     // initialise two custom services
     _feedbackActivity = [PMFeedbackActivity new];
     _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
-   
+    
     
     NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
     
@@ -76,7 +78,14 @@
         if (user) {
             _logActivity = [PMLogoutActivity new];
             [_logActivity setDelegate:self];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity,_cameraRollActivity]];
+            
+            _refreshActivity = [[PMRefreshActivity alloc] init];
+            [_refreshActivity setRefreshDelegate:(PMCloudContentsViewController*)sender];
+            
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity,_cameraRollActivity,_refreshActivity]];
+            
+            
+            
             
         } else {
             _logActivity = [PMLoginActivity new];

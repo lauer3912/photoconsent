@@ -10,6 +10,7 @@
 		E428C75618B26FF4002C1391 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75518B26FF4002C1391 /* Default-568h@2x.png */; };
 		E428C75918B2703C002C1391 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75718B2703C002C1391 /* Default.png */; };
 		E428C75A18B2703C002C1391 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75818B2703C002C1391 /* Default@2x.png */; };
+		E452D23D18CF10AA00EED549 /* PMRefreshActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */; };
 		E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */; };
 		E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */; };
 		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
@@ -100,6 +101,8 @@
 		E428C75518B26FF4002C1391 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		E428C75718B2703C002C1391 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Photoconsent/PhotoConsent.xcassets/Default.png; sourceTree = SOURCE_ROOT; };
 		E428C75818B2703C002C1391 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		E452D23B18CF10AA00EED549 /* PMRefreshActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMRefreshActivity.h; sourceTree = "<group>"; };
+		E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMRefreshActivity.m; sourceTree = "<group>"; };
 		E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDimmableCollectionView.h; sourceTree = "<group>"; };
 		E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDimmableCollectionView.m; sourceTree = "<group>"; };
 		E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTransitionAnimator.m; sourceTree = "<group>"; };
@@ -505,6 +508,8 @@
 				E478DB831883F20F0064E331 /* PMLogoutActivity.m */,
 				E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */,
 				E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */,
+				E452D23B18CF10AA00EED549 /* PMRefreshActivity.h */,
+				E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -757,6 +762,7 @@
 				E478DBC11883F2100064E331 /* PMLogoutActivity.m in Sources */,
 				E478DBBE1883F2100064E331 /* PMLoginActivity.m in Sources */,
 				E478DBC81883F2100064E331 /* AlbumContentsViewController.m in Sources */,
+				E452D23D18CF10AA00EED549 /* PMRefreshActivity.m in Sources */,
 				E4F4C0F2188E62DC00B006E1 /* RMCanvas.m in Sources */,
 				E478DBBC1883F2100064E331 /* PMFeedbackActivity.m in Sources */,
 				E478DBEB1883F2600064E331 /* PageViewControllerData.m in Sources */,
