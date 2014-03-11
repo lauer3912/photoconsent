@@ -9,7 +9,7 @@
 #import "PMLoginActivityDelegate.h"
 #import "PMLoginActivity.h"
 #import <Parse/Parse.h>
-#import  "BaseViewController.h"
+
 
 
 
@@ -67,11 +67,8 @@
         
         if ([activityType isEqualToString:@"loginActivityType"])
             if ([PFUser currentUser]) {
-                if ([_senderController isKindOfClass:[BaseViewController class]]) {
-                    BaseViewController* vc = (BaseViewController*)_senderController;
-                    [vc centerItemTapped];
-                }
-
+                
+                
             }
     };
     

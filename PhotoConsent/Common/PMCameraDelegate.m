@@ -8,7 +8,6 @@
 
 #import "PMCameraDelegate.h"
 #import "PMCloudContentsViewController.h"
-#import "AlbumContentsViewController.h"
 #import "Consent.h"
 #import "PMFunctions.h"
 #import "PMConsentDetailViewController.h"
@@ -84,7 +83,10 @@
                 });
                 
                 
-            } else if ([_senderController isKindOfClass:[AlbumContentsViewController class]]) {
+            }
+            
+            /*
+            else if ([_senderController isKindOfClass:[AlbumContentsViewController class]]) {
                 
                 
                 //store a smaller version of the image for verification
@@ -101,7 +103,7 @@
                 
                 
             }
-                        
+             */
         }];
         
     

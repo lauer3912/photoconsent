@@ -37,7 +37,7 @@ void cloudPhoto(UIImage *image,NSString* reference,
         PFFile *imageFile = [PFFile fileWithName:@"Image.jpg" data:imageData];
         [userPhoto setObject:imageFile forKey:@"imageFile"];
         
-        NSData *smallImageData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(60.0, 60.0)), 1.0f);
+        NSData *smallImageData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(65.0, 65.0)), 1.0f);
         PFFile *smallImageFile = [PFFile fileWithName:@"SmallImage.jpg" data:smallImageData];
         [userPhoto setObject:smallImageFile forKey:@"smallImageFile"];
         

@@ -11,6 +11,7 @@
 		E428C75918B2703C002C1391 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75718B2703C002C1391 /* Default.png */; };
 		E428C75A18B2703C002C1391 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75818B2703C002C1391 /* Default@2x.png */; };
 		E452D23D18CF10AA00EED549 /* PMRefreshActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */; };
+		E452D24918CF6A8800EED549 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E452D24818CF6A8800EED549 /* StoreKit.framework */; };
 		E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */; };
 		E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */; };
 		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
@@ -43,7 +44,6 @@
 		E478DBC41883F2100064E331 /* PMReferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8A1883F20F0064E331 /* PMReferenceViewController.m */; };
 		E478DBC51883F2100064E331 /* PMSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8C1883F20F0064E331 /* PMSignUpViewController.m */; };
 		E478DBC61883F2100064E331 /* PMTextConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB8E1883F20F0064E331 /* PMTextConstants.m */; };
-		E478DBC81883F2100064E331 /* AlbumContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB911883F20F0064E331 /* AlbumContentsViewController.m */; };
 		E478DBCB1883F2100064E331 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E478DB961883F20F0064E331 /* MainStoryboard.storyboard */; };
 		E478DBCC1883F2100064E331 /* PMConsentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB981883F20F0064E331 /* PMConsentViewController.m */; };
 		E478DBCD1883F2100064E331 /* PMCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB991883F2100064E331 /* PMCompleteViewController.m */; };
@@ -51,11 +51,9 @@
 		E478DBCF1883F2100064E331 /* PMActivityDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB9B1883F2100064E331 /* PMActivityDelegate.m */; };
 		E478DBD01883F2100064E331 /* MyPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB9F1883F2100064E331 /* MyPageViewController.m */; };
 		E478DBD11883F2100064E331 /* PMSignViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA11883F2100064E331 /* PMSignViewController.m */; };
-		E478DBD21883F2100064E331 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA21883F2100064E331 /* BaseViewController.m */; };
 		E478DBD31883F2100064E331 /* PMConsentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */; };
 		E478DBD51883F2100064E331 /* PMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA51883F2100064E331 /* PMAppDelegate.m */; };
 		E478DBD61883F2100064E331 /* ConsentStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA61883F2100064E331 /* ConsentStore.m */; };
-		E478DBD71883F2100064E331 /* CustomTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA71883F2100064E331 /* CustomTabBarViewController.m */; };
 		E478DBD81883F2100064E331 /* Consent.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBA91883F2100064E331 /* Consent.m */; };
 		E478DBD91883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBAD1883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 		E478DBDA1883F2100064E331 /* PMBasicDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBAF1883F2100064E331 /* PMBasicDetailsViewController.m */; };
@@ -67,7 +65,6 @@
 		E478DBF41883F2600064E331 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DBEA1883F2600064E331 /* MBProgressHUD.m */; };
 		E478DC061883F4FA0064E331 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFC1883F4FA0064E331 /* Accounts.framework */; };
 		E478DC071883F4FA0064E331 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFD1883F4FA0064E331 /* AdSupport.framework */; };
-		E478DC081883F4FA0064E331 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFE1883F4FA0064E331 /* AssetsLibrary.framework */; };
 		E478DC091883F4FA0064E331 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DBFF1883F4FA0064E331 /* AudioToolbox.framework */; };
 		E478DC0B1883F4FA0064E331 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC011883F4FA0064E331 /* CFNetwork.framework */; };
 		E478DC0C1883F4FA0064E331 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC021883F4FA0064E331 /* MessageUI.framework */; };
@@ -103,6 +100,7 @@
 		E428C75818B2703C002C1391 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		E452D23B18CF10AA00EED549 /* PMRefreshActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMRefreshActivity.h; sourceTree = "<group>"; };
 		E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMRefreshActivity.m; sourceTree = "<group>"; };
+		E452D24818CF6A8800EED549 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDimmableCollectionView.h; sourceTree = "<group>"; };
 		E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDimmableCollectionView.m; sourceTree = "<group>"; };
 		E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTransitionAnimator.m; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 		E478DB8C1883F20F0064E331 /* PMSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSignUpViewController.m; sourceTree = "<group>"; };
 		E478DB8D1883F20F0064E331 /* PMTextConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMTextConstants.h; sourceTree = "<group>"; };
 		E478DB8E1883F20F0064E331 /* PMTextConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMTextConstants.m; sourceTree = "<group>"; };
-		E478DB911883F20F0064E331 /* AlbumContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlbumContentsViewController.m; path = Photoconsent/AlbumContentsViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DB951883F20F0064E331 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		E478DB971883F20F0064E331 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		E478DB981883F20F0064E331 /* PMConsentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMConsentViewController.m; path = Photoconsent/PMConsentViewController.m; sourceTree = SOURCE_ROOT; };
@@ -170,16 +167,12 @@
 		E478DB9A1883F2100064E331 /* PMCloudContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMCloudContentsViewController.m; path = Photoconsent/PMCloudContentsViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DB9B1883F2100064E331 /* PMActivityDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMActivityDelegate.m; path = Photoconsent/PMActivityDelegate.m; sourceTree = SOURCE_ROOT; };
 		E478DB9C1883F2100064E331 /* PMActivityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMActivityDelegate.h; path = Photoconsent/PMActivityDelegate.h; sourceTree = SOURCE_ROOT; };
-		E478DB9D1883F2100064E331 /* AlbumContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlbumContentsViewController.h; path = Photoconsent/AlbumContentsViewController.h; sourceTree = SOURCE_ROOT; };
-		E478DB9E1883F2100064E331 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseViewController.h; path = Photoconsent/BaseViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DB9F1883F2100064E331 /* MyPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyPageViewController.m; path = Photoconsent/MyPageViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA01883F2100064E331 /* MyPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyPageViewController.h; path = Photoconsent/MyPageViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBA11883F2100064E331 /* PMSignViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMSignViewController.m; path = Photoconsent/PMSignViewController.m; sourceTree = SOURCE_ROOT; };
-		E478DBA21883F2100064E331 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseViewController.m; path = Photoconsent/BaseViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA31883F2100064E331 /* PMConsentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMConsentDetailViewController.m; path = Photoconsent/PMConsentDetailViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA51883F2100064E331 /* PMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMAppDelegate.m; path = Photoconsent/PMAppDelegate.m; sourceTree = SOURCE_ROOT; };
 		E478DBA61883F2100064E331 /* ConsentStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConsentStore.m; path = Photoconsent/ConsentStore.m; sourceTree = SOURCE_ROOT; };
-		E478DBA71883F2100064E331 /* CustomTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomTabBarViewController.m; path = Photoconsent/CustomTabBarViewController.m; sourceTree = SOURCE_ROOT; };
 		E478DBA81883F2100064E331 /* PMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMAppDelegate.h; path = Photoconsent/PMAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		E478DBA91883F2100064E331 /* Consent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Consent.m; path = Photoconsent/Consent.m; sourceTree = SOURCE_ROOT; };
 		E478DBAA1883F2100064E331 /* Consent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Consent.h; path = Photoconsent/Consent.h; sourceTree = SOURCE_ROOT; };
@@ -199,7 +192,6 @@
 		E478DBDE1883F2600064E331 /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoViewController.h; path = Photoconsent/PhotoViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBDF1883F2600064E331 /* ImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageScrollView.m; path = Photoconsent/ImageScrollView.m; sourceTree = SOURCE_ROOT; };
 		E478DBE01883F2600064E331 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Photoconsent/iTunesArtwork; sourceTree = SOURCE_ROOT; };
-		E478DBE11883F2600064E331 /* CustomTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomTabBarViewController.h; path = Photoconsent/CustomTabBarViewController.h; sourceTree = SOURCE_ROOT; };
 		E478DBE51883F2600064E331 /* UIImage+iPhone5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+iPhone5.h"; path = "Photoconsent/UIImage+iPhone5.h"; sourceTree = SOURCE_ROOT; };
 		E478DBE61883F2600064E331 /* UIImage+iPhone5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+iPhone5.m"; path = "Photoconsent/UIImage+iPhone5.m"; sourceTree = SOURCE_ROOT; };
 		E478DBE91883F2600064E331 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = Photoconsent/MBProgressHUD.h; sourceTree = SOURCE_ROOT; };
@@ -239,12 +231,12 @@
 				E4B0A95918980E6C00265349 /* Parse.framework in Frameworks */,
 				E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */,
 				E478DC1D1883FCAA0064E331 /* libsqlite3.dylib in Frameworks */,
+				E452D24918CF6A8800EED549 /* StoreKit.framework in Frameworks */,
 				E478DC1E1883FCAA0064E331 /* libz.1.1.3.dylib in Frameworks */,
 				E478DC141883F58E0064E331 /* Social.framework in Frameworks */,
 				E478DC111883F5580064E331 /* CoreLocation.framework in Frameworks */,
 				E478DC061883F4FA0064E331 /* Accounts.framework in Frameworks */,
 				E478DC071883F4FA0064E331 /* AdSupport.framework in Frameworks */,
-				E478DC081883F4FA0064E331 /* AssetsLibrary.framework in Frameworks */,
 				E478DC091883F4FA0064E331 /* AudioToolbox.framework in Frameworks */,
 				E478DC0B1883F4FA0064E331 /* CFNetwork.framework in Frameworks */,
 				E478DC0C1883F4FA0064E331 /* MessageUI.framework in Frameworks */,
@@ -319,6 +311,7 @@
 		E478DB331883EF370064E331 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E452D24818CF6A8800EED549 /* StoreKit.framework */,
 				E478DC1F1883FCF70064E331 /* QuartzCore.framework */,
 				E478DC1B1883FCAA0064E331 /* libsqlite3.dylib */,
 				E478DC1C1883FCAA0064E331 /* libz.1.1.3.dylib */,
@@ -414,17 +407,6 @@
 			path = Photoconsent/en.lproj;
 			sourceTree = SOURCE_ROOT;
 		};
-		E478DC161883F6CB0064E331 /* Custom Tab Bar */ = {
-			isa = PBXGroup;
-			children = (
-				E478DB9E1883F2100064E331 /* BaseViewController.h */,
-				E478DBA21883F2100064E331 /* BaseViewController.m */,
-				E478DBE11883F2600064E331 /* CustomTabBarViewController.h */,
-				E478DBA71883F2100064E331 /* CustomTabBarViewController.m */,
-			);
-			name = "Custom Tab Bar";
-			sourceTree = "<group>";
-		};
 		E478DC171883F72A0064E331 /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -447,7 +429,6 @@
 			isa = PBXGroup;
 			children = (
 				E478DC21188409E80064E331 /* Categories */,
-				E478DC161883F6CB0064E331 /* Custom Tab Bar */,
 				E478DC171883F72A0064E331 /* MBProgressHUD */,
 			);
 			name = Library;
@@ -468,8 +449,6 @@
 			children = (
 				E478DB6A1883F20F0064E331 /* PMCloudContentsViewController.h */,
 				E478DB9A1883F2100064E331 /* PMCloudContentsViewController.m */,
-				E478DB9D1883F2100064E331 /* AlbumContentsViewController.h */,
-				E478DB911883F20F0064E331 /* AlbumContentsViewController.m */,
 			);
 			name = CollectionViewControllers;
 			path = ../../PhotoConsent;
@@ -682,7 +661,7 @@
 						DevelopmentTeam = EC35S3QLS3;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -761,7 +740,6 @@
 				E478DBC01883F2100064E331 /* PMLogoLabel.m in Sources */,
 				E478DBC11883F2100064E331 /* PMLogoutActivity.m in Sources */,
 				E478DBBE1883F2100064E331 /* PMLoginActivity.m in Sources */,
-				E478DBC81883F2100064E331 /* AlbumContentsViewController.m in Sources */,
 				E452D23D18CF10AA00EED549 /* PMRefreshActivity.m in Sources */,
 				E4F4C0F2188E62DC00B006E1 /* RMCanvas.m in Sources */,
 				E478DBBC1883F2100064E331 /* PMFeedbackActivity.m in Sources */,
@@ -769,7 +747,6 @@
 				E478DBD51883F2100064E331 /* PMAppDelegate.m in Sources */,
 				E478DBBA1883F2100064E331 /* PMConsentDetailsActivity.m in Sources */,
 				E4756E3918B102E8000A05BE /* RMCustomSegue.m in Sources */,
-				E478DBD21883F2100064E331 /* BaseViewController.m in Sources */,
 				E478DBD91883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				E478DBC21883F2100064E331 /* PMPurposeViewController.m in Sources */,
 				E478DBD11883F2100064E331 /* PMSignViewController.m in Sources */,
@@ -779,7 +756,6 @@
 				E478DBCD1883F2100064E331 /* PMCompleteViewController.m in Sources */,
 				E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */,
 				E478DBCE1883F2100064E331 /* PMCloudContentsViewController.m in Sources */,
-				E478DBD71883F2100064E331 /* CustomTabBarViewController.m in Sources */,
 				E478DBF41883F2600064E331 /* MBProgressHUD.m in Sources */,
 				E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */,
 				E478DBBD1883F2100064E331 /* PMFunctions.m in Sources */,
@@ -931,7 +907,7 @@
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -950,7 +926,7 @@
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -7,15 +7,13 @@
 //
 
 #import "PMCompleteViewController.h"
-#import <AssetsLibrary/AssetsLibrary.h>
-#import "ALAssetsLibrary+CustomPhotoAlbum.h"
 #import "Consent.h"
 #import "PMFunctions.h"
 #import "ConsentStore.h"
 #import "PMTextConstants.h"
 #import "PMCloudContentsViewController.h"
 #import  <Parse/Parse.h>
-#import  "AlbumContentsViewController.h"
+
 
 
 
@@ -51,22 +49,11 @@
             data = [imagefile getData];
             _imageView.image = [UIImage imageWithData:data];
         }
-    } else {
-        data = [_userPhoto valueForKey:@"imageFile"];
-        _imageView.image = [UIImage imageWithData:data];
-        
     }
     [self showPurposeLabels];
     _emailBtn.titleLabel.textColor = self.view.tintColor;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self.tabBarController.tabBar setUserInteractionEnabled:NO];
-//    UIButton *centerButton = (UIButton*)[self.tabBarController.tabBar viewWithTag:27];
-//    [centerButton setEnabled:NO];
-}
 
 - (void) showPurposeLabels {
     NSNumber *assessment = [_userPhoto valueForKey:@"Assessment"];
@@ -148,7 +135,7 @@
                     
                     PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
                     
-                    //save the image to the album
+                    /* save the image to the album REMOVED ALBUM FUNCTIONLITY
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         
                         UIImage *image = [UIImage imageWithData:data];
@@ -156,6 +143,9 @@
                         [self saveImageToAlbum:image withConsent:nil sender:vc];
                         
                     });
+                     
+                     */
+                    
                     
                     //check if this viewcontroller is still visible and if so pop to root viewconroller
                     if ([self isEqual:self.navigationController.visibleViewController]) {
@@ -173,7 +163,9 @@
         }];
         
         
-    } else {
+    }
+    /*
+      else {
         
         AlbumContentsViewController *vc = (AlbumContentsViewController*)self.navigationController.viewControllers[0];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -184,7 +176,7 @@
         });
         
     }
-    
+    */
 
     
 }
@@ -216,11 +208,13 @@
             
             
         }
+        [self savePhoto];
     }
     
-    [self savePhoto]; //if cloud will save to cloud and album
     
 }
+
+/*
 - (void) saveImageToAlbum:(UIImage*)image withConsent:(Consent*)deviceConsent sender:(id) senderController;  {
     
     //save to PhotoConsent album
@@ -270,7 +264,10 @@
     
     
 }
+ 
+ */
 
+/*
 - (void) createDeviceConsentFromPFObjectForAssetAtURL:(NSURL*)newAssetURL {
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
@@ -308,6 +305,8 @@
     [store saveChanges];
     
 }
+
+*/
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

@@ -11,19 +11,6 @@
 @implementation RMCustomSegue
 
 
-- (id)initWithIdentifier:(NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination {
-    
-    
-    if ([super initWithIdentifier:identifier source:source destination:destination]) {
-        
-               
-        
-    }
-    return self;
-}
-
-
-
 - (void) perform {
     
     if ([self.identifier isEqualToString:@"showPanel"]) {

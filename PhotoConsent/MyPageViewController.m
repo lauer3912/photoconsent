@@ -21,7 +21,6 @@
 #import "Consent.h"
 #import "ConsentStore.h"
 #import "PMCloudContentsViewController.h"
-#import "AlbumContentsViewController.h"
 #import "PMTextConstants.h"
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -153,7 +152,7 @@
     sheet.destructiveButtonIndex = [sheet addButtonWithTitle:@"Delete"];
     sheet.cancelButtonIndex = [sheet addButtonWithTitle:@"Cancel"];
     sheet.actionSheetStyle = UIActionSheetStyleDefault;
-    [sheet showInView:self.tabBarController.tabBar];
+    [sheet showInView:self.navigationController.topViewController.view];
     
     
 }

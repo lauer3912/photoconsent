@@ -26,7 +26,8 @@
    
     [[UINavigationBar appearance] setBarTintColor:orange];
     [[UICollectionView appearance] setBackgroundColor:turquoise];
-    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UIView appearance] setTintColor:turquoise];
+    [application setStatusBarStyle:UIStatusBarStyleDefault];
          
     return YES;
 }
