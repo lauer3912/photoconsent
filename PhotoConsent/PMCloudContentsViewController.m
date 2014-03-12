@@ -422,7 +422,7 @@
     _activityDelegate = _delegateInstance;
     
     if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
-        [_activityDelegate showActivitySheet:self];
+        [_activityDelegate showActivitySheet:sender];
     }
     
     
@@ -534,17 +534,19 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 }
 
 #pragma mark  - shareActivity portocol delegate methods
-- (void) shareActivity {
+- (void) shareActivity:(id)sender {
     
     [self dismissViewControllerAnimated:YES completion:^{
         if (!_delegateInstance) {
             _delegateInstance = [[PMActivityDelegate alloc] init];
         }
-        
+        [_delegateInstance setSenderController:self];
         _activityDelegate = _delegateInstance;
         
+        
+        
         if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
-            [_activityDelegate showActivitySheet:self];
+            [_activityDelegate showActivitySheet:sender];
         }
     }];
     

@@ -58,4 +58,28 @@ void cloudPhoto(UIImage *image,NSString* reference,
 
 
 
+
+#pragma mark - add watermark
+
+UIImage* generateWatermarkForImage(UIImage *mainImg) {
+    UIImage *backgroundImage = mainImg;
+    UIImage *watermarkImage = [UIImage imageNamed:@"iconwatermark"];
+    
+    
+    //Now re-drawing your  Image using drawInRect method
+    UIGraphicsBeginImageContext(backgroundImage.size);
+    [backgroundImage drawInRect:CGRectMake(0, 0, backgroundImage.size.width, backgroundImage.size.height)];
+    // set watermark position/frame a s(xposition,yposition,width,height)
+    [watermarkImage drawInRect:CGRectMake(backgroundImage.size.width - watermarkImage.size.width, backgroundImage.size.height - watermarkImage.size.height - 320.0, watermarkImage.size.width, watermarkImage.size.height)];
+    
+    // now merging two images into one
+    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return result;
+}
+
+
+
+
+
 @end

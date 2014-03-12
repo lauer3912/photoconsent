@@ -51,8 +51,8 @@
 #pragma mark - Button pressed
 - (IBAction)shareAction:(id)sender {
     
-    if ([_delegate respondsToSelector:@selector(shareActivity)]) {
-        [_delegate shareActivity];
+    if ([_delegate respondsToSelector:@selector(shareActivity:)]) {
+        [_delegate shareActivity:sender];
     }
 
 }

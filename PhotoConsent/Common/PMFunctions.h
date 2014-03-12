@@ -17,5 +17,6 @@ extern UIImage* resizeImage(UIImage *imageIn, CGSize itemSize );
 extern void cloudPhoto(UIImage *image,NSString* reference,
                        dispatch_queue_t queue, void (^block)(id userPhoto));
 
+extern UIImage* generateWatermarkForImage(UIImage *mainImg);
 
 @end

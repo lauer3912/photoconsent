@@ -40,14 +40,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSData* data;
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         PFFile *imagefile = [_userPhoto valueForKey:@"imageFile"];
         //the image data should be cached within userPhoto but check. If it's not skip and leave it to the asynchronous save processes
         if (imagefile.isDataAvailable) {
             
-            data = [imagefile getData];
-            _imageView.image = [UIImage imageWithData:data];
+            
+            _imageView.image =  generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
         }
     }
     [self showPurposeLabels];
@@ -368,7 +367,11 @@
             PFFile *imagefile = [_userPhoto valueForKey:@"imageFile"];
             //the image data should be cached within userPhoto but check.
             if (imagefile.isDataAvailable) {
-                imageData = [imagefile getData];
+                //add the watermark
+                UIImage *image = generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
+                
+               imageData = UIImageJPEGRepresentation(image, 1.0f);
+                
             }
             PFFile *signaturefile = [_userPhoto valueForKey:@"consentSignature"];
             if (signaturefile.isDataAvailable) {
@@ -377,7 +380,7 @@
 
             
             
-        } else {
+        } else { //offline
             signatureData = [_userPhoto valueForKey:@"consentSignature"];
             imageData = [_userPhoto valueForKey:@"imageFile"];
         
@@ -396,43 +399,12 @@
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - watermark attempts that don't work, at least with icon-small.png
-- (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage {
-    
-    CGImageRef maskRef = maskImage.CGImage;
-    
-    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
-                                        CGImageGetHeight(maskRef),
-                                        CGImageGetBitsPerComponent(maskRef),
-                                        CGImageGetBitsPerPixel(maskRef),
-                                        CGImageGetBytesPerRow(maskRef),
-                                        CGImageGetDataProvider(maskRef), NULL, false);
-    
-    CGImageRef masked = CGImageCreateWithMask([image CGImage], mask);
-    
-    UIImage *watermarkImage = [UIImage imageWithCGImage:masked];
-    CGImageRelease(masked);
-    CGImageRelease(mask);
-    return watermarkImage;
-    
-}
-
--(UIImage *) generateWatermarkForImage:(UIImage *) mainImg{
-    UIImage *backgroundImage = mainImg;
-    UIImage *watermarkImage = [UIImage imageNamed:@"icon-Small.png"];
-    
-    
-    //Now re-drawing your  Image using drawInRect method
-    UIGraphicsBeginImageContext(backgroundImage.size);
-    [backgroundImage drawInRect:CGRectMake(0, 0, backgroundImage.size.width, backgroundImage.size.height)];
-    // set watermark position/frame a s(xposition,yposition,width,height)
-    [watermarkImage drawInRect:CGRectMake(backgroundImage.size.width - watermarkImage.size.width, backgroundImage.size.height - watermarkImage.size.height, watermarkImage.size.width, watermarkImage.size.height)];
-    
-    // now merging two images into one
-    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return result;
-}
-
 
 @end
+
+
+
+
+
+
+

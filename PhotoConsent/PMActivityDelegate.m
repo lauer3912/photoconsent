@@ -22,7 +22,7 @@
 
 @interface PMActivityDelegate ()
 <UIActivityItemSource, PMLogoutActivityProtocol>
-@property (strong, nonatomic) id senderController;
+
 @property (strong, nonatomic) PMFeedbackActivity *feedbackActivity;
 @property (strong, nonatomic) PMCameraRollActivity *cameraRollActivity;
 @property (strong, nonatomic) PMRefreshActivity *refreshActivity;
@@ -72,8 +72,8 @@
     NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
     
     //check if sender is album or cloud
-    _senderController = sender;
-    if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
+    
+    if ([sender isKindOfClass:[UIBarButtonItem class]]) {
         PFUser *user = [PFUser currentUser];
         if (user) {
             _logActivity = [PMLogoutActivity new];
@@ -111,7 +111,7 @@
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         //iPhone, present activity view controller as is
-        [(UIViewController*)sender presentViewController:activityViewController animated:YES completion:^{
+        [(UIViewController*)_senderController presentViewController:activityViewController animated:YES completion:^{
             
         }];
 

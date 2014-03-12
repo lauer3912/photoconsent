@@ -11,6 +11,6 @@
 
 @interface PMActivityDelegate : UIViewController <PMPhotoConsentProtocol>
 
-
+@property (strong, nonatomic) id senderController;
 
 @end

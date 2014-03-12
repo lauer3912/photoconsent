@@ -12,7 +12,7 @@
 
 @protocol shareActivityProtocol <NSObject>
 
-- (void) shareActivity;
+- (void) shareActivity:(id)sender;
 - (void) showConsentTypes;
 - (void) showDisclaimer;
 
