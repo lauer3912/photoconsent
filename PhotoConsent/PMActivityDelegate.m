@@ -18,14 +18,16 @@
 #import <Parse/Parse.h>
 #import "PMCloudContentsViewController.h"
 #import "PMDisclaimerActivity.h"
+#import "PMWorkOfflineActivity.h"
 
 
 @interface PMActivityDelegate ()
-<UIActivityItemSource, PMLogoutActivityProtocol>
+<UIActivityItemSource>
 
 @property (strong, nonatomic) PMFeedbackActivity *feedbackActivity;
 @property (strong, nonatomic) PMCameraRollActivity *cameraRollActivity;
 @property (strong, nonatomic) PMRefreshActivity *refreshActivity;
+@property (strong, nonatomic) PMWorkOfflineActivity *offlineActivity;
 @property (strong, nonatomic) id logActivity;
 
 
@@ -62,6 +64,8 @@
    
     //this uses UIActivityController to provide sharing services - but as at iOS7 still some issues when relying solely on the system controller
     
+    NSMutableArray *excludedActivityTypes = [NSMutableArray arrayWithCapacity:10];
+    
     UIActivityViewController *activityViewController;
     
     // initialise two custom services
@@ -77,10 +81,10 @@
         PFUser *user = [PFUser currentUser];
         if (user) {
             _logActivity = [PMLogoutActivity new];
-            [_logActivity setDelegate:self];
+            [_logActivity setDelegate:_senderController];
             
             _refreshActivity = [[PMRefreshActivity alloc] init];
-            [_refreshActivity setRefreshDelegate:(PMCloudContentsViewController*)sender];
+            [_refreshActivity setRefreshDelegate:_senderController];
             
             activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity,_cameraRollActivity,_refreshActivity]];
             
@@ -88,13 +92,35 @@
             
             
         } else {
+            //login to cloud or start/stop offline working on device
+            
+           [excludedActivityTypes addObject:UIActivityTypeMail]; //string item causes it to show
+            NSNumber *imageCount = @0;
+            NSString *nameForActivity;
             _logActivity = [PMLoginActivity new];
-            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity]];
+            [_logActivity setStopOfflineDelegate:_senderController];
+            [_logActivity setRefreshDelegate:_senderController];
+            
+            _offlineActivity = [PMWorkOfflineActivity new];
+            [_offlineActivity setOfflineDelegate:_senderController];
+            if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
+                PMCloudContentsViewController* controller = (PMCloudContentsViewController*)_senderController;
+                if (controller.allImages) {
+                    
+                    imageCount = [NSNumber numberWithInteger:controller.allImages.count];
+                    
+                    nameForActivity = @"Hide";
+                } else
+                    nameForActivity = @"View";
+                
+            }
+            
+            activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[imageCount,nameForActivity] applicationActivities:@[_logActivity,_offlineActivity]];
         }
     } else
         activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity]];
     
-    NSMutableArray *excludedActivityTypes = [NSMutableArray arrayWithArray:@[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint,UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMessage]];
+    [excludedActivityTypes addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint,UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMessage,UIActivityTypeAirDrop]];
     
     //exclude mail service if they cannot be sent
     if (![MFMailComposeViewController canSendMail])
@@ -108,6 +134,7 @@
     
     activityViewController.completionHandler = completionBlock;
     [activityViewController setValue:@"PhotoConsent" forKey:@"subject"];
+    
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         //iPhone, present activity view controller as is
@@ -162,12 +189,5 @@
     return value;
 }
 
-#pragma mark - logout activity delegate called on activityDidFinish
-
-- (void) userDidLogout:(id) sender {
-    PMCloudContentsViewController *cloudController = (PMCloudContentsViewController*)_senderController;
-    [cloudController clearCollectionView];
-    
-}
 
 @end

@@ -15,7 +15,6 @@
 #import "PhotoViewController.h"
 #import "PageViewControllerData.h"
 #import <Parse/Parse.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "PMConsentActivity.h"
 #import "PMConsentViewController.h"
 #import "Consent.h"
@@ -32,7 +31,7 @@
 @interface MyPageViewController ()
 <UIActionSheetDelegate,UIActivityItemSource>
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *trashBtn;
-@property (strong, nonatomic) ALAsset *assetToDelete;
+@property (strong, nonatomic) Consent *consentToDelete;
 @property (strong, nonatomic) UIImage *imageForEmail;
 
 @end
@@ -47,7 +46,7 @@
     
     UIBarButtonItem *actionBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction  target:self action:@selector(openActivitySheet:)];
     
-    NSArray *rightBarButtonItems = @[_trashBtn, actionBtn];
+    NSArray *rightBarButtonItems = @[actionBtn, _trashBtn];
     [self.navigationItem setRightBarButtonItems:rightBarButtonItems animated:YES];
     _currentIndex = _startingIndex;
     [self displayViewControllerAtIndex:_currentIndex];
@@ -132,11 +131,7 @@
 }
 
 - (BOOL) canBeDeleted:(NSInteger)index {
-    
-    id obj = [[PageViewControllerData sharedInstance] objectAtIndex:index];
-    if ([obj isKindOfClass:[ALAsset class]]) {
-        return [(ALAsset*)obj isEditable];
-    } else
+   
         return YES;
         
 }
@@ -174,10 +169,10 @@
 #pragma mark delete photo
 - (void)deletePhoto:(UIActionSheet *)sender
 {
-    id obj = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
-    if ([obj isKindOfClass:[PFObject class]]) {
+    id selectedObject = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
+    if ([selectedObject isKindOfClass:[PFObject class]]) {
         
-         [(PFObject*)obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+         [(PFObject*)selectedObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
          
              if (succeeded) {
                  //remove the object from allImages in the presenting viewController and also the cache
@@ -194,8 +189,19 @@
              }
          
          }];
+    
+    } else if ([selectedObject isKindOfClass:[Consent class]]) {
         
-    } else if ([obj isKindOfClass:[ALAsset class]]) {
+            NSCache *cachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedImages];
+            [cachedImages removeObjectForKey:[NSNumber numberWithInteger:_currentIndex]];
+        
+            [[ConsentStore sharedDeviceConsents] deleteDeviceConsent:selectedObject];
+            [[ConsentStore sharedDeviceConsents] saveChanges];
+        
+            [self displayPrevPhoto];
+        
+        
+        /*
         _assetToDelete = (ALAsset*)obj; // need this as the assetURL returned in the completionblock will be nil if the image is deleted
         
         
@@ -220,6 +226,7 @@
                 });
             }
         }];
+        */
         
     }
 }
@@ -229,7 +236,7 @@
     
     [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
      [self flagAssetRemoved];
-    if ([[PageViewControllerData sharedInstance].photoAssets count] == 0) {
+    if ([[PageViewControllerData sharedInstance] photoCount] == 0) {
         
         [self.navigationController popToRootViewControllerAnimated:YES];
         _currentIndex = NSNotFound;
@@ -313,34 +320,11 @@
 }
 
 
-- (NSURL*)urlForAsset {
-    
-    id currentObj = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
-    if ([currentObj isKindOfClass:[ALAsset class]]) {
-        return [(ALAsset*)currentObj valueForProperty:ALAssetPropertyAssetURL];
-    } else
-        return nil;
-    
-}
 
 -(id) currentObj {
     
-    __block id currentObj = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
+    id currentObj = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
     
-    if ([currentObj isKindOfClass:[ALAsset class]]) {
-        NSURL *currentAssetURL = [(ALAsset*)currentObj valueForProperty:ALAssetPropertyAssetURL];
-        NSArray *deviceConsents = [[ConsentStore sharedDeviceConsents] allDeviceConsents];
-        [deviceConsents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if ([obj isKindOfClass:[Consent class]]) {
-                Consent *deviceConsent = (Consent*)obj;
-                if ([deviceConsent.assetURL isEqual:currentAssetURL]) {
-                    currentObj = deviceConsent;
-                    *stop = YES;
-                }
-                
-            }
-        }];
-    }
     return currentObj;
     
 }

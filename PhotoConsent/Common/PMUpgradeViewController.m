@@ -1,25 +1,37 @@
 //
-//  PMMenuViewController.m
+//  PMUpgradeViewController.m
 //  PhotoConsent
 //
-//  Created by Alex Rafferty on 16/02/2014.
+//  Created by Alex Rafferty on 17/03/2014.
 //  Copyright (c) 2014 PM. All rights reserved.
 //
 
-#import "PMMenuViewController.h"
+#import "PMUpgradeViewController.h"
+
+@interface PMUpgradeViewController ()
 
 
-@interface PMMenuViewController ()
+@property (weak, nonatomic) IBOutlet UILabel  *productName;
+@property (weak, nonatomic) IBOutlet UILabel  *productDesc;
+@property (weak, nonatomic) IBOutlet UILabel  *productPrice;
+@property (weak, nonatomic) IBOutlet UIButton  *upgradeButton;
+@property (weak, nonatomic) IBOutlet UIButton  *renewButton;
 
 @end
 
-@implementation PMMenuViewController
+@implementation PMUpgradeViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
+        UIColor *orange = [UIColor colorWithRed:1.0 green:140.0/255.0 blue:0 alpha:1.0];
+        
+        [_upgradeButton setBackgroundColor:orange];
+       
+        
     }
     return self;
 }
@@ -28,6 +40,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+     UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    [self.view setBackgroundColor:turquoise];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,40 +62,5 @@
     // Pass the selected object to the new view controller.
 }
 */
-
-
-#pragma mark - Button pressed
-- (IBAction)shareAction:(id)sender {
-    
-    if ([_delegate respondsToSelector:@selector(shareActivity:)]) {
-        [_delegate shareActivity:sender];
-    }
-
-}
-
-- (IBAction)upgradePhotoConsent:(id)sender {
-    
-    if ([_delegate respondsToSelector:@selector(upgradePhotoConsent:)]) {
-        [_delegate upgradePhotoConsent:sender];
-    }
-    
-}
-
-- (IBAction)showConsentTypes:(id)sender {
-    
-    if ([_delegate respondsToSelector:@selector(showConsentTypes)]) {
-        [_delegate showConsentTypes];
-    }
-    
-}
-
-- (IBAction)showDisclaimer:(id)sender {
-    
-    if ([_delegate respondsToSelector:@selector(showDisclaimer)]) {
-        [_delegate showDisclaimer];
-    }
-    
-}
-
 
 @end

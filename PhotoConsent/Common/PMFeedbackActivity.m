@@ -33,7 +33,7 @@
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"18-envelope"], CGSizeMake(40.0, 40.0));
+    return resizeImage([UIImage imageNamed:@"feedback"], CGSizeMake(40.0, 27.5));
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
@@ -53,6 +53,8 @@
     [mailComposer setSubject:@"PhotoConsent"];
     [mailComposer setToRecipients:@[@"feedback@photoconsent.com"]];
     [mailComposer setMessageBody:@"Please enter your comments here" isHTML:NO];
+    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    [mailComposer.navigationBar setTintColor:turquoise];
     return mailComposer;
 }
 

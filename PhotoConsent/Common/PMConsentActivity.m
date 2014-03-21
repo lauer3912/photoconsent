@@ -12,8 +12,9 @@
 #import "Consent.h"
 
 
+
 @interface PMConsentActivity () 
-@property (nonatomic, strong) NSArray* activityItems;
+@property (nonatomic, strong) id selectedObject;
 @end
 
 
@@ -36,7 +37,7 @@
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"consent-tabicon"], CGSizeMake(40.0, 40.0));
+    return [UIImage imageNamed:@"consent-tabicon"];
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
@@ -53,21 +54,26 @@
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     
-    _activityItems = activityItems;
+    [activityItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[PFObject class]] || [obj isKindOfClass:[Consent class]]) {
+            _selectedObject = obj;
+        }
+    }];
     
 }
 - (UIViewController *)activityViewController {
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    __block UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"consentViewController"];
+    UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"consentNavController"];
+    
+    UIViewController *avc = nvc.viewControllers[0];
     if ([avc isKindOfClass:[PMConsentViewController class]]) {
         [(PMConsentViewController*)avc setActivityConsent:self];
-        [_activityItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if ([obj isKindOfClass:[PFObject class]] || [obj isKindOfClass:[Consent class]]) {
-              [(PMConsentViewController*)avc setM_selectedPhoto:obj];
-            }
-        }];
+        [(PMConsentViewController*)avc setM_selectedPhoto:_selectedObject];
+        
     }
-    return avc;
+    
+    return nvc;
 }
 
 - (void)performActivity {

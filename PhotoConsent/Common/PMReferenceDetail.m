@@ -29,11 +29,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    if ([self.title isEqualToString:@"PhotoConsent"])  {
-        [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_PhotoConsent]];
-    } else
-    
     if ([self.title isEqualToString:@"Assessment"])  {
         [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_Assessment]];
     } else
@@ -42,7 +37,10 @@
     } else
     if ([self.title isEqualToString:@"Publication"])  {
         [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_Publication]];
-    } 
+    }
+    
+    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    [self.view setBackgroundColor:turquoise];
     
 }
 

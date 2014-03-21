@@ -30,6 +30,8 @@
 
     // Uncomment the following line to preserve selection between presentations.
      self.clearsSelectionOnViewWillAppear = NO;
+    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    [self.view setBackgroundColor:turquoise];
  
 }
 

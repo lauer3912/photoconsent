@@ -15,7 +15,7 @@
 
 @interface PMLoginActivity ()
 <PFLogInViewControllerDelegate,PFSignUpViewControllerDelegate>
-@property (nonatomic, strong) NSArray* activityItems;
+  @property NSInteger imageCount;
 @end
 
 
@@ -39,7 +39,7 @@
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"234-cloud"], CGSizeMake(40.0, 40.0));
+    return resizeImage([UIImage imageNamed:@"234-cloud"], CGSizeMake(40.0, 21.25));
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
@@ -49,9 +49,22 @@
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     
-    _activityItems = activityItems;
+    _imageCount = 0;
+    if ([activityItems[0] isKindOfClass:[NSNumber class]]) {
+        
+        _imageCount = [(NSNumber*)activityItems[0] integerValue];
+        
+        if (_imageCount > 0) {
+            if ([_stopOfflineDelegate respondsToSelector:@selector(userDidLogout:)]) {
+                [_stopOfflineDelegate userDidLogout:nil];
+            }
+
+        }
+        
+    }
     
 }
+
 - (UIViewController *)activityViewController {
     
     // Create the log in view controller
@@ -95,11 +108,17 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
     [self activityDidFinish:YES];
+    
+    if ([_refreshDelegate respondsToSelector:@selector(loadAndCacheObjects)]) {
+        [_refreshDelegate loadAndCacheObjects];
+    }
+
 }
 
 // Sent to the delegate when the log in attempt fails.
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
     NSLog(@"Failed to log in...");
+    
 }
 
 // Sent to the delegate when the log in screen is dismissed.
@@ -127,7 +146,7 @@
         [[[UIAlertView alloc] initWithTitle:@"Missing Information"
                                     message:@"Make sure you fill out all of the information!"
                                    delegate:nil
-                          cancelButtonTitle:@"ok"
+                          cancelButtonTitle:@"Ok"
                           otherButtonTitles:nil] show];
     } 
     return informationComplete;
@@ -156,7 +175,7 @@
 
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
-    NSLog(@"Failed to sign up...");
+   [self activityDidFinish:YES];
 }
 
 // Sent to the delegate when the sign up screen is dismissed.

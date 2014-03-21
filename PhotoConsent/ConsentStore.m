@@ -7,7 +7,7 @@
 //
 
 #import "ConsentStore.h"
-#import "Consent.h"
+
 
 @interface ConsentStore ()
 {
@@ -53,7 +53,7 @@
 
 - (NSArray *)allDeviceConsents
 {
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:NO];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:YES];
     NSArray *descriptors = [NSArray arrayWithObjects:descriptor, nil];
     return [allDeviceConsents sortedArrayUsingDescriptors:descriptors];
 }

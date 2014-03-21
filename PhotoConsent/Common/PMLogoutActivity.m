@@ -37,7 +37,7 @@
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"234-cloud"], CGSizeMake(40.0, 40.0));
+    return resizeImage([UIImage imageNamed:@"234-cloud"], CGSizeMake(40.0, 21.25));
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {

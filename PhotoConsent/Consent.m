@@ -14,7 +14,7 @@
 #pragma mark -
 #pragma mark - NSCoding
 
-- (id) initWithReference:(NSString*)referenceID imageFile:(NSData *)imageFile {
+- (instancetype) initWithReference:(NSString*)referenceID imageFile:(NSData *)imageFile {
     self = [super init];
     if (self) {
         _referenceID = referenceID;

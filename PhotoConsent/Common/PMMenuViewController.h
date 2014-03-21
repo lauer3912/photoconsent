@@ -13,6 +13,7 @@
 @protocol shareActivityProtocol <NSObject>
 
 - (void) shareActivity:(id)sender;
+- (void) upgradePhotoConsent:(id)sender;
 - (void) showConsentTypes;
 - (void) showDisclaimer;
 

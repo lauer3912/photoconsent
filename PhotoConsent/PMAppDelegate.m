@@ -7,7 +7,7 @@
 //
 
 #import "PMAppDelegate.h"
-
+#import "PMTextConstants.h"
 
 @implementation PMAppDelegate
 
@@ -19,15 +19,17 @@
     
     [self setStandardUserDefaults];
     
-    [_window setTintColor:[UIColor lightTextColor]];
+   
     
     UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
     UIColor *orange = [UIColor colorWithRed:1.0 green:140.0/255.0 blue:0 alpha:1.0];
    
     [[UINavigationBar appearance] setBarTintColor:orange];
+    [[UINavigationBar appearance] setTintColor:turquoise];
+    [[UIBarButtonItem appearance] setTintColor:turquoise];
     [[UICollectionView appearance] setBackgroundColor:turquoise];
     [[UIView appearance] setTintColor:turquoise];
-    [application setStatusBarStyle:UIStatusBarStyleDefault];
+    
          
     return YES;
 }
@@ -78,8 +80,8 @@
     NSString *error;
    
     NSDictionary *plistDict = [NSDictionary dictionaryWithObjects:
-                               [NSArray arrayWithObjects:@"Password not registered", @"User name not registered",noValue, [dateFormatter stringFromDate:[NSDate distantFuture]] ,[dateFormatter stringFromDate:[NSDate distantFuture]], nil]
-                                   forKeys:[NSArray arrayWithObjects: @"cloudPassword", @"cloudUsername", @"disclaimerAcknowledged",@"disclaimerAcknowledgedDate", @"lastAppSession",nil]];
+                               [NSArray arrayWithObjects:@"Password not registered", @"User name not registered",noValue, [dateFormatter stringFromDate:[NSDate distantFuture]] ,[dateFormatter stringFromDate:[NSDate distantFuture]], noValue, nil]
+                                   forKeys:[NSArray arrayWithObjects: @"cloudPassword", @"cloudUsername", @"disclaimerAcknowledged",@"disclaimerAcknowledgedDate", @"lastAppSession",@"isSubscribed",nil]];
     
     NSData *plistData = [NSPropertyListSerialization dataFromPropertyList:plistDict
                                                                    format:NSPropertyListXMLFormat_v1_0
@@ -110,6 +112,7 @@
     [userDefaultsClear removeObjectForKey:@"disclaimerAcknowledged"]; //BOOL
     [userDefaultsClear removeObjectForKey:@"disclaimerAcknowledgedDate"];
     [userDefaultsClear removeObjectForKey:@"lastAppSession"];
+    [userDefaultsClear removeObjectForKey:@"isSubscribed"];
     
     [NSUserDefaults resetStandardUserDefaults];
     

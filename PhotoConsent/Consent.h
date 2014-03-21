@@ -25,7 +25,7 @@
 + (void)saveConsent:(Consent *)consent;
 + (Consent *)getConsent;
 
-- (id) initWithReference:(NSString*)referenceID imageFile:(NSData*)imageFile;
+- (instancetype) initWithReference:(NSString*)referenceID imageFile:(NSData*)imageFile;
 - (Consent *)initWithCoder:(NSCoder *)aDecoder;
 - (void)encodeWithCoder:(NSCoder *)anEncoder;
 

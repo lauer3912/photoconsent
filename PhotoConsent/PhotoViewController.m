@@ -72,7 +72,7 @@
     if (self != nil)
     {
         _pageIndex = pageIndex;
-        self.view.backgroundColor = [UIColor whiteColor];
+        self.view.backgroundColor = [UIColor blackColor];
         
     }
     return self;
@@ -108,12 +108,6 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-
-}
 
 
 @end

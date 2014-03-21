@@ -31,7 +31,7 @@
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"01-refresh"], CGSizeMake(40.0, 40.0));
+    return resizeImage([UIImage imageNamed:@"01-refresh"], CGSizeMake(30.0, 32.4));
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {

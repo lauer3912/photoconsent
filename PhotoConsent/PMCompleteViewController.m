@@ -17,7 +17,7 @@
 
 
 
-@interface PMCompleteViewController ()
+@interface PMCompleteViewController () <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel* label1;
@@ -50,7 +50,12 @@
         }
     }
     [self showPurposeLabels];
-    _emailBtn.titleLabel.textColor = self.view.tintColor;
+    
+    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+    [self.view setBackgroundColor:turquoise];
+    
+    _emailBtn.titleLabel.textColor = turquoise;
+    
 }
 
 
@@ -134,17 +139,10 @@
                     
                     PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
                     
-                    /* save the image to the album REMOVED ALBUM FUNCTIONLITY
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        
-                        UIImage *image = [UIImage imageWithData:data];
-                        //UIImage *waterMarkedImg = [self generateWatermarkForImage:image];
-                        [self saveImageToAlbum:image withConsent:nil sender:vc];
-                        
-                    });
-                     
-                     */
-                    
+                    //save copy of image and consent on the device
+                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                         [self createDeviceConsentFromPFObject];
+                     });
                     
                     //check if this viewcontroller is still visible and if so pop to root viewconroller
                     if ([self isEqual:self.navigationController.visibleViewController]) {
@@ -163,28 +161,14 @@
         
         
     }
-    /*
-      else {
-        
-        AlbumContentsViewController *vc = (AlbumContentsViewController*)self.navigationController.viewControllers[0];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            Consent *deviceConsent = (Consent*)_userPhoto;
-            NSData *imageData = deviceConsent.imageFile;
-            UIImage *image = [UIImage imageWithData:imageData];
-            [self saveImageToAlbum:image withConsent:deviceConsent sender:vc];
-        });
-        
-    }
-    */
-
     
 }
 
 - (IBAction)completeAndUpload:(id)sender {
-    //add the new object/photo to the allImage array in the cloud Viewcontroller
+    //NOTE will always be PFObject. add the new object/photo to the allImage array in the cloud Viewcontroller
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         /*
-        as it takes a while to save everything we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous tasks to save the data to both the cloud and the album+consent on the device
+        as it takes a while to save everything we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous tasks to save the data to both the cloud and the device
         */
         PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
         NSCache *cachedImages = [vc cachedImages];
@@ -213,61 +197,7 @@
     
 }
 
-/*
-- (void) saveImageToAlbum:(UIImage*)image withConsent:(Consent*)deviceConsent sender:(id) senderController;  {
-    
-    //save to PhotoConsent album
-    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
-    //use ALAssetLibrary category methods
-   [lib saveImage:image toAlbum:@"PhotoConsent" withCompletionBlock:^(NSURL* albumAssetURL, NSError *error) {
-       
-       
-        if (error!=nil) {
-            NSString *errorMessage = @"Error saving to album\n";
-            if ([error userInfo]) {
-                errorMessage = [errorMessage stringByAppendingString:[[error userInfo] valueForKey:NSLocalizedDescriptionKey]];
-            }
-            
-            UIAlertView *reportError = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [reportError show];
-            
-        } else {
-            // NSAssert(albumAssetURL, @"nil value not allowed for assetURL");
-            
-            if ([senderController isKindOfClass:[AlbumContentsViewController class]]) {
-                [(AlbumContentsViewController*)senderController setDataArrayDidChange:@1];
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                });
-            } else {
-                NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-                [center postNotificationName:@"NotificationDidSaveToAlbum" object:self];
-            }
-            if (albumAssetURL) {
-                if ([_userPhoto isKindOfClass:[PFObject class]]) {
-                    
-                    [self createDeviceConsentFromPFObjectForAssetAtURL:albumAssetURL];
-                   
-                }
-                else {
-                    
-                    [deviceConsent setAssetURL:albumAssetURL];
-                    [deviceConsent setCreatedAt:[NSDate date]];
-                    [self saveDeviceConsent:deviceConsent];
-
-                }
-            }
-        }
-            
-    }];
-    
-    
-}
- 
- */
-
-/*
-- (void) createDeviceConsentFromPFObjectForAssetAtURL:(NSURL*)newAssetURL {
+- (void) createDeviceConsentFromPFObject {
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
         if (theImage.isDataAvailable) {
@@ -287,7 +217,7 @@
                 deviceConsent.Education = education;
                 deviceConsent.Publication = publication;
                 deviceConsent.consentSignature = [signature getData];
-                deviceConsent.assetURL = newAssetURL;
+                deviceConsent.assetURL = nil;
                 deviceConsent.createdAt = [NSDate date];
                 [self saveDeviceConsent:deviceConsent];
             }
@@ -301,11 +231,29 @@
   
     ConsentStore *store = [ConsentStore sharedDeviceConsents];
     [store addDeviceConsent:deviceConsent];
-    [store saveChanges];
+    if ([store saveChanges]) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSString *message = [NSString stringWithFormat:@"The photo and its consent details have been saved. The original remains in the Camera Roll"];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Copy Complete" message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+            [alert show];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [self dismiss:alert];
+    
+            });
+        });
+    }
     
 }
 
-*/
+-(void)dismiss:(UIAlertView*)alert
+{
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+}
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -325,12 +273,14 @@
         MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
         composer.mailComposeDelegate = self;
         
+        UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
+        [composer.navigationBar setTintColor:turquoise];
         // set the recipient as the patient
         NSArray *recipients = [[NSArray alloc] initWithObjects:[_userPhoto valueForKey:@"patientEmail"], nil];
         [composer setToRecipients:recipients];
         
         // set the subject
-        [composer setSubject:@"Photoconsent Image and Consent"];
+        [composer setSubject:@"PhotoConsent Image"];
         
         // setup the content for the email
         NSMutableString *emailBody = [NSMutableString stringWithFormat:@"<p><strong>Consent details for medical image taken by your healthcare professional using PhotoConsent</strong></p>"];

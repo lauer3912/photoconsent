@@ -8,6 +8,7 @@
 //  
 
 #import "PMCloudContentsViewController.h"
+#import  <iAd/iAd.h>
 #import "MyPageViewController.h"
 #import "PMLoginViewController.h"
 #import "PMSignUpViewController.h"
@@ -20,9 +21,15 @@
 #import "TLTransitionAnimator.h"
 #import "PMCameraDelegate.h"
 #import "PMLoginActivityDelegate.h"
+#import "Consent.h"
+#import "ConsentStore.h"
+#import "PMWorkOfflineActivity.h"
+#import "PMLogoutActivity.h"
+#import "PMLoginActivity.h"
+#import "PMUpgradeViewController.h"
 
+@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol>
 
-@interface PMCloudContentsViewController () <shareActivityProtocol>
 @property (strong, nonatomic)  UILabel *emptyLabel;
 
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
@@ -42,6 +49,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [self setCanDisplayBannerAds:YES];
+        
     }
     return self;
 }
@@ -50,34 +59,83 @@
 {
     [super viewDidLoad];
     _allImages = [[NSMutableArray alloc] init];
- //   self.title = @"Cloud";
-    
-    
-    [self.navigationItem setTitleView: [self titleView]];
+    [self setCanDisplayBannerAds:YES];
+    NSLog(@"There are %lu images stored offline on the device", (unsigned long)[[ConsentStore sharedDeviceConsents] allDeviceConsents].count);
     
     _dataArrayDidChange = @0;
     
     if ([PFUser currentUser]) {
         [self loadAndCacheObjects];
-    }
+        [self titleViewWithEnableSwitch:YES];
+    } else
+        [self titleViewWithEnableSwitch:NO];
 }
 
-- (UIView*)titleView {
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
-    UIView *titleView = [UIView new];
-    titleView.frame = CGRectMake(0.0, 0.0, 80., 44.0);
-//    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., 80., 44.0)];
-//    [title setAttributedText:[self attributedStringForText:@"Camera"]];
-     
-    UIButton *cameraBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *image = [UIImage imageNamed:@"714-camera"];
+    if ([PFUser currentUser]) {
+        if (!_allImages) {
+            _allImages = [[NSMutableArray alloc] init];
+            [self loadAndCacheObjects];
+            
+            
+        } else {
+            if (_dataArrayDidChange.boolValue == YES) {
+                [self.collectionView reloadData];
+                _dataArrayDidChange = @0; //= NO
+            }
+            [self showEmptyLabel];
+        }
+    } else  {
+        if (_allImages.count == 0) {
+            [self userDidLogout:nil];
+        }
+        if (_dataArrayDidChange.boolValue == YES) {
+            [self.collectionView reloadData];
+            _dataArrayDidChange = @0; //= NO
+        }
+        [self showEmptyLabel];
+    }
+
     
-    [cameraBtn setImage:image forState:UIControlStateNormal];
-    [cameraBtn addTarget:self action:@selector(useCamera:) forControlEvents:UIControlEventTouchUpInside];
-    cameraBtn.frame = CGRectMake(20.0, 0.0, 40., 40.);
+}
+
+
+- (UIView*)titleViewWithEnableSwitch:(BOOL)shouldEnable  {
     
-//    [titleView addSubview:title];
-    [titleView addSubview:cameraBtn];
+    self.navigationItem.titleView = nil;
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 120., 44.0)];
+    
+    if (shouldEnable) {
+        UIButton *cameraBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIImage *image = [UIImage imageNamed:@"714-camera"];
+        
+        [cameraBtn setImage:image forState:UIControlStateNormal];
+        [cameraBtn addTarget:self action:@selector(useCamera:) forControlEvents:UIControlEventTouchUpInside];
+        cameraBtn.frame = CGRectMake(40.0, 0.0, 40., 40.);
+        [cameraBtn setEnabled:shouldEnable];
+        [titleView addSubview:cameraBtn];
+    } else {
+        UILabel *offlineLabel = [[UILabel alloc] initWithFrame:titleView.bounds];
+        [offlineLabel setBackgroundColor:[UIColor clearColor]];
+        [offlineLabel setTextAlignment:NSTextAlignmentCenter];
+        [offlineLabel setFont:[UIFont boldSystemFontOfSize:15.0]];
+        [offlineLabel setTextColor:[UIColor darkTextColor]];
+        if (_allImages.count > 0)
+            [offlineLabel setText:@"Offline"];
+        else
+            [offlineLabel setText:@"PhotoConsent"];
+        
+        [titleView addSubview:offlineLabel];
+    }
     return titleView;
 }
 
@@ -143,22 +201,29 @@
                 [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
             }
             
-            if ([PFUser currentUser])
-                
+            if ([PFUser currentUser]) {
+                [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
                 [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No photos to display"]]];
-            else
-                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not logged inted"]]];
+            } else
+                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are not logged in"]]];
             
             [self.view addSubview:_emptyLabel];
             
-        } else
+        } else {
             if (_emptyLabel) {
                 [_emptyLabel removeFromSuperview];
                 _emptyLabel = nil;
             }
+            
+            if ([PFUser currentUser])
+              [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
+            else
+              [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
+        }
     } else
         //if not logged in
         if (![PFUser currentUser]) {
+            [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
             if (_emptyLabel) {
                 [_emptyLabel removeFromSuperview];
             }
@@ -173,25 +238,38 @@
         }
     
 }
-- (void) loadAndCacheObjects {
+
+#pragma mark - create image cache for cloud or device images and reload
+
+//delegate to PMWorkOfflineActivity
+- (void) loadAndCacheDeviceImages:(id) sender {
     
+        NSArray *allPhotos = [NSArray arrayWithArray:[[ConsentStore sharedDeviceConsents] allDeviceConsents]];
+        _allImages = nil;
+        _allImages = [NSMutableArray arrayWithCapacity:allPhotos.count];
+        [self cacheImages:allPhotos];
+    
+}
+
+- (void) cacheImages:(NSArray*) allPhotos {
+    
+    if (allPhotos.count == 0) {
+        return;
+    }
+
     [self showHUD];
-    
-    cloudRefresh(_allImages, dispatch_get_main_queue(), ^(NSMutableArray *allPhotos) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!_cachedImages) {
+            _cachedImages = [NSCache new];
+        }
         
+        _cachedImages.countLimit = 100;
+        [_cachedImages setName:@"imageCache"];
+        [_cachedImages setTotalCostLimit:(5 * 1024 * 1024)];//5MB
+        [_cachedImages setEvictsObjectsWithDiscardedContent:YES];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (!_cachedImages) {
-                _cachedImages = [NSCache new];
-            }
-            
-            _cachedImages.countLimit = 100;
-            [_cachedImages setName:@"cloudCache"];
-            [_cachedImages setTotalCostLimit:(5 * 1024 * 1024)];//5MB
-            [_cachedImages setEvictsObjectsWithDiscardedContent:YES];
-            
-            [allPhotos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
+        [allPhotos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ([obj isKindOfClass:[PFObject class]]) {
                 PFFile *theImage = [(PFObject*)obj objectForKey:@"smallImageFile"];
                 [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                     
@@ -202,22 +280,44 @@
                     [_cachedImages setObject:purgeableData forKey:index cost:data.length];
                     
                 }];
-            }];
-            
-            _dataArrayDidChange = @0;//= NO
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.collectionView reloadData];
-                if (refreshHUD) {
-                    [refreshHUD hide:YES];
-                    refreshHUD = nil;
-                }
-                [self showEmptyLabel];
+            } else if ([obj isKindOfClass:[Consent class]]) {
+                [_allImages addObject:obj];
+                NSData *data = [(Consent*)obj valueForKey:@"imageFile"];
+                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
+                NSNumber *index = [NSNumber numberWithInteger:idx];
+                [_cachedImages setObject:purgeableData forKey:index cost:data.length];
                 
-            });
+            }
+            
+        }];
+        
+        _dataArrayDidChange = @0;//= NO
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.collectionView reloadData];
+            if (refreshHUD) {
+                [refreshHUD hide:YES];
+                refreshHUD = nil;
+            }
+            [self showEmptyLabel];
             
             
-        }); //end of dispatch
+        });
+        
+        
+    }); //end of dispatch
+    
+}
+
+
+
+
+- (void) loadAndCacheObjects {
+    
+    cloudRefresh(_allImages, dispatch_get_main_queue(), ^(NSMutableArray *allPhotos) {
+        
+        [self cacheImages:allPhotos];
+        
         
     });
     
@@ -274,34 +374,15 @@
     
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - logout activity delegate called on activityDidFinish
+
+- (void) userDidLogout:(id) sender {
+    
+    [self clearCollectionView];
+    [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
+    
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    if ([PFUser currentUser]) {
-        if (!_allImages) {
-            _allImages = [[NSMutableArray alloc] init];
-            [self loadAndCacheObjects];
-            
-            
-        } else {
-            if (_dataArrayDidChange.boolValue == YES) {
-                [self.collectionView reloadData];
-                _dataArrayDidChange = @0; //= NO
-            }
-            [self showEmptyLabel];
-        }
-    } else
-        [self clearCollectionView];
-    
-    
-}
 
 
 #pragma mark - UICollectionViewDelegate
@@ -331,28 +412,35 @@
     NSPurgeableData *imageData = [_cachedImages objectForKey:index];
     
     
-    if (!imageData) {
+    if (!imageData) { //image is not in the cache
         
-        PFObject *eachObject = [_allImages objectAtIndex:indexPath.row];
-        PFFile *theImage = [eachObject objectForKey:@"imageFile"];
+        id eachObject = [_allImages objectAtIndex:indexPath.row];
         
-        [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if ([eachObject isKindOfClass:[PFObject class]]) {
+            PFFile *theImage = [eachObject objectForKey:@"imageFile"];
             
-            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
-            dispatch_async(queue, ^{
-                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-                
+            [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                [self cacheData:data atIndex:index];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    imageView.image = [UIImage imageWithData:purgeableData];
+                    imageView.image = [UIImage imageWithData:data];
                     [cell setNeedsLayout];
                 });
-                [_cachedImages setObject:purgeableData forKey:index cost:data.length];
-                [imageData endContentAccess];
-                [imageData discardContentIfPossible];
                 
+                
+                
+            }];
+
+        } else if ([eachObject isKindOfClass:[Consent class]]) {
+            
+            NSData *data = [eachObject valueForKey:@"imageFile"];
+            [self cacheData:data atIndex:index];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = [UIImage imageWithData:data];
+                [cell setNeedsLayout];
             });
             
-        }];
+        }
+        
         
         
     } else
@@ -368,6 +456,19 @@
     
 }
 
+- (void) cacheData:(NSData *)data atIndex: (NSNumber*) index {
+    
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
+    dispatch_async(queue, ^{
+        NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
+        [_cachedImages setObject:purgeableData forKey:index cost:data.length];
+        [purgeableData endContentAccess];
+        [purgeableData discardContentIfPossible];
+        
+    });
+    
+}
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -422,6 +523,7 @@
     _activityDelegate = _delegateInstance;
     
     if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
+        [(PMActivityDelegate*)_activityDelegate setSenderController:self];
         [_activityDelegate showActivitySheet:sender];
     }
     
@@ -511,9 +613,6 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                     block(allImages);
                     
                     
-                    
-                    
-                    
                 });
             }
             
@@ -551,6 +650,25 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     }];
     
 }
+
+
+- (void) upgradePhotoConsent:(id)sender {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        
+        PMUpgradeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"upgradeViewController"];
+        
+        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+        [nvc setTitle:@"Upgrade nav bar"];
+        
+        [vc setModalPresentationStyle:UIModalPresentationFormSheet];
+        [self presentViewController:nvc animated:YES completion:nil];
+    
+    }];
+    
+}
+
 
 - (void) showConsentTypes {
     
@@ -600,12 +718,12 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 #pragma mark - AtrributedString method
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     
-    UIColor *foregroundColour = [UIColor darkTextColor];
+    UIColor *foregroundColour = [UIColor darkGrayColor];
     
     NSMutableAttributedString *attrMutableString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", string]];
     
     NSRange range = [[attrMutableString string] rangeOfString:string];
-    [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour, NSFontAttributeName:[UIFont systemFontOfSize:17.0], NSTextEffectAttributeName:NSTextEffectLetterpressStyle} range:range];
+    [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour, NSFontAttributeName:[UIFont systemFontOfSize:19.0], NSTextEffectAttributeName:NSTextEffectLetterpressStyle} range:range];
     
     return attrMutableString;
 }

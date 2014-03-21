@@ -46,7 +46,7 @@
  */
 
 #import "PageViewControllerData.h"
-#import <AssetsLibrary/AssetsLibrary.h>
+#import "Consent.h"
 #import <Parse/Parse.h>
 #import "PMFunctions.h"
 
@@ -71,17 +71,13 @@
 
 - (UIImage *)photoAtIndex:(NSUInteger)index
 {
-    //used only for ALAsset
+    //used only for Device Consent i.e. offline viewing
     
     id photo = [_photoAssets objectAtIndex:index];
-    if ([photo isKindOfClass:[ALAsset class]]) {
-        ALAsset *photoAsset = self.photoAssets[index];
+    if ([photo isKindOfClass:[Consent class]]) {
+        Consent *photoAsset = self.photoAssets[index];
         
-        ALAssetRepresentation *assetRepresentation = [photoAsset defaultRepresentation];
-        
-        return [UIImage imageWithCGImage:[assetRepresentation fullResolutionImage]
-                                   scale:[assetRepresentation scale]
-                             orientation:(UIImageOrientation)ALAssetOrientationUp];
+        return [UIImage imageWithData:[photoAsset valueForKey:@"imageFile"]];
     } else return nil;
 }
 
