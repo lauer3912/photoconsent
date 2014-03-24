@@ -44,9 +44,10 @@
         PFFile *imagefile = [_userPhoto valueForKey:@"imageFile"];
         //the image data should be cached within userPhoto but check. If it's not skip and leave it to the asynchronous save processes
         if (imagefile.isDataAvailable) {
-            
-            
-            _imageView.image =  generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
+            if (isPaid()) {
+                _imageView.image = [UIImage imageWithData:[imagefile getData]];
+            } else
+                _imageView.image =  generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
         }
     }
     [self showPurposeLabels];
@@ -131,7 +132,7 @@
         
         
         [_userPhoto saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
+            if (succeeded) {
                 
                 
                 PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
@@ -181,10 +182,6 @@
             [allImages addObject:_userPhoto];
             NSData* data = [imagefile getData];
             NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-            if (cachedImages.countLimit <= nextIndex.integerValue) {
-                [cachedImages setCountLimit:nextIndex.integerValue];
-                
-            }
             [cachedImages setObject:purgeableData forKey:nextIndex cost:data.length];
             vc.dataArrayDidChange = @1;
             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -227,25 +224,28 @@
     
 }
 
+- (void)showCameraRollAlert {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSString *message = [NSString stringWithFormat:@"The photo and its consent details have been saved. The original remains in the Camera Roll"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Copy Complete" message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        [alert show];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [self dismiss:alert];
+            
+        });
+    });
+}
+
 - (void)saveDeviceConsent:(Consent*)deviceConsent {
   
     ConsentStore *store = [ConsentStore sharedDeviceConsents];
     [store addDeviceConsent:deviceConsent];
     if ([store saveChanges]) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            NSString *message = [NSString stringWithFormat:@"The photo and its consent details have been saved. The original remains in the Camera Roll"];
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Copy Complete" message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
-            [alert show];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
-                [self dismiss:alert];
-    
-            });
-        });
+        //if camera roll - showCameraRollAlert
     }
     
 }
@@ -318,7 +318,11 @@
             //the image data should be cached within userPhoto but check.
             if (imagefile.isDataAvailable) {
                 //add the watermark
-                UIImage *image = generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
+                UIImage *image;
+                if (isPaid()) {
+                    image = [UIImage imageWithData:[imagefile getData]];
+                } else
+                    image =  generateWatermarkForImage([UIImage imageWithData:[imagefile getData]]);
                 
                imageData = UIImageJPEGRepresentation(image, 1.0f);
                 

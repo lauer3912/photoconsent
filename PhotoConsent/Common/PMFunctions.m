@@ -78,6 +78,13 @@ UIImage* generateWatermarkForImage(UIImage *mainImg) {
     return result;
 }
 
+BOOL isPaid() {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *isPaid = [defaults valueForKey:@"Paid"];
+    return [isPaid boolValue];
+    
+}
 
 
 

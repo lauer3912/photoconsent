@@ -47,9 +47,10 @@
     
     if ([[ConsentStore sharedDeviceConsents] allDeviceConsents].count == 0) {
         
-        
+        /*
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Offline Not Available" message:@"There are no PhotoConsent images stored on the device" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
+        */
         
         return NO;
     } else {

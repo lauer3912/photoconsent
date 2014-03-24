@@ -200,34 +200,6 @@
         
             [self displayPrevPhoto];
         
-        
-        /*
-        _assetToDelete = (ALAsset*)obj; // need this as the assetURL returned in the completionblock will be nil if the image is deleted
-        
-        
-         __weak MyPageViewController* weakSelf = self;
-        NSURL* assetToDeleteURL = [_assetToDelete valueForProperty:ALAssetPropertyAssetURL];
-        [_assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-            if (error != nil) {
-                NSLog(@"Error deleting photo");
-            } else {
-                //PHOTO REMOVED FROM ALBUM so delete the matching device Consent
-               
-                [[[ConsentStore sharedDeviceConsents] allDeviceConsents] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                   
-                    if ([ [(Consent*)obj assetURL] isEqual:assetToDeleteURL]) {
-                        [[ConsentStore sharedDeviceConsents] deleteDeviceConsent:obj];
-                        [[ConsentStore sharedDeviceConsents] saveChanges];
-                        *stop = YES;
-                    }
-                }];
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    [weakSelf displayPrevPhoto];
-                });
-            }
-        }];
-        */
-        
     }
 }
 

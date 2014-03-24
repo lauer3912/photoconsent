@@ -31,3 +31,7 @@ NSString *const kPMTextConstants_Disclaimer6 = @"It is the responsibility of the
 NSString *const kPMTextConstants_Disclaimer7 = @"PhotoConsent recommends the user of this app to ensure that appropriate security precautions, like password protection on the device, are used to protect patient data in line with clinical information governance.";
 
 NSString *const kPMTextConstants_Disclaimer8 = @"This app may contain links to other sites. PhotoConsent make no representations, guarantees or promises regarding these other sites, which are not controlled by or affiliated with us.";
+
+
+
+

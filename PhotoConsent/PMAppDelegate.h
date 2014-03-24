@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import <StoreKit/StoreKit.h>
 
-@interface PMAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate>
+@interface PMAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate, SKPaymentTransactionObserver, SKRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) NSDictionary *latestMonthlyReceipt;
 
 @end

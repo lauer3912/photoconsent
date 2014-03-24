@@ -27,6 +27,7 @@
 #import "PMLogoutActivity.h"
 #import "PMLoginActivity.h"
 #import "PMUpgradeViewController.h"
+#import "PMFunctions.h"
 
 @interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol>
 
@@ -49,7 +50,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [self setCanDisplayBannerAds:YES];
+        [self setCanDisplayBannerAds:!isPaid()];
         
     }
     return self;
@@ -59,7 +60,7 @@
 {
     [super viewDidLoad];
     _allImages = [[NSMutableArray alloc] init];
-    [self setCanDisplayBannerAds:YES];
+    [self setCanDisplayBannerAds:!isPaid()];
     NSLog(@"There are %lu images stored offline on the device", (unsigned long)[[ConsentStore sharedDeviceConsents] allDeviceConsents].count);
     
     _dataArrayDidChange = @0;
@@ -263,7 +264,7 @@
             _cachedImages = [NSCache new];
         }
         
-        _cachedImages.countLimit = 100;
+
         [_cachedImages setName:@"imageCache"];
         [_cachedImages setTotalCostLimit:(5 * 1024 * 1024)];//5MB
         [_cachedImages setEvictsObjectsWithDiscardedContent:YES];
@@ -410,7 +411,7 @@
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:kImageViewTag];
     NSNumber *index = [NSNumber numberWithInteger:indexPath.row];
     NSPurgeableData *imageData = [_cachedImages objectForKey:index];
-    
+    NSLog(@"Cache index = %d  indexPath.Row = %d", index.integerValue, indexPath.row);
     
     if (!imageData) { //image is not in the cache
         

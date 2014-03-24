@@ -177,7 +177,10 @@
     
     
     // make a new UIImageView for the new image
-    _zoomView = [[UIImageView alloc] initWithImage:generateWatermarkForImage(image)];
+    if (isPaid()) {
+        _zoomView = [[UIImageView alloc] initWithImage:image];
+    } else
+        _zoomView = [[UIImageView alloc] initWithImage:generateWatermarkForImage(image)];
 
     
     [self addSubview:_zoomView];

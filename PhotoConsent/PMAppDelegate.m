@@ -11,6 +11,8 @@
 
 @implementation PMAppDelegate
 
+static  NSDateFormatter *dateFormatter;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup parse API
@@ -30,7 +32,9 @@
     [[UICollectionView appearance] setBackgroundColor:turquoise];
     [[UIView appearance] setTintColor:turquoise];
     
-         
+    //In-App Purchase transaction queue observer
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    
     return YES;
 }
 							
@@ -68,20 +72,16 @@
 - (void)setStandardUserDefaults
 {
     
-    
+    formatter();
     NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *plistPath = [rootPath stringByAppendingPathComponent:@"UserDefaults.plist"];
     //if the UserDefaults.plist file is not found create it
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSString* formatString =  [NSDateFormatter dateFormatFromTemplate:@"EdMMMhh:mma" options:0 locale:[NSLocale currentLocale]];
-    [dateFormatter setDateFormat:formatString];
     NSNumber *noValue = [NSNumber numberWithBool:NO];
     NSString *error;
    
     NSDictionary *plistDict = [NSDictionary dictionaryWithObjects:
-                               [NSArray arrayWithObjects:@"Password not registered", @"User name not registered",noValue, [dateFormatter stringFromDate:[NSDate distantFuture]] ,[dateFormatter stringFromDate:[NSDate distantFuture]], noValue, nil]
-                                   forKeys:[NSArray arrayWithObjects: @"cloudPassword", @"cloudUsername", @"disclaimerAcknowledged",@"disclaimerAcknowledgedDate", @"lastAppSession",@"isSubscribed",nil]];
+                               [NSArray arrayWithObjects:noValue,noValue,[dateFormatter stringFromDate:[NSDate distantFuture]], nil]
+                                   forKeys:[NSArray arrayWithObjects:@"Paid",@"disclaimerAcknowledged",@"disclaimerAcknowledgedDate",nil]];
     
     NSData *plistData = [NSPropertyListSerialization dataFromPropertyList:plistDict
                                                                    format:NSPropertyListXMLFormat_v1_0
@@ -107,12 +107,9 @@
 - (void) clearUserDefaults {
     
     NSUserDefaults* userDefaultsClear = [NSUserDefaults standardUserDefaults];
-    [userDefaultsClear removeObjectForKey:@"cloudPassword"];
-    [userDefaultsClear removeObjectForKey:@"cloudUsername"];
+    [userDefaultsClear removeObjectForKey:@"Paid"];
     [userDefaultsClear removeObjectForKey:@"disclaimerAcknowledged"]; //BOOL
     [userDefaultsClear removeObjectForKey:@"disclaimerAcknowledgedDate"];
-    [userDefaultsClear removeObjectForKey:@"lastAppSession"];
-    [userDefaultsClear removeObjectForKey:@"isSubscribed"];
     
     [NSUserDefaults resetStandardUserDefaults];
     
@@ -128,5 +125,84 @@
     }
         
 }
+
+
+#pragma mark -
+#pragma mark - In-App Purchase SKPaymentTransactionObserver protocol methods
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
+    
+    for (SKPaymentTransaction *transaction in transactions) {
+        switch (transaction.transactionState) {
+                
+            case SKPaymentTransactionStatePurchased:
+                
+                [self saveTransactionToDefaults:transaction];
+                [self showConfirmation:@"Thank you for your purchase"];
+                [self sendNotificationToObservers];
+                [queue finishTransaction:transaction];
+                break;
+            case SKPaymentTransactionStateRestored:
+                
+                [self saveTransactionToDefaults:transaction];
+                [self showConfirmation:@"Your purchase has been restored"];
+                [self sendNotificationToObservers];
+                [queue finishTransaction:transaction];
+                break;
+            case SKPaymentTransactionStateFailed:
+                
+                [queue finishTransaction:transaction];
+                break;
+            
+            default:
+                break;
+        }
+        
+    }
+    
+}
+
+- (void) showConfirmation:(NSString*)message {
+    UIAlertView *purchased = [[UIAlertView alloc] initWithTitle:@"Confirmation" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [purchased show];
+    
+}
+
+
+- (void) saveTransactionToDefaults:(SKPaymentTransaction*) transaction {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:@1 forKey:@"Paid"];
+    
+    
+}
+
+
+#pragma mark - Notification to transaction observers
+- (void) sendNotificationToObservers {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter postNotificationName:@"AppStorePurchaseNotification" object:nil];
+    });
+    
+}
+
+
+#pragma mark -
+#pragma mark - Date format function
+void formatter()  {
+    
+    if (dateFormatter == nil) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+        NSLocale *ukLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_GB"];
+        [dateFormatter setLocale:ukLocale];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    }
+    
+}
+
+
 
 @end
