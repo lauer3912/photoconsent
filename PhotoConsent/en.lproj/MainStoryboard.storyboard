@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="utp-dO-iPs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5051" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="utp-dO-iPs">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -86,7 +86,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
                                 <rect key="frame" x="40" y="106" width="241" height="330"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -117,7 +117,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" alpha="0.49999999999999961" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-iF-1BQ">
+                            <button opaque="NO" alpha="0.49999999999999961" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-iF-1BQ">
                                 <rect key="frame" x="40" y="392" width="241" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -133,7 +133,7 @@
                                     <action selector="emailPatientConsent:" destination="0fa-bz-Ruy" eventType="touchUpInside" id="b5s-Iz-JmB"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Zol-Hn-fka">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Zol-Hn-fka">
                                 <rect key="frame" x="20" y="457" width="280" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
@@ -159,7 +159,7 @@
                             <constraint firstItem="8Yt-Rt-kRY" firstAttribute="leading" secondItem="n5J-tc-qYE" secondAttribute="leading" id="LJa-ka-4Xq"/>
                             <constraint firstItem="pgN-iF-1BQ" firstAttribute="leading" secondItem="VFP-9L-044" secondAttribute="leading" id="QHR-wo-65g"/>
                             <constraint firstItem="M9J-6O-Ry9" firstAttribute="top" secondItem="SoJ-lb-WyE" secondAttribute="bottom" constant="6" id="TUG-uY-L75"/>
-                            <constraint firstItem="Xda-Uz-nU4" firstAttribute="top" secondItem="Zol-Hn-fka" secondAttribute="bottom" constant="22" id="UgZ-x8-Yuh"/>
+                            <constraint firstItem="Xda-Uz-nU4" firstAttribute="top" secondItem="Zol-Hn-fka" secondAttribute="bottom" constant="71" id="UgZ-x8-Yuh"/>
                             <constraint firstItem="8Yt-Rt-kRY" firstAttribute="top" secondItem="n5J-tc-qYE" secondAttribute="bottom" id="VQL-r4-lKB"/>
                             <constraint firstItem="M9J-6O-Ry9" firstAttribute="leading" secondItem="Zol-Hn-fka" secondAttribute="leading" id="dfc-79-1lt"/>
                             <constraint firstItem="n5J-tc-qYE" firstAttribute="top" secondItem="M9J-6O-Ry9" secondAttribute="bottom" constant="26" id="hTJ-YA-ttW"/>
@@ -213,12 +213,12 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WO5-7h-wqx" customClass="RMCanvasView">
+                            <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="WO5-7h-wqx" customClass="RMCanvasView">
                                 <rect key="frame" x="20" y="120" width="280" height="240"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hL3-Bs-fP0">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hL3-Bs-fP0">
                                 <rect key="frame" x="140" y="418" width="41" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -237,11 +237,11 @@
                             <constraint firstItem="WO5-7h-wqx" firstAttribute="centerX" secondItem="hL3-Bs-fP0" secondAttribute="centerX" id="A7v-hl-rtz"/>
                             <constraint firstItem="k8g-eb-TcK" firstAttribute="top" secondItem="vva-CQ-c9x" secondAttribute="bottom" constant="20" id="Agk-OT-8dx"/>
                             <constraint firstAttribute="trailing" secondItem="WO5-7h-wqx" secondAttribute="trailing" constant="20" symbolic="YES" id="GzV-Ed-SsT"/>
-                            <constraint firstAttribute="bottom" secondItem="WO5-7h-wqx" secondAttribute="bottom" constant="168" id="O0J-9v-Mws"/>
+                            <constraint firstAttribute="bottom" secondItem="WO5-7h-wqx" secondAttribute="bottom" constant="208" id="O0J-9v-Mws"/>
                             <constraint firstItem="WO5-7h-wqx" firstAttribute="leading" secondItem="k8g-eb-TcK" secondAttribute="leading" id="e0X-ty-eAO"/>
                             <constraint firstItem="WO5-7h-wqx" firstAttribute="trailing" secondItem="k8g-eb-TcK" secondAttribute="trailing" id="gfv-MT-qro"/>
-                            <constraint firstItem="hL3-Bs-fP0" firstAttribute="top" secondItem="WO5-7h-wqx" secondAttribute="bottom" constant="18" id="qwF-DT-bFQ"/>
-                            <constraint firstItem="Am7-bM-SKb" firstAttribute="top" secondItem="hL3-Bs-fP0" secondAttribute="bottom" constant="57" id="tlu-d9-zdz"/>
+                            <constraint firstItem="hL3-Bs-fP0" firstAttribute="top" secondItem="WO5-7h-wqx" secondAttribute="bottom" constant="58" id="qwF-DT-bFQ"/>
+                            <constraint firstItem="Am7-bM-SKb" firstAttribute="top" secondItem="hL3-Bs-fP0" secondAttribute="bottom" constant="106" id="tlu-d9-zdz"/>
                             <constraint firstItem="WO5-7h-wqx" firstAttribute="leading" secondItem="cHq-EH-obZ" secondAttribute="leading" constant="20" symbolic="YES" id="xEZ-dn-Ciq"/>
                         </constraints>
                     </view>
@@ -490,7 +490,7 @@
             </objects>
             <point key="canvasLocation" x="2032" y="-1089"/>
         </scene>
-        <!--Disclaimer View Controller-->
+        <!--Disclaimer View Controller - Disclaimer-->
         <scene sceneID="DQK-90-cG9">
             <objects>
                 <viewController storyboardIdentifier="disclaimerViewController" id="KlJ-YR-nZs" customClass="PMDisclaimerViewController" sceneMemberID="viewController">
@@ -502,38 +502,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="abc-TY-RMY">
-                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="LEG-Ui-g7h"/>
-                                </constraints>
-                                <items>
-                                    <navigationItem title="Disclaimer" id="TBQ-mM-Uic"/>
-                                </items>
-                            </navigationBar>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jn1-xf-cLi">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="3oQ-cP-9zW"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="26c-Cd-WKw"/>
-                                    <barButtonItem title="Accept" width="130" id="d09-6s-cM5" userLabel="Bar Button Item - Close">
-                                        <connections>
-                                            <action selector="disclaimer:" destination="KlJ-YR-nZs" id="OWZ-TK-z72"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="9p9-7w-07N"/>
-                                </items>
-                            </toolbar>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="DSS-IP-RFB">
-                                <rect key="frame" x="20" y="69" width="280" height="90"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="DSS-IP-RFB">
+                                <rect key="frame" x="20" y="83" width="280" height="84"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="97" id="M5Y-Wy-CNl"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="Disclaimer 0">
                                         <attributes>
@@ -545,8 +516,56 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="14" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="FB3-b0-5dU">
-                                <rect key="frame" x="20" y="286" width="280" height="231"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fo6-wN-mgH">
+                                <rect key="frame" x="20" y="175" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="LinkBtn0">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="2EL-Zh-pZk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r82-t8-0Sy">
+                                <rect key="frame" x="20" y="213" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="LinkBtn1">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="YOa-DJ-gZZ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B32-eo-ket">
+                                <rect key="frame" x="20" y="289" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="LinkBtn2">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="1t4-VC-H3n"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L9f-Fv-0yz">
+                                <rect key="frame" x="20" y="251" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="LinkBtn3">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="KMH-9e-M5z"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="11" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="FB3-b0-5dU">
+                                <rect key="frame" x="20" y="327" width="280" height="148"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
                                     <fragment content="Disclaimer 2">
@@ -559,65 +578,18 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fo6-wN-mgH">
-                                <rect key="frame" x="20" y="174" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="LinkBtn0">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="2EL-Zh-pZk"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r82-t8-0Sy">
-                                <rect key="frame" x="20" y="198" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="LinkBtn1">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="YOa-DJ-gZZ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B32-eo-ket">
-                                <rect key="frame" x="20" y="223" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="LinkBtn2">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="1t4-VC-H3n"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L9f-Fv-0yz">
-                                <rect key="frame" x="20" y="248" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="LinkBtn3">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="goToLink:" destination="KlJ-YR-nZs" eventType="touchUpInside" id="KMH-9e-M5z"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="DSS-IP-RFB" firstAttribute="top" secondItem="abc-TY-RMY" secondAttribute="bottom" constant="5" id="4iM-OA-71h"/>
-                            <constraint firstAttribute="bottom" secondItem="jn1-xf-cLi" secondAttribute="bottom" id="Bmr-6h-DpR"/>
-                            <constraint firstItem="abc-TY-RMY" firstAttribute="leading" secondItem="zDL-WG-xb5" secondAttribute="leading" id="Kg3-Oq-kVM"/>
-                            <constraint firstItem="jn1-xf-cLi" firstAttribute="top" secondItem="FB3-b0-5dU" secondAttribute="bottom" constant="7" id="Lgv-QP-g4W"/>
-                            <constraint firstAttribute="trailing" secondItem="DSS-IP-RFB" secondAttribute="trailing" constant="20" symbolic="YES" id="WLY-H8-pou"/>
-                            <constraint firstItem="jn1-xf-cLi" firstAttribute="trailing" secondItem="abc-TY-RMY" secondAttribute="trailing" id="flR-3e-Juo"/>
-                            <constraint firstItem="DSS-IP-RFB" firstAttribute="leading" secondItem="zDL-WG-xb5" secondAttribute="leading" constant="20" symbolic="YES" id="uU4-aL-E5d"/>
-                            <constraint firstItem="abc-TY-RMY" firstAttribute="top" secondItem="9UE-yg-U68" secondAttribute="bottom" id="xca-39-ZU0"/>
-                            <constraint firstItem="abc-TY-RMY" firstAttribute="leading" secondItem="jn1-xf-cLi" secondAttribute="leading" id="xw8-HG-YFO"/>
-                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="iqZ-cz-y1s"/>
+                    <navigationItem key="navigationItem" title="Disclaimer" id="iqZ-cz-y1s">
+                        <barButtonItem key="leftBarButtonItem" title="Accept" id="Ang-SB-4wk">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="disclaimer:" destination="KlJ-YR-nZs" id="N4p-fb-Lv6"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="dislcaimerBtn0" destination="Fo6-wN-mgH" id="s5b-Ac-J9f"/>
                         <outlet property="dislcaimerBtn1" destination="r82-t8-0Sy" id="QNj-S9-k1f"/>

@@ -44,15 +44,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
-    if ([segue.identifier isEqualToString:@"disclaimer"]) {
-        [segue.destinationViewController setTitle:@"Disclaimer"];
-
-    }
-    
     if ([segue.identifier isEqualToString:@"assessment"]) {
         [segue.destinationViewController setTitle:@"Assessment"];
-        
         
     }
     if ([segue.identifier isEqualToString:@"education"]) {

@@ -29,7 +29,7 @@
 #import "PMUpgradeViewController.h"
 #import "PMFunctions.h"
 
-@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol>
+@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate>
 
 @property (strong, nonatomic)  UILabel *emptyLabel;
 
@@ -50,7 +50,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [self setCanDisplayBannerAds:!isPaid()];
+       [self setCanDisplayBannerAds:!isPaid()];
         
     }
     return self;
@@ -60,12 +60,12 @@
 {
     [super viewDidLoad];
     _allImages = [[NSMutableArray alloc] init];
-    [self setCanDisplayBannerAds:!isPaid()];
-    NSLog(@"There are %lu images stored offline on the device", (unsigned long)[[ConsentStore sharedDeviceConsents] allDeviceConsents].count);
-    
+     [self setCanDisplayBannerAds:!isPaid()];
+
     _dataArrayDidChange = @0;
     
     if ([PFUser currentUser]) {
+        
         [self loadAndCacheObjects];
         [self titleViewWithEnableSwitch:YES];
     } else
@@ -76,6 +76,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    
+    NSLog(@"VIEW RECEIVED MEMORY WARNING");
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -264,30 +267,30 @@
             _cachedImages = [NSCache new];
         }
         
-
+        [_cachedImages setCountLimit:100];
         [_cachedImages setName:@"imageCache"];
         [_cachedImages setTotalCostLimit:(5 * 1024 * 1024)];//5MB
-        [_cachedImages setEvictsObjectsWithDiscardedContent:YES];
-        
+        [_cachedImages setEvictsObjectsWithDiscardedContent:NO];
+        [_cachedImages setDelegate:self];
         [allPhotos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if ([obj isKindOfClass:[PFObject class]]) {
-                PFFile *theImage = [(PFObject*)obj objectForKey:@"smallImageFile"];
-                [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            
+            if (idx < _cachedImages.countLimit) {
+                if ([obj isKindOfClass:[PFObject class]]) {
+                    PFFile *theImage = [(PFObject*)obj objectForKey:@"smallImageFile"];
+                    [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                        NSLog(@"ADDING CACHED IMAGE AT INDEX %lu", (unsigned long)idx);
+                        NSNumber *index = [NSNumber numberWithInteger:idx];
+                        [self cacheData:data atIndex:index];
+                        
+                    }];
                     
-                    
-                    NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-                    
+                } else if ([obj isKindOfClass:[Consent class]]) {
+                    [_allImages addObject:obj];
+                    NSData *data = [(Consent*)obj valueForKey:@"imageFile"];
                     NSNumber *index = [NSNumber numberWithInteger:idx];
-                    [_cachedImages setObject:purgeableData forKey:index cost:data.length];
+                    [self cacheData:data atIndex:index];
                     
-                }];
-            } else if ([obj isKindOfClass:[Consent class]]) {
-                [_allImages addObject:obj];
-                NSData *data = [(Consent*)obj valueForKey:@"imageFile"];
-                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-                NSNumber *index = [NSNumber numberWithInteger:idx];
-                [_cachedImages setObject:purgeableData forKey:index cost:data.length];
-                
+                }
             }
             
         }];
@@ -295,6 +298,7 @@
         _dataArrayDidChange = @0;//= NO
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             [self.collectionView reloadData];
             if (refreshHUD) {
                 [refreshHUD hide:YES];
@@ -378,7 +382,8 @@
 #pragma mark - logout activity delegate called on activityDidFinish
 
 - (void) userDidLogout:(id) sender {
-    
+    [_cachedImages removeAllObjects];
+    _cachedImages = nil;
     [self clearCollectionView];
     [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
     
@@ -407,28 +412,24 @@
     
     UICollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:kImageViewTag];
+    
     NSNumber *index = [NSNumber numberWithInteger:indexPath.row];
     NSPurgeableData *imageData = [_cachedImages objectForKey:index];
-    NSLog(@"Cache index = %d  indexPath.Row = %d", index.integerValue, indexPath.row);
-    
     if (!imageData) { //image is not in the cache
-        
+        NSLog(@"Image is not in the cache for Index %ld at row %ld", (long)index.integerValue, (long)indexPath.row);
         id eachObject = [_allImages objectAtIndex:indexPath.row];
         
         if ([eachObject isKindOfClass:[PFObject class]]) {
-            PFFile *theImage = [eachObject objectForKey:@"imageFile"];
+            PFFile *theImage = [eachObject objectForKey:@"smallImageFile"];
             
             [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 NSLog(@"Adding image not found for row %ld", (long)indexPath.row);
                 [self cacheData:data atIndex:index];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     imageView.image = [UIImage imageWithData:data];
                     [cell setNeedsLayout];
                 });
-                
-                
-                
             }];
 
         } else if ([eachObject isKindOfClass:[Consent class]]) {
@@ -447,9 +448,10 @@
     } else
         
         if ([imageData beginContentAccess]) {
-            imageView.image = [UIImage imageWithData:imageData];
+            NSLog(@"Image found in cache for Index %ld at row %ld", (long)index.integerValue, (long)indexPath.row);
+            
             [imageData endContentAccess];
-            [imageData discardContentIfPossible];
+            imageView.image = [UIImage imageWithData:imageData];
             [cell setNeedsLayout];
         }
     
@@ -459,13 +461,14 @@
 
 - (void) cacheData:(NSData *)data atIndex: (NSNumber*) index {
     
+    if (!data) {
+        return;
+    }
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0UL);
     dispatch_async(queue, ^{
         NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
         [_cachedImages setObject:purgeableData forKey:index cost:data.length];
-        [purgeableData endContentAccess];
-        [purgeableData discardContentIfPossible];
         
     });
     
@@ -534,6 +537,8 @@
 void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^block)(NSMutableArray *allPhotos))
 {
     
+    
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         // create a PFQuery
@@ -541,6 +546,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
         PFUser *user = [PFUser currentUser];
         [query whereKey:@"user" equalTo:user];
         [query orderByAscending:@"createdAt"];
+        query.limit = 300;
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
@@ -564,13 +570,13 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                     }
                 }
                 
-                // Compare the old and new object IDs
+                // Compare the old and newLY refreshed object IDs
                 NSMutableArray *newCompareObjectIDArray = [NSMutableArray arrayWithArray:newObjectIDArray];
                 NSMutableArray *newCompareObjectIDArray2 = [NSMutableArray arrayWithArray:newObjectIDArray];
                 if (oldCompareObjectIDArray.count > 0) {
                     // New objects
                     [newCompareObjectIDArray removeObjectsInArray:oldCompareObjectIDArray];
-                    // Remove old objects if you delete them using the web browser
+                    // Remove old objects that have been deleted using the web browser
                     [oldCompareObjectIDArray removeObjectsInArray:newCompareObjectIDArray2];
                     if (oldCompareObjectIDArray.count > 0) {
                         // Check the position in the objectIDArray and remove
@@ -612,7 +618,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                 //return the array of images in the completion block
                 dispatch_async(queue, ^{
                     block(allImages);
-                    
+                    NSLog(@"Count allImages after refresh = %lu", (unsigned long)allImages.count);
                     
                 });
             }
@@ -689,8 +695,9 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     [self dismissViewControllerAnimated:YES completion:^{
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
-        [self presentViewController:avc animated:YES completion:nil];
+        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController: [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"]];
+            
+        [self presentViewController:nvc animated:YES completion:nil];
     }];
 }
 
@@ -729,6 +736,10 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     return attrMutableString;
 }
 
-
+#pragma mark - NSCache delegate protocol
+- (void)cache:(NSCache *)cache willEvictObject:(id)obj {
+    
+    NSLog(@"Will evict this object from cache %@ with length %@", cache.name, [obj valueForKey:@"length"]);
+}
 
 @end

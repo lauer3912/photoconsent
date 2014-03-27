@@ -96,7 +96,7 @@
             
            [excludedActivityTypes addObject:UIActivityTypeMail]; //string item causes it to show
             NSNumber *imageCount = @0;
-            NSString *nameForActivity;
+            NSString *nameForActivity = @"View";
             _logActivity = [PMLoginActivity new];
             [_logActivity setStopOfflineDelegate:_senderController];
             [_logActivity setRefreshDelegate:_senderController];
@@ -110,8 +110,7 @@
                     imageCount = [NSNumber numberWithInteger:controller.allImages.count];
                     
                     nameForActivity = @"Hide";
-                } else
-                    nameForActivity = @"View";
+                } 
                 
             }
             
