@@ -8,13 +8,31 @@
 
 #import "PMFeedbackActivity.h"
 #import "PMFunctions.h"
+#import "UIColor+More.h"
+
 
 @interface PMFeedbackActivity () <MFMailComposeViewControllerDelegate>
-@property (nonatomic, strong) NSArray* activityItems;
+
+@property (strong, nonatomic) MFMailComposeViewController *mailComposer;
+
 @end
 
 
 @implementation PMFeedbackActivity
+
+
+- (id) initWithSenderController:(UIViewController*)controller shareActivityType:(PMFeedbackActivityShareType)shareActivityType;{
+    
+    if (self = [super init]) {
+        _senderController = controller;
+        _shareActivityType = shareActivityType;
+        _mailComposer = [[MFMailComposeViewController alloc] init];
+    }
+    
+    return self;
+}
+
+
 
 + (UIActivityCategory)activityCategory {
     
@@ -23,44 +41,68 @@
 
 - (NSString *)activityType {
     
-    return @"feedbackActivityType";
+    return @"CustomMailActivityType";
 }
 
 - (NSString *)activityTitle {
     
-    return @"Feedback";
+    if (_shareActivityType == shareActivityTypeFeedback) {
+        return @"Feedback";
+    } else
+        return @"Share";
+
+        
+    
 }
 
 - (UIImage *)activityImage {
     
-    return resizeImage([UIImage imageNamed:@"feedback"], CGSizeMake(40.0, 27.5));
+    if (_shareActivityType == shareActivityTypeFeedback) {
+        return resizeImage([UIImage imageNamed:@"feedback"], CGSizeMake(40.0, 27.5));
+    } else
+        return resizeImage([UIImage imageNamed:@"18-envelope"], CGSizeMake(40.0, 27.5));
+    
+    
+    
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
-    
-    return YES;
+   
+       return YES;
 }
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     
-    _activityItems = activityItems;
+    
+    _mailComposer.mailComposeDelegate = self;
+    [_mailComposer.navigationBar setTintColor:[UIColor turquoise]];
+    if (_shareActivityType == shareActivityTypeFeedback) {
+        [_mailComposer setSubject:@"PhotoConsent"];
+        [_mailComposer setToRecipients:@[@"feedback@photoconsent.com"]];
+        [_mailComposer setMessageBody:@"Please enter your comments here" isHTML:NO];
+    } else if (_shareActivityType == shareActivityTypeWithImages) {
+                [_mailComposer setSubject:@"Image from PhotoConsent"];
+                [_mailComposer setMessageBody:activityItems[3] isHTML:NO];
+                NSData *signatureData = activityItems[1];
+                NSData *imageData = activityItems[2];
+                [_mailComposer addAttachmentData:signatureData mimeType:@"image/jpeg" fileName:@"consent_image.jpg"];
+                [_mailComposer addAttachmentData:imageData mimeType:@"image/jpeg" fileName:@"medical_image.jpg"];
+          } else if (_shareActivityType == shareActivityTypePromote) {
+                    [_mailComposer setSubject:@"Image from PhotoConsent"];
+                    [_mailComposer setMessageBody:activityItems[0] isHTML:NO];
+                
+                }
     
 }
 - (UIViewController *)activityViewController {
-    
-    MFMailComposeViewController *mailComposer = [[MFMailComposeViewController alloc] init];
-    mailComposer.mailComposeDelegate = self;
-    [mailComposer setSubject:@"PhotoConsent"];
-    [mailComposer setToRecipients:@[@"feedback@photoconsent.com"]];
-    [mailComposer setMessageBody:@"Please enter your comments here" isHTML:NO];
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    [mailComposer.navigationBar setTintColor:turquoise];
-    return mailComposer;
+       return nil;
 }
 
 - (void)performActivity {
- 
-   
+    
+    [[(UIViewController*)_senderController presentedViewController]  presentViewController:_mailComposer animated:YES completion:^{
+      
+   }];;
     
 }
 

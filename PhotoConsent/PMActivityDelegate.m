@@ -25,6 +25,7 @@
 <UIActivityItemSource>
 
 @property (strong, nonatomic) PMFeedbackActivity *feedbackActivity;
+@property (strong, nonatomic) PMFeedbackActivity *shareActivity;
 @property (strong, nonatomic) PMCameraRollActivity *cameraRollActivity;
 @property (strong, nonatomic) PMRefreshActivity *refreshActivity;
 @property (strong, nonatomic) PMWorkOfflineActivity *offlineActivity;
@@ -68,14 +69,17 @@
     
     UIActivityViewController *activityViewController;
     
-    // initialise two custom services
-    _feedbackActivity = [PMFeedbackActivity new];
+    
+    if ([MFMailComposeViewController canSendMail]) {
+        
+        _feedbackActivity = [[PMFeedbackActivity alloc] initWithSenderController:_senderController shareActivityType:shareActivityTypeFeedback];
+        _shareActivity = [[PMFeedbackActivity alloc] initWithSenderController:_senderController shareActivityType:shareActivityTypePromote];
+    }
+
     _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
     
     
-    NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
-    
-    //check if sender is album or cloud
+     NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
     
     if ([sender isKindOfClass:[UIBarButtonItem class]]) {
         PFUser *user = [PFUser currentUser];
@@ -101,8 +105,13 @@
             [_logActivity setStopOfflineDelegate:_senderController];
             [_logActivity setRefreshDelegate:_senderController];
             
+            
+            
+           
             _offlineActivity = [PMWorkOfflineActivity new];
             [_offlineActivity setOfflineDelegate:_senderController];
+            
+            
             if ([_senderController isKindOfClass:[PMCloudContentsViewController class]]) {
                 PMCloudContentsViewController* controller = (PMCloudContentsViewController*)_senderController;
                 if (controller.allImages) {
@@ -117,28 +126,27 @@
             activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[imageCount,nameForActivity] applicationActivities:@[_logActivity,_offlineActivity]];
         }
     } else
-        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_feedbackActivity]];
+        activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[messageItem] applicationActivities:@[_shareActivity, _feedbackActivity]];
     
-    [excludedActivityTypes addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint,UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMessage,UIActivityTypeAirDrop]];
+    [excludedActivityTypes addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact, UIActivityTypePrint,UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMessage,UIActivityTypeAirDrop,UIActivityTypeMail]];
     
-    //exclude mail service if they cannot be sent
-    if (![MFMailComposeViewController canSendMail])
-        [excludedActivityTypes addObject:UIActivityTypeMail];
+   
     
     activityViewController.excludedActivityTypes = excludedActivityTypes;
     
     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
-        //completion code here
+        if ([activityType isEqualToString:@"CustomMailActivityType"]) {
+          //[(UIViewController*)_senderController dismissViewControllerAnimated:YES completion:nil];
+        }
     };
     
     activityViewController.completionHandler = completionBlock;
-    [activityViewController setValue:@"PhotoConsent" forKey:@"subject"];
-    
+   
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         //iPhone, present activity view controller as is
         [(UIViewController*)_senderController presentViewController:activityViewController animated:YES completion:^{
-            
+           
         }];
 
     }
@@ -163,13 +171,13 @@
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
     
-    return @"PhotoConsent";
+    return @"PhotoConsent is good";
 }
 
 
 - (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType {
     
-    id text = @"Checkout Photoconsent - the secure app for gaining medical consent for patient images";
+    id text = @"Checkout PhotoConsent - the secure app for gaining medical consent for patient images";
         
     return text;
     

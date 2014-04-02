@@ -23,8 +23,8 @@
 #import "PMTextConstants.h"
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
-
-
+#import "PMFeedbackActivity.h"
+#import  "UIColor+More.h"
 
 
 
@@ -34,6 +34,8 @@
 @property (strong, nonatomic) Consent *consentToDelete;
 @property (strong, nonatomic) UIImage *imageForEmail;
 
+@property (strong, nonatomic) PMFeedbackActivity *shareActivity;
+
 @end
 
 @implementation MyPageViewController
@@ -41,6 +43,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    [self.view setBackgroundColor:[UIColor turquoise]];
     
     _trashBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(deletePhotoActionSheet:)];
     
@@ -54,6 +59,7 @@
     
 }
 
+
 -(void) flagAssetRemoved {
     
     UIViewController *senderController = self.navigationController.viewControllers[0];
@@ -61,15 +67,6 @@
 
 }
 
-- (void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    //keep a direct reference to asset arrays in the cloud and album viewControllers
-    
-    UINavigationController *cloudController = (UINavigationController*)self.parentViewController;
-    PMCloudContentsViewController* vc = (PMCloudContentsViewController*)cloudController.viewControllers[0];
-    [[PageViewControllerData sharedInstance] setPhotoAssets:[vc allImages]];
-        
-}
 
 #pragma mark - datasource
 
@@ -109,9 +106,12 @@
         index--;
        
         [_trashBtn setEnabled:[self canBeDeleted:index]];
+        
+         NSLog(@"VC BEFORE - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
+        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
         return [PhotoViewController photoViewControllerForPageIndex:(index)];
     }
-    
+   
 
 }
 
@@ -126,8 +126,13 @@
     } else {
         index ++;
         [_trashBtn setEnabled:[self canBeDeleted:index]];
+        
+         NSLog(@"VC AFTER - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
+        
+        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
         return [PhotoViewController photoViewControllerForPageIndex:(index)];
     }
+    
 }
 
 - (BOOL) canBeDeleted:(NSInteger)index {
@@ -170,6 +175,7 @@
 - (void)deletePhoto:(UIActionSheet *)sender
 {
     id selectedObject = [[PageViewControllerData sharedInstance] objectAtIndex:_currentIndex];
+    
     if ([selectedObject isKindOfClass:[PFObject class]]) {
         
          [(PFObject*)selectedObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -177,10 +183,9 @@
              if (succeeded) {
                  //remove the object from allImages in the presenting viewController and also the cache
                  
-                 NSCache *cachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedImages];
-                 [cachedImages removeObjectForKey:[NSNumber numberWithInteger:_currentIndex]];
-              
-                 [self displayPrevPhoto];
+                [self flagAssetRemoved];
+                [self displayPrevPhoto];
+               
                 
              
              } else {
@@ -192,22 +197,51 @@
     
     } else if ([selectedObject isKindOfClass:[Consent class]]) {
         
-            NSCache *cachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedImages];
-            [cachedImages removeObjectForKey:[NSNumber numberWithInteger:_currentIndex]];
         
             [[ConsentStore sharedDeviceConsents] deleteDeviceConsent:selectedObject];
             [[ConsentStore sharedDeviceConsents] saveChanges];
+            [self flagAssetRemoved];
         
-            [self displayPrevPhoto];
-        
+           [self displayPrevPhoto];
     }
 }
 
-
+/*
+- (void) refreshLargeImageCache {
+    
+    
+    [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
+        
+    if ([_refreshCacheDelegate respondsToSelector:@selector(loadCache:objects:key:progress:completionHandler:)]) {
+        
+    //NSCache* largeCachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedLargeImages];
+        
+        NSCache* largeCachedImages =  [[PageViewControllerData sharedInstance] largeCachedImages];
+        
+        [largeCachedImages removeAllObjects];
+        
+        NSArray* countAllImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] allImages];
+      
+        NSArray* allPhotos = [[PageViewControllerData sharedInstance] photoAssets];
+        [_refreshCacheDelegate loadCache:largeCachedImages objects:allPhotos key:@"imageFile" progress:nil completionHandler:^(BOOL finished) {
+            if (finished) {
+                
+                NSLog(@"count allImages = %d  count photoAssets = %d", countAllImages.count, [[PageViewControllerData sharedInstance] photoCount]  );
+                NSLog(@"CURRENTINDEX = %d", _currentIndex);
+                [self displayPrevPhoto];
+            }
+            
+            
+        }];
+        
+    }
+}
+*/
+ 
 - (void) displayPrevPhoto {
     
     [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
-     [self flagAssetRemoved];
+    
     if ([[PageViewControllerData sharedInstance] photoCount] == 0) {
         
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -221,7 +255,7 @@
     
         NSArray* photoViewControllers = @[ [PhotoViewController photoViewControllerForPageIndex:_currentIndex]];
         
-        [self setViewControllers:photoViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+        [self setViewControllers:photoViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
         }];
         
     }
@@ -245,6 +279,8 @@
         id consent = [self activityViewController:activityViewController itemForActivityType:@"consentActivityType"];
         [shareActivityItems addObject:consent];
         
+        _shareActivity = [[PMFeedbackActivity alloc] initWithSenderController:self shareActivityType:shareActivityTypeWithImages];
+        
         imageDataForEmailActivity(currentObj, @"consentSignature", ^(id emailPhoto) {
             if (emailPhoto) {
                 
@@ -257,20 +293,19 @@
                     [shareActivityItems addObject:emailPhoto];
                     
                     
-                    [shareActivityItems addObject:[self activityViewController:activityViewController itemForActivityType:UIActivityTypeMail]];
+                    [shareActivityItems addObject:[self activityViewController:activityViewController itemForActivityType:@"CustomMailActivityType"]];
                     
                     
-                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:shareActivityItems  applicationActivities:@[consentActivity]];
+                    activityViewController = [[UIActivityViewController alloc] initWithActivityItems:shareActivityItems  applicationActivities:@[_shareActivity,consentActivity]];
  
-                    activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeMessage, UIActivityTypePostToFacebook,UIActivityTypePostToTwitter];
+                    activityViewController.excludedActivityTypes = @[UIActivityTypeSaveToCameraRoll,UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeMessage, UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypeMail];
                     
-                    [activityViewController setValue:@"Image from PhotoConsent" forKey:@"subject"];
                     
                     //set up the completion handler but not used
                     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
                         
-                        if ([activityType isEqualToString:UIActivityTypeMail]) {
-                            NSLog(@"Mail activity completion handler has fired");
+                        if ([activityType isEqualToString:@"CustomMailActivityType"]) {
+                          //  [self dismissViewControllerAnimated:YES completion:nil];
                         }
                         
                     };
@@ -348,7 +383,7 @@ void imageDataForEmailActivity(id currentObj, NSString* key, void (^block)(id em
     __block id value;
     
 
-    if ([activityType isEqualToString:UIActivityTypeMail])
+    if ([activityType isEqualToString:@"CustomMailActivityType"])
         value = [NSString stringWithFormat:@"Reference:%@", [[self currentObj] valueForKey:@"referenceID"]];
     
     

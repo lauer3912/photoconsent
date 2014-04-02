@@ -45,30 +45,19 @@
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
     
-    if ([[ConsentStore sharedDeviceConsents] allDeviceConsents].count == 0) {
+    _imageCount = 0; //initialise
+    if ([activityItems[0] isKindOfClass:[NSNumber class]]) {
         
-        /*
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Offline Not Available" message:@"There are no PhotoConsent images stored on the device" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-        */
-        
-        return NO;
-    } else {
-    
-    
-        _imageCount = 0; //initialise
-        if ([activityItems[0] isKindOfClass:[NSNumber class]]) {
-            
-            _imageCount = [(NSNumber*)activityItems[0] integerValue];
-        }
-        
-        if ([activityItems[1] isKindOfClass:[NSString class]]) {
-            
-            _activityName = (NSString*)activityItems[1];
-        }
-        
-        return YES;
+        _imageCount = [(NSNumber*)activityItems[0] integerValue];
     }
+    
+    if ([activityItems[1] isKindOfClass:[NSString class]]) {
+        
+        _activityName = (NSString*)activityItems[1];
+    }
+    
+    return YES;
+
 }
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {

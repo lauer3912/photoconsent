@@ -34,8 +34,7 @@
     [_ib_publicationSwitch addTarget:self action:@selector(consentSwitchChange:) forControlEvents:UIControlEventValueChanged];
     [self.navigationItem.rightBarButtonItem setEnabled:NO];
     
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    [self.view setBackgroundColor:turquoise];
+    [self.view setBackgroundColor:[UIColor turquoise]];
     
 }
 

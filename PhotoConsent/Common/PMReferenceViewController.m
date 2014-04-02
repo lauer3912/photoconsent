@@ -8,6 +8,8 @@
 
 #import "PMReferenceViewController.h"
 #import "PMReferenceDetail.h"
+#import "UIColor+More.h"
+
 
 @interface PMReferenceViewController ()
  
@@ -30,8 +32,8 @@
 
     // Uncomment the following line to preserve selection between presentations.
      self.clearsSelectionOnViewWillAppear = NO;
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    [self.view setBackgroundColor:turquoise];
+    
+    [self.view setBackgroundColor:[UIColor turquoise]];
  
 }
 
@@ -68,27 +70,6 @@
     }];
 }
 
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    
-    UIView *headerView = [UIView new];
-    
-        
-    if (section == 0) {
-        UILabel *stringLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 240.0, 50.0)];
-        [stringLabel setBackgroundColor:[UIColor clearColor]];
-        [stringLabel setTextAlignment:NSTextAlignmentCenter];
-        [stringLabel setNumberOfLines:2];
-        NSString *string = [NSString stringWithFormat:@"Refer to details"];
-       
-        NSAttributedString *attrString = [self attributedStringForText:string];
-        [stringLabel setAttributedText:attrString];
-        [headerView addSubview:stringLabel];
-    }
-    
-        
-       return headerView;
-}
 
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     

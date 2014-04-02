@@ -13,7 +13,7 @@
 #import "PMTextConstants.h"
 #import "PMCloudContentsViewController.h"
 #import  <Parse/Parse.h>
-
+#import "UIColor+More.h"
 
 
 
@@ -52,10 +52,9 @@
     }
     [self showPurposeLabels];
     
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    [self.view setBackgroundColor:turquoise];
+    [self.view setBackgroundColor:[UIColor turquoise]];
     
-    _emailBtn.titleLabel.textColor = turquoise;
+    _emailBtn.titleLabel.textColor = [UIColor turquoise];
     
 }
 
@@ -148,6 +147,7 @@
                     //check if this viewcontroller is still visible and if so pop to root viewconroller
                     if ([self isEqual:self.navigationController.visibleViewController]) {
                         
+                        
                         vc.dataArrayDidChange = @1;
                         [self.navigationController popToRootViewControllerAnimated:YES];
                     }
@@ -172,19 +172,29 @@
         as it takes a while to save everything we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous tasks to save the data to both the cloud and the device
         */
         PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
-        NSCache *cachedImages = [vc cachedImages];
+        NSCache *cachedSmallImages = [vc cachedSmallImages];
+        NSCache *cachedLargeImages = [vc cachedLargeImages];
         NSMutableArray *allImages = [vc allImages];
         //get the index as the key by which to add the image to the cache
         NSNumber *nextIndex = [NSNumber numberWithInteger:[vc allImages].count];
-        PFFile *imagefile = [_userPhoto valueForKey:@"imageFile"];
+        PFFile *largeImageData = [_userPhoto valueForKey:@"imageFile"];
+        PFFile *smallImageData = [_userPhoto valueForKey:@"smallImageFile"];
         //the image data should be cached within userPhoto but check. If it's not skip and leave it to the asynchronous save processes
-        if (imagefile.isDataAvailable) {
+        if (largeImageData.isDataAvailable) {
             [allImages addObject:_userPhoto];
-            NSData* data = [imagefile getData];
+            NSData* data = [largeImageData getData];
             NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-            [cachedImages setObject:purgeableData forKey:nextIndex cost:data.length];
+            [cachedLargeImages setObject:purgeableData forKey:nextIndex cost:data.length];
             vc.dataArrayDidChange = @1;
+            vc.shouldDim = NO;
+            [vc.navigationItem.rightBarButtonItem setEnabled:NO];//Gets re-enabled in PMCloudContentsViewController viewDidAppear
+            if (smallImageData.isDataAvailable) {
+                NSData* data = [smallImageData getData];
+                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
+                [cachedSmallImages setObject:purgeableData forKey:nextIndex cost:data.length];
+            }
             [self.navigationController popToRootViewControllerAnimated:YES];
+            
             
             
         }
@@ -224,6 +234,7 @@
     
 }
 
+//not used
 - (void)showCameraRollAlert {
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -273,8 +284,8 @@
         MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
         composer.mailComposeDelegate = self;
         
-        UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-        [composer.navigationBar setTintColor:turquoise];
+        
+        [composer.navigationBar setTintColor:[UIColor turquoise]];
         // set the recipient as the patient
         NSArray *recipients = [[NSArray alloc] initWithObjects:[_userPhoto valueForKey:@"patientEmail"], nil];
         [composer setToRecipients:recipients];

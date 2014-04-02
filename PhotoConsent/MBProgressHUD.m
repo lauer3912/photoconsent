@@ -8,6 +8,7 @@
 #import <tgmath.h>
 
 
+
 #if __has_feature(objc_arc)
 	#define MB_AUTORELEASE(exp) exp
 	#define MB_RELEASE(exp) exp
@@ -777,8 +778,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		self.opaque = NO;
 		_progress = 0.f;
 		_annular = NO;
-		_progressTintColor = [[UIColor alloc] initWithWhite:1.f alpha:1.f];
-		_backgroundTintColor = [[UIColor alloc] initWithWhite:1.f alpha:.1f];
+        
+        //bright orange added by Alex
+        UIColor *brightOrange = [UIColor colorWithRed:1.0 green:140.0/255.0 blue:0 alpha:1.0];
+		_progressTintColor = brightOrange;  //[[UIColor alloc] initWithWhite:1.f alpha:1.f];
+		_backgroundTintColor = [UIColor darkGrayColor]; //[[UIColor alloc] initWithWhite:1.f alpha:.1f];
 		[self registerForKVO];
 	}
 	return self;
@@ -834,7 +838,12 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		CGFloat radius = (allRect.size.width - 4) / 2;
 		CGFloat startAngle = - ((float)M_PI / 2); // 90 degrees
 		CGFloat endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-		CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // white
+        
+        //added ay Alex
+        CGContextSetRGBFillColor(context, 64./255.0f, 224.0/255.0f, 208.0/255.0f, 1.0f); // turquoise
+		
+        //original white default
+       // CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // white
 		CGContextMoveToPoint(context, center.x, center.y);
 		CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, 0);
 		CGContextClosePath(context);

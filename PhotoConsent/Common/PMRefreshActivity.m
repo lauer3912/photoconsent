@@ -20,7 +20,7 @@
 }
 
 - (NSString *)activityType {
-    
+
     return @"refreshActivityType";
 }
 
@@ -53,8 +53,8 @@
     
     [self activityDidFinish:YES];
     
-    if ([_refreshDelegate respondsToSelector:@selector(loadAndCacheObjects)]) {
-        [_refreshDelegate loadAndCacheObjects];
+    if ([_refreshDelegate respondsToSelector:@selector(refreshAndCacheObjects)]) {
+        [_refreshDelegate refreshAndCacheObjects];
     }
     
 }

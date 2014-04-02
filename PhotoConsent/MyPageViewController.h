@@ -47,10 +47,22 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^LoadCacheDidFinish)(BOOL);
+typedef void(^LoadCacheProgress)(CGFloat);
+
+
+@protocol PMRefreshCacheProtocol <NSObject>
+
+- (void)loadCache:(NSCache*)cache objects:(NSArray*)allPhotos  key:(NSString*) imageKey  progress:(LoadCacheProgress)progress completionHandler:(LoadCacheDidFinish)completion;
+
+
+@end
+
+
 @interface MyPageViewController : UIPageViewController <UIPageViewControllerDataSource>
 
 @property NSInteger startingIndex;
 @property NSInteger currentIndex;
-
+@property (weak, nonatomic) id<PMRefreshCacheProtocol> refreshCacheDelegate;
 
 @end

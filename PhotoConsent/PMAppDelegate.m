@@ -8,10 +8,13 @@
 
 #import "PMAppDelegate.h"
 #import "PMTextConstants.h"
+#import "UIColor+More.h"
 
 @implementation PMAppDelegate
 
 static  NSDateFormatter *dateFormatter;
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,15 +25,11 @@ static  NSDateFormatter *dateFormatter;
     [self setStandardUserDefaults];
     
    
-    
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    UIColor *orange = [UIColor colorWithRed:1.0 green:140.0/255.0 blue:0 alpha:1.0];
-   
-    [[UINavigationBar appearance] setBarTintColor:orange];
-    [[UINavigationBar appearance] setTintColor:turquoise];
-    [[UIBarButtonItem appearance] setTintColor:turquoise];
-    [[UICollectionView appearance] setBackgroundColor:turquoise];
-    [[UIView appearance] setTintColor:turquoise];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor brightOrange]];
+    [[UINavigationBar appearance] setTintColor:[UIColor turquoise]];
+    [[UIBarButtonItem appearance] setTintColor:[UIColor turquoise]];
+    [[UICollectionView appearance] setBackgroundColor:[UIColor turquoise]];
+    [[UIView appearance] setTintColor:[UIColor turquoise]];
     
     //In-App Purchase transaction queue observer
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];

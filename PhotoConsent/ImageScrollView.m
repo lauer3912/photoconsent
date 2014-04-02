@@ -49,6 +49,9 @@
 #import "PageViewControllerData.h"
 #import <Parse/Parse.h>
 #import "PMFunctions.h"
+#import "UIColor+More.h"
+
+
 
 @interface ImageScrollView () <UIScrollViewDelegate>
 
@@ -74,7 +77,10 @@
         self.showsHorizontalScrollIndicator = NO;
         self.bouncesZoom = YES;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
-        self.delegate = self;        
+        self.delegate = self;
+        
+      
+        [self setBackgroundColor:[UIColor turquoise]];
     }
     return self;
 }
@@ -82,33 +88,8 @@
 - (void)setIndex:(NSUInteger)index {
     
     _index = index;
-    id obj = [[PageViewControllerData sharedInstance] objectAtIndex:index];
+     [self displayImage:[[PageViewControllerData sharedInstance] photoAtIndex:_index]];
     
-    if ([obj isKindOfClass:[PFObject class]]) {
-        
-   NSLog(@"Now = %@   Object created at = %@", [NSDate date], [(PFObject*)obj valueForKey:@"createdAt"]);
-        
-        PFFile *imagefile = [(PFObject*)obj objectForKey:@"imageFile"];
-        
-        [imagefile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            if (!error) {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    
-                    UIImage *image = [UIImage imageWithData:data];
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        [self displayImage:image];
-                    });
-                    
-                });
-            }
-            
-        }];//end of Parse getdata
-       
-        
-    } else
-        [self displayImage:[[PageViewControllerData sharedInstance] photoAtIndex:_index]];
- 
-        
 }
 
 + (NSUInteger)imageCount {

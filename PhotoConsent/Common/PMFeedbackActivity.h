@@ -11,4 +11,19 @@
 
 @interface PMFeedbackActivity : UIActivity
 
+enum PMFeedbackActivityShareType: NSInteger {
+    
+    shareActivityTypeFeedback,
+    shareActivityTypePromote,
+    shareActivityTypeWithImages,
+    
+};
+typedef enum PMFeedbackActivityShareType PMFeedbackActivityShareType;
+
+@property (strong, nonatomic) id senderController;
+@property (assign, nonatomic) PMFeedbackActivityShareType shareActivityType;
+
+- (id) initWithSenderController:(UIViewController*)controller shareActivityType:(PMFeedbackActivityShareType)shareActivityType;
+
+
 @end

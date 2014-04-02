@@ -69,18 +69,48 @@
     return self.photoAssets.count;
 }
 
+
+/*  this is used with _largeCachedImages
+- (UIImage *)photoAtIndex:(NSUInteger)index
+{
+    UIImage *image;
+    if ([_delegate respondsToSelector:@selector(imageAtIndex:forCache:)]) {
+        image = [_delegate imageAtIndex:[NSNumber numberWithInteger:index] forCache:_largeCachedImages];
+     }
+    return image;
+    
+ }
+*/
+
 - (UIImage *)photoAtIndex:(NSUInteger)index
 {
     //used only for Device Consent i.e. offline viewing
-    
+    UIImage* image;
     id photo = [_photoAssets objectAtIndex:index];
     if ([photo isKindOfClass:[Consent class]]) {
         Consent *photoAsset = self.photoAssets[index];
         
-        return [UIImage imageWithData:[photoAsset valueForKey:@"imageFile"]];
-    } else return nil;
+        image = [UIImage imageWithData:[photoAsset valueForKey:@"imageFile"]];
+    } else
+        
+        if ([photo isKindOfClass:[PFObject class]]) {
+            NSString *key = @"imageFile";
+            
+            PFFile *imageData = [photo objectForKey:key];
+            if (imageData.isDataAvailable) {
+                
+                NSData *data = [imageData getData];
+                
+                image = [UIImage imageWithData:data];
+            }
+        }
+    
+    return image;
 }
 
+
+
+//not used
 - (id)objectAtIndex:(NSUInteger)index
 {
     if (index == NSNotFound) {

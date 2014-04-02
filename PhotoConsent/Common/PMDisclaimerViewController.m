@@ -56,9 +56,7 @@
     [_dislcaimerBtn3 setTitle:kPMTextConstants_Disclaimer5 forState:UIControlStateNormal];
     [_dislcaimerBtn3 setTag:3];
     
-    
-    UIColor *turquoise = [UIColor colorWithRed:64./255.0 green:224.0/255.0 blue:208.0/255.0 alpha:1.0];
-    [self.view setBackgroundColor:turquoise];
+    [self.view setBackgroundColor:[UIColor turquoise]];
 
 }
 - (void)didReceiveMemoryWarning

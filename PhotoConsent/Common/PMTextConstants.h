@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UIColor+More.h"
+
 
 @interface PMTextConstants : NSObject
 
@@ -23,8 +25,8 @@ extern NSString *const kPMTextConstants_Disclaimer5;
 extern NSString *const kPMTextConstants_Disclaimer6;
 extern NSString *const kPMTextConstants_Disclaimer7;
 extern NSString *const kPMTextConstants_Disclaimer8;
-
-
 extern NSString *const kPMTextConstants_PhotoConsent;
+
+
 
 @end

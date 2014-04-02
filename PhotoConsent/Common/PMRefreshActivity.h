@@ -10,7 +10,7 @@
 
 @protocol PMRefreshActivityProtocol <NSObject>
 
-- (void) loadAndCacheObjects;
+- (void) refreshAndCacheObjects;
 
 @end
 

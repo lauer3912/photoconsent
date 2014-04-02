@@ -31,7 +31,7 @@
 
 -(void)tintColorDidChange {
     if (self.tintAdjustmentMode == UIViewTintAdjustmentModeDimmed) {
-        [self setAlpha:0.70];
+        [self setAlpha:0.50];
     } else
         [self setAlpha:1.0];
 }

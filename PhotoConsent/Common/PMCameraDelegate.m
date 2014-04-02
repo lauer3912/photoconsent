@@ -67,7 +67,10 @@
         _referenceID = [[alertView textFieldAtIndex:0] text];
         // Dismiss picker, resize image and start the consent process
         
+        PMCloudContentsViewController* svc = (PMCloudContentsViewController*)_senderController;
         
+        svc.shouldDim = YES;
+
         
         [cameraController dismissViewControllerAnimated:YES completion:^{
             
@@ -79,31 +82,14 @@
                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
                     PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
                     [vc setUserPhoto:userPhoto];
+                    
+                    
                     [[_senderController navigationController] pushViewController:vc animated:NO];
                 });
                 
                 
             }
-            
-            /*
-            else if ([_senderController isKindOfClass:[AlbumContentsViewController class]]) {
-                
-                
-                //store a smaller version of the image for verification
-                NSData *imageData = UIImageJPEGRepresentation(resizeImage(_image, CGSizeMake(640.0, 960.0)), 1.0f);
-                
-                
-                Consent *userPhoto = [[Consent alloc] initWithReference:_referenceID imageFile:imageData];
-                
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-                PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
-                [vc setUserPhoto:userPhoto];
-                [[_senderController navigationController] pushViewController:vc animated:NO];
-                
-                
-                
-            }
-             */
+           
         }];
         
     
