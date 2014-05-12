@@ -8,7 +8,6 @@
 
 #import "PMReferenceViewController.h"
 #import "PMReferenceDetail.h"
-#import "UIColor+More.h"
 
 
 @interface PMReferenceViewController ()
@@ -33,7 +32,7 @@
     // Uncomment the following line to preserve selection between presentations.
      self.clearsSelectionOnViewWillAppear = NO;
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+//    [self.view setBackgroundColor:[UIColor turquoise]];
  
 }
 

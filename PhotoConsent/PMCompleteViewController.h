@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
-#import <Parse/Parse.h>
+#import "PMPhotoConsentProtocol.h"
+
 
 @interface PMCompleteViewController : UIViewController <MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) id userPhoto;
 
+@property (weak,nonatomic) id<ConsentDelegate> consentDelegate;
+
 - (IBAction)completeAndUpload:(id)sender;
+
+
 
 @end

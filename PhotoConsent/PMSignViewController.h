@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Parse/Parse.h>
+#import "PMPhotoConsentProtocol.h"
 
 @class RMCanvas, RMCanvasView, RMPainter;
 
@@ -20,5 +20,7 @@
 @property (weak, nonatomic) IBOutlet  RMCanvasView *canvasView;
 @property (strong, nonatomic) RMPainter *painter;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButton;
+
+@property (weak,nonatomic) id<ConsentDelegate> consentDelegate;
 
 @end

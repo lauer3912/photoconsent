@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UIColor+More.h"
+
 
 
 @interface PMTextConstants : NSObject

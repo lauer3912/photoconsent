@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Parse/Parse.h>
+#import "PMPhotoConsentProtocol.h"
 
 @interface PMBasicDetailsViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) id userPhoto;
+
+@property (weak,nonatomic) id<ConsentDelegate> consentDelegate;
+
 
 @end

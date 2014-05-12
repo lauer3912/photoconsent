@@ -10,8 +10,11 @@
 #import "PMBasicDetailsViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "PMTextConstants.h"
+#import "PMUsePhotoViewController.h"
+#import "PMCameraRollActivity.h"
+#import "PMCloudContentsViewController.h"
 
-@interface PMConsentDetailViewController ()
+@interface PMConsentDetailViewController () <UINavigationControllerDelegate>
 
 @end
 
@@ -34,7 +37,7 @@
     [_ib_publicationSwitch addTarget:self action:@selector(consentSwitchChange:) forControlEvents:UIControlEventValueChanged];
     [self.navigationItem.rightBarButtonItem setEnabled:NO];
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+    [self.navigationController setDelegate:self];
     
 }
 
@@ -75,7 +78,10 @@
     if ([segue.identifier isEqualToString:@"goToBasicDetailsView"]) {
         PMBasicDetailsViewController *vc = (PMBasicDetailsViewController *)segue.destinationViewController;
         vc.userPhoto = sender;
+        [vc setConsentDelegate:_consentDelegate];
     }
+    
+    
 }
 
 #pragma mark - IBAction
@@ -95,7 +101,11 @@
 
 - (IBAction)cancelBtn:(id)sender {
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ([_consentDelegate respondsToSelector:@selector(didCancelConsent)]) {
+        [_consentDelegate didCancelConsent];
+    }
+    
+    
 }
 
 - (IBAction)pressedNextButton:(UIBarButtonItem *)sender {
@@ -107,8 +117,50 @@
     [self performSegueWithIdentifier:@"goToBasicDetailsView" sender:_userPhoto];
 }
 
+#pragma mark - UINavigationControllerDelegate
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    
+    if (viewController.view.tag == 100) {
+        id<UIAlertViewDelegate> vc;
+        if ([viewController isKindOfClass:[PMUsePhotoViewController class]]) {
+            vc = [(PMUsePhotoViewController*)viewController alertViewDelegate];
 
+        } else
+            
+            if ([navigationController.presentingViewController isKindOfClass:[UIActivityViewController class]]) {
+                //this is a cameraRollActivity
+                
+                //track back to get the alert view delegate
+                UIActivityViewController *uac = (UIActivityViewController*)navigationController.presentingViewController;
+                
+                UINavigationController  *nc = (UINavigationController*)uac.presentingViewController;
+                
+                vc = (PMCloudContentsViewController*)nc.topViewController;
+                
+            }
+        
+        
+        [navigationController setNavigationBarHidden:YES];
+        [self showReferenceIDWithDelegate:vc];
+       
+    }
+    
+}
 
-
+- (void) showReferenceIDWithDelegate:(id<UIAlertViewDelegate>) avDelegate {
+    
+    
+    UIAlertView *referenceID = [[UIAlertView alloc] initWithTitle:@"Reference Identifier" message:nil delegate:avDelegate cancelButtonTitle:@"Cancel" otherButtonTitles: @"Done",nil];
+    referenceID.tag = 2;
+    [referenceID setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    NSString *reference = [_userPhoto valueForKey:@"referenceID"];
+    UITextField *textField = [referenceID textFieldAtIndex:0];
+    
+    [textField setTextColor:[UIColor blueColor]];
+    [textField setClearButtonMode:UITextFieldViewModeAlways];
+    [textField setText:reference];
+    [referenceID show];
+    
+}
 
 @end

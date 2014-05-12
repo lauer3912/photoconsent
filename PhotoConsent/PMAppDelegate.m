@@ -8,7 +8,7 @@
 
 #import "PMAppDelegate.h"
 #import "PMTextConstants.h"
-#import "UIColor+More.h"
+
 
 @implementation PMAppDelegate
 
@@ -24,12 +24,13 @@ static  NSDateFormatter *dateFormatter;
     
     [self setStandardUserDefaults];
     
-   
+   /*
     [[UINavigationBar appearance] setBarTintColor:[UIColor brightOrange]];
     [[UINavigationBar appearance] setTintColor:[UIColor turquoise]];
     [[UIBarButtonItem appearance] setTintColor:[UIColor turquoise]];
     [[UICollectionView appearance] setBackgroundColor:[UIColor turquoise]];
     [[UIView appearance] setTintColor:[UIColor turquoise]];
+    */
     
     //In-App Purchase transaction queue observer
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
@@ -115,7 +116,7 @@ static  NSDateFormatter *dateFormatter;
 }
 
 
-#pragma mark - Disclaimer alertview delegate
+#pragma mark - Disclaimer alertview delegate not used
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != -1) {

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
-#import <Parse/Parse.h>
+
 
 @interface PMConsentViewController : UIViewController <MFMailComposeViewControllerDelegate>
 

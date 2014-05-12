@@ -8,7 +8,7 @@
 
 #import "PMFeedbackActivity.h"
 #import "PMFunctions.h"
-#import "UIColor+More.h"
+
 
 
 @interface PMFeedbackActivity () <MFMailComposeViewControllerDelegate>
@@ -75,7 +75,7 @@
     
     
     _mailComposer.mailComposeDelegate = self;
-    [_mailComposer.navigationBar setTintColor:[UIColor turquoise]];
+//    [_mailComposer.navigationBar setTintColor:[UIColor turquoise]];
     if (_shareActivityType == shareActivityTypeFeedback) {
         [_mailComposer setSubject:@"PhotoConsent"];
         [_mailComposer setToRecipients:@[@"feedback@photoconsent.com"]];

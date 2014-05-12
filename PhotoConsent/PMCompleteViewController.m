@@ -13,7 +13,6 @@
 #import "PMTextConstants.h"
 #import "PMCloudContentsViewController.h"
 #import  <Parse/Parse.h>
-#import "UIColor+More.h"
 
 
 
@@ -52,14 +51,18 @@
     }
     [self showPurposeLabels];
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    _emailBtn.titleLabel.textColor = [UIColor turquoise];
+    
+    [_emailBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [_emailBtn setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
+
     
 }
 
 
 - (void) showPurposeLabels {
+    //should use a bitmap for these
     NSNumber *assessment = [_userPhoto valueForKey:@"Assessment"];
     NSNumber *education = [_userPhoto valueForKey:@"Education"];
     NSNumber *publication = [_userPhoto valueForKey:@"Publication"];
@@ -129,34 +132,29 @@
     
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         
-        
         [_userPhoto saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 
-                
                 PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
                 [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    
-                    PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
                     
                     //save copy of image and consent on the device
                      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                          [self createDeviceConsentFromPFObject];
                      });
                     
-                    //check if this viewcontroller is still visible and if so pop to root viewconroller
-                    if ([self isEqual:self.navigationController.visibleViewController]) {
-                        
-                        
-                        vc.dataArrayDidChange = @1;
-                        [self.navigationController popToRootViewControllerAnimated:YES];
-                    }
+                    
+                    
                     
                     
                 }];//end of parse getdata
                 
             } else
                 NSLog(@"Error: %@ %@", error, [error userInfo]);
+            
+            if ([_consentDelegate respondsToSelector:@selector(didFinishSaving)]) {
+                [_consentDelegate didFinishSaving];
+            }
             
         }];
         
@@ -171,43 +169,34 @@
         /*
         as it takes a while to save everything we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous tasks to save the data to both the cloud and the device
         */
-        PMCloudContentsViewController *vc = (PMCloudContentsViewController*)self.navigationController.viewControllers[0];
-        NSCache *cachedSmallImages = [vc cachedSmallImages];
-        NSCache *cachedLargeImages = [vc cachedLargeImages];
-        NSMutableArray *allImages = [vc allImages];
-        //get the index as the key by which to add the image to the cache
-        NSNumber *nextIndex = [NSNumber numberWithInteger:[vc allImages].count];
-        PFFile *largeImageData = [_userPhoto valueForKey:@"imageFile"];
-        PFFile *smallImageData = [_userPhoto valueForKey:@"smallImageFile"];
-        //the image data should be cached within userPhoto but check. If it's not skip and leave it to the asynchronous save processes
-        if (largeImageData.isDataAvailable) {
-            [allImages addObject:_userPhoto];
-            NSData* data = [largeImageData getData];
-            NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-            [cachedLargeImages setObject:purgeableData forKey:nextIndex cost:data.length];
-            vc.dataArrayDidChange = @1;
-            vc.shouldDim = NO;
-            [vc.navigationItem.rightBarButtonItem setEnabled:NO];//Gets re-enabled in PMCloudContentsViewController viewDidAppear
-            if (smallImageData.isDataAvailable) {
-                NSData* data = [smallImageData getData];
-                NSPurgeableData *purgeableData = [NSPurgeableData dataWithData:data];
-                [cachedSmallImages setObject:purgeableData forKey:nextIndex cost:data.length];
-            }
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        
+                
+        if ([_consentDelegate respondsToSelector:@selector(didCompleteConsentForPhoto:)]) {
             
-            
-            
+            [_consentDelegate didCompleteConsentForPhoto:_userPhoto];
         }
         [self savePhoto];
+        
     }
     
     
 }
 
+- (IBAction)cancelBtn:(id)sender {
+    
+    if ([_consentDelegate respondsToSelector:@selector(didCancelConsent)]) {
+        [_consentDelegate didCancelConsent];
+    }
+    
+    
+}
+
+
 - (void) createDeviceConsentFromPFObject {
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
         PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
         if (theImage.isDataAvailable) {
+            PFFile *smallImageData = [_userPhoto valueForKey:@"smallImageFile"];
             NSString *reference = [_userPhoto valueForKey:@"referenceID"];
             NSString *patientName = [_userPhoto valueForKey:@"patientName"];
             NSString *patientEmail = [_userPhoto valueForKey:@"patientEmail"];
@@ -218,6 +207,10 @@
             PFFile *signature = [_userPhoto valueForKey:@"consentSignature"];
             if (signature.isDataAvailable) {
                 Consent *deviceConsent = [[Consent alloc] initWithReference:reference imageFile:[theImage getData]];
+                if (smallImageData.isDataAvailable) {
+                    deviceConsent.smallImageFile = [smallImageData getData];
+                }
+                
                 deviceConsent.patientName = patientName;
                 deviceConsent.patientEmail = patientEmail;
                 deviceConsent.Assessment = assessment;
@@ -285,7 +278,6 @@
         composer.mailComposeDelegate = self;
         
         
-        [composer.navigationBar setTintColor:[UIColor turquoise]];
         // set the recipient as the patient
         NSArray *recipients = [[NSArray alloc] initWithObjects:[_userPhoto valueForKey:@"patientEmail"], nil];
         [composer setToRecipients:recipients];

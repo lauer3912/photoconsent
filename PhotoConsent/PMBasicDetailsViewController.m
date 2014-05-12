@@ -57,9 +57,21 @@
 {
     if ([segue.identifier isEqualToString:@"goToSignView"]) {
         // pass on the photo object to the next view
-        PMSignViewController *controller = segue.destinationViewController;
-        controller.userPhoto = _userPhoto;
+        PMSignViewController *vc = segue.destinationViewController;
+        vc.userPhoto = _userPhoto;
+        [vc setConsentDelegate:_consentDelegate];
+        
     }
+}
+
+
+- (IBAction)cancelBtn:(id)sender {
+    
+    if ([_consentDelegate respondsToSelector:@selector(didCancelConsent)]) {
+        [_consentDelegate didCancelConsent];
+    }
+    
+    
 }
 
 @end

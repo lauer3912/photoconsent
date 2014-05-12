@@ -56,7 +56,7 @@
     [_dislcaimerBtn3 setTitle:kPMTextConstants_Disclaimer5 forState:UIControlStateNormal];
     [_dislcaimerBtn3 setTag:3];
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+//    [self.view setBackgroundColor:[UIColor turquoise]];
 
 }
 - (void)didReceiveMemoryWarning

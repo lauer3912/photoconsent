@@ -10,7 +10,7 @@
 #import "PMFunctions.h"
 #import "PMConsentViewController.h"
 #import "Consent.h"
-
+#import <Parse/Parse.h>
 
 
 @interface PMConsentActivity () 
@@ -79,6 +79,7 @@
 - (void)performActivity {
      
 }
+
 
 
 @end

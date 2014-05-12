@@ -13,4 +13,12 @@
 
 @property (strong, nonatomic) id senderController;
 
+@property (strong, nonatomic) UIImagePickerController *cameraController;
+
+//pass consent delegate on to cameraRoll activity
+@property (weak, nonatomic) id<ConsentDelegate> consentDelegate;
+//pass these delegates on to cameraRoll activity
+@property (weak, nonatomic) id<UIAlertViewDelegate> alertviewDelegate;
+
+
 @end

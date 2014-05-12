@@ -11,11 +11,11 @@
 #include <QuartzCore/QuartzCore.h>
 #import "PMCompleteViewController.h"
 #import "Consent.h"
-
+#import <Parse/Parse.h>
 #import "RMCanvas.h"
 #import "RMCanvasView.h"
 #import "RMPainter.h"
-#import "UIColor+More.h"
+
 
 @interface PMSignViewController ()
 <UIGestureRecognizerDelegate>
@@ -42,7 +42,7 @@
     _painter = painter;
     
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+//    [self.view setBackgroundColor:[UIColor turquoise]];
     
 }
 
@@ -57,8 +57,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"goToConfirmationScreen"]) {
-        PMCompleteViewController *controller = segue.destinationViewController;
-        controller.userPhoto = _userPhoto;
+        PMCompleteViewController *vc = segue.destinationViewController;
+        vc.userPhoto = _userPhoto;
+        [vc setConsentDelegate:_consentDelegate];
     }
 }
 
@@ -98,5 +99,13 @@
     [_painter setupContextWithCanvas:_canvas];
 }
 
+- (IBAction)cancelBtn:(id)sender {
+    
+    if ([_consentDelegate respondsToSelector:@selector(didCancelConsent)]) {
+        [_consentDelegate didCancelConsent];
+    }
+    
+    
+}
 
 @end

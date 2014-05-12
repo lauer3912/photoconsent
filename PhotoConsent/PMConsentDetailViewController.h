@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Parse/Parse.h>
+#import "PMPhotoConsentProtocol.h"
+
+
 
 @interface PMConsentDetailViewController : UIViewController
 
@@ -19,7 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *educationLabel;
 @property (weak, nonatomic) IBOutlet UIButton *publicationLabel;
 
-
+@property (weak,nonatomic) id<ConsentDelegate> consentDelegate;
 
 @property (strong, nonatomic) id userPhoto;
 

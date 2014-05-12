@@ -7,11 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PMPhotoConsentProtocol.h"
+
 
 @interface PMCameraRollActivity : UIActivity
 
-    @property (strong, nonatomic) id senderController;
+@property (strong,nonatomic) id<UIAlertViewDelegate> alertViewDelegate;
 
-- (id) initWithSenderController:(UIViewController*)controller;
+@property (strong, nonatomic) id senderController;
+
+@property (weak, nonatomic) id<ConsentDelegate> consentDelegate;
+
 
 @end

@@ -49,7 +49,7 @@
 #import "PageViewControllerData.h"
 #import <Parse/Parse.h>
 #import "PMFunctions.h"
-#import "UIColor+More.h"
+
 
 
 
@@ -80,7 +80,7 @@
         self.delegate = self;
         
       
-        [self setBackgroundColor:[UIColor turquoise]];
+       // [self setBackgroundColor:[UIColor turquoise]];
     }
     return self;
 }

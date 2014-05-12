@@ -43,6 +43,7 @@
         _Publication = [aDecoder decodeObjectForKey:@"Publication"];
         _createdAt = [aDecoder decodeObjectForKey:@"created"];
         _imageFile = [aDecoder decodeObjectForKey:@"imageFile"];
+        _smallImageFile = [aDecoder decodeObjectForKey:@"smallImageFile"];
         _consentSignature = [aDecoder decodeObjectForKey:@"consentSignature"];
         _assetURL = [aDecoder decodeObjectForKey:@"assetURL"];
     }
@@ -60,6 +61,7 @@
     [anEncoder encodeObject:_Publication forKey:@"Publication"];
     [anEncoder encodeObject:_createdAt forKey:@"created"];
     [anEncoder encodeObject:_imageFile forKey:@"imageFile"];
+    [anEncoder encodeObject:_smallImageFile forKey:@"smallImageFile"];
     [anEncoder encodeObject:_consentSignature forKey:@"consentSignature"];
     [anEncoder encodeObject:_assetURL forKey:@"assetURL"];
     

@@ -24,7 +24,7 @@
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "PMFeedbackActivity.h"
-#import  "UIColor+More.h"
+
 
 
 
@@ -43,9 +43,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    [self.view setBackgroundColor:[UIColor turquoise]];
     
     _trashBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(deletePhotoActionSheet:)];
     
@@ -305,8 +302,11 @@
                     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
                         
                         if ([activityType isEqualToString:@"CustomMailActivityType"]) {
-                          //  [self dismissViewControllerAnimated:YES completion:nil];
+                            [self dismissViewControllerAnimated:YES completion:nil];
                         }
+                        
+                        [self.view setTintAdjustmentMode:UIViewTintAdjustmentModeNormal];
+                       
                         
                     };
                     

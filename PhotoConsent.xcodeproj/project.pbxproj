@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E41C09AF191A69FD00807C3F /* PMUsePhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E41C09AE191A69FD00807C3F /* PMUsePhotoViewController.m */; };
 		E428C75618B26FF4002C1391 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75518B26FF4002C1391 /* Default-568h@2x.png */; };
 		E428C75918B2703C002C1391 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75718B2703C002C1391 /* Default.png */; };
 		E428C75A18B2703C002C1391 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428C75818B2703C002C1391 /* Default@2x.png */; };
@@ -14,7 +15,6 @@
 		E452D24918CF6A8800EED549 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E452D24818CF6A8800EED549 /* StoreKit.framework */; };
 		E47291A518D0698500CA031B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB661883F0E50064E331 /* Parse.framework */; };
 		E47291AC18D0BD7F00CA031B /* PMWorkOfflineActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E47291AB18D0BD7F00CA031B /* PMWorkOfflineActivity.m */; };
-		E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */; };
 		E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */; };
 		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
 		E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */; };
@@ -29,7 +29,6 @@
 		E478DB501883EF370064E331 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB381883EF370064E331 /* UIKit.framework */; };
 		E478DB581883EF370064E331 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E478DB561883EF370064E331 /* InfoPlist.strings */; };
 		E478DB5A1883EF380064E331 /* PhotoConsentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB591883EF380064E331 /* PhotoConsentTests.m */; };
-		E478DBB71883F2100064E331 /* PMCameraDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */; };
 		E478DBB81883F2100064E331 /* PMCameraRollActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB711883F20F0064E331 /* PMCameraRollActivity.m */; };
 		E478DBB91883F2100064E331 /* PMConsentActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB731883F20F0064E331 /* PMConsentActivity.m */; };
 		E478DBBA1883F2100064E331 /* PMConsentDetailsActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E478DB751883F20F0064E331 /* PMConsentDetailsActivity.m */; };
@@ -78,12 +77,17 @@
 		E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1F1883FCF70064E331 /* QuartzCore.framework */; };
 		E486BD5218D7160A00635939 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E486BD5118D7160A00635939 /* iAd.framework */; };
 		E486BD5518D7580200635939 /* PMUpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E486BD5418D7580200635939 /* PMUpgradeViewController.m */; };
-		E48BE26118D84C20009AAB75 /* PhotoConsent.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E48BE26018D84C20009AAB75 /* PhotoConsent.xcassets */; };
+		E4B8A84E18E6EA4900B1A92B /* UIColor+More.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */; };
 		E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */; };
 		E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */; };
+		E4D8A96A18E9665D008D58E5 /* PhotoConsent.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */; };
+		E4EF48C619209B1D00F4FBF9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */; };
+		E4EF48C719209B1D00F4FBF9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E4EF48C419209B1D00F4FBF9 /* Default.png */; };
+		E4EF48C819209B1D00F4FBF9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4EF48C519209B1D00F4FBF9 /* Default@2x.png */; };
 		E4F4C0F2188E62DC00B006E1 /* RMCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0ED188E62DC00B006E1 /* RMCanvas.m */; };
 		E4F4C0F3188E62DC00B006E1 /* RMCanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0EF188E62DC00B006E1 /* RMCanvasView.m */; };
 		E4F4C0F4188E62DC00B006E1 /* RMPainter.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4C0F1188E62DC00B006E1 /* RMPainter.m */; };
+		E4F7673A18EC6168006EDC1B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E4F7673818EC6168006EDC1B /* Icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +101,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E41C09AD191A69FD00807C3F /* PMUsePhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMUsePhotoViewController.h; path = Photoconsent/PMUsePhotoViewController.h; sourceTree = SOURCE_ROOT; };
+		E41C09AE191A69FD00807C3F /* PMUsePhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMUsePhotoViewController.m; path = Photoconsent/PMUsePhotoViewController.m; sourceTree = SOURCE_ROOT; };
 		E428C75518B26FF4002C1391 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		E428C75718B2703C002C1391 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Photoconsent/PhotoConsent.xcassets/Default.png; sourceTree = SOURCE_ROOT; };
 		E428C75818B2703C002C1391 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Default@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -105,8 +111,6 @@
 		E452D24818CF6A8800EED549 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E47291AA18D0BD7F00CA031B /* PMWorkOfflineActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMWorkOfflineActivity.h; sourceTree = "<group>"; };
 		E47291AB18D0BD7F00CA031B /* PMWorkOfflineActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMWorkOfflineActivity.m; sourceTree = "<group>"; };
-		E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDimmableCollectionView.h; sourceTree = "<group>"; };
-		E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDimmableCollectionView.m; sourceTree = "<group>"; };
 		E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTransitionAnimator.m; sourceTree = "<group>"; };
 		E4756E2F18B0FAE1000A05BE /* TLTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLTransitionAnimator.h; sourceTree = "<group>"; };
 		E4756E3118B0FBF0000A05BE /* PMMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMMenuViewController.h; sourceTree = "<group>"; };
@@ -130,8 +134,6 @@
 		E478DB591883EF380064E331 /* PhotoConsentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoConsentTests.m; sourceTree = "<group>"; };
 		E478DB661883F0E50064E331 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		E478DB6A1883F20F0064E331 /* PMCloudContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMCloudContentsViewController.h; path = Photoconsent/PMCloudContentsViewController.h; sourceTree = SOURCE_ROOT; };
-		E478DB6E1883F20F0064E331 /* PMCameraDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMCameraDelegate.h; path = ../Photoconsent/Common/PMCameraDelegate.h; sourceTree = "<group>"; };
-		E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMCameraDelegate.m; path = ../Photoconsent/Common/PMCameraDelegate.m; sourceTree = "<group>"; };
 		E478DB701883F20F0064E331 /* PMCameraRollActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMCameraRollActivity.h; sourceTree = "<group>"; };
 		E478DB711883F20F0064E331 /* PMCameraRollActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMCameraRollActivity.m; sourceTree = "<group>"; };
 		E478DB721883F20F0064E331 /* PMConsentActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMConsentActivity.h; sourceTree = "<group>"; };
@@ -148,7 +150,6 @@
 		E478DB7D1883F20F0064E331 /* PMLoginActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMLoginActivity.m; sourceTree = "<group>"; };
 		E478DB7E1883F20F0064E331 /* PMLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMLoginViewController.h; sourceTree = "<group>"; };
 		E478DB7F1883F20F0064E331 /* PMLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMLoginViewController.m; sourceTree = "<group>"; };
-		E478DB801883F20F0064E331 /* PMLogoLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMLogoLabel.h; sourceTree = "<group>"; };
 		E478DB811883F20F0064E331 /* PMLogoLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMLogoLabel.m; sourceTree = "<group>"; };
 		E478DB821883F20F0064E331 /* PMLogoutActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMLogoutActivity.h; sourceTree = "<group>"; };
 		E478DB831883F20F0064E331 /* PMLogoutActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMLogoutActivity.m; sourceTree = "<group>"; };
@@ -214,17 +215,24 @@
 		E486BD5118D7160A00635939 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		E486BD5318D7580200635939 /* PMUpgradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMUpgradeViewController.h; sourceTree = "<group>"; };
 		E486BD5418D7580200635939 /* PMUpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMUpgradeViewController.m; sourceTree = "<group>"; };
-		E48BE26018D84C20009AAB75 /* PhotoConsent.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PhotoConsent.xcassets; path = Photoconsent/PhotoConsent.xcassets; sourceTree = SOURCE_ROOT; };
+		E4B8A84C18E6EA4900B1A92B /* UIColor+More.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+More.h"; path = "../Photoconsent/Common/UIColor+More.h"; sourceTree = "<group>"; };
+		E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+More.m"; path = "../Photoconsent/Common/UIColor+More.m"; sourceTree = "<group>"; };
 		E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDisclaimerActivity.h; sourceTree = "<group>"; };
 		E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDisclaimerActivity.m; sourceTree = "<group>"; };
 		E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMLoginActivityDelegate.h; path = Photoconsent/PMLoginActivityDelegate.h; sourceTree = SOURCE_ROOT; };
 		E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMLoginActivityDelegate.m; path = Photoconsent/PMLoginActivityDelegate.m; sourceTree = SOURCE_ROOT; };
+		E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PhotoConsent.xcassets; path = Photoconsent/PhotoConsent.xcassets; sourceTree = SOURCE_ROOT; };
+		E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/LaunchImage.launchimage/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		E4EF48C419209B1D00F4FBF9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Photoconsent/PhotoConsent.xcassets/LaunchImage.launchimage/Default.png; sourceTree = SOURCE_ROOT; };
+		E4EF48C519209B1D00F4FBF9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/LaunchImage.launchimage/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		E4F4C0EC188E62DC00B006E1 /* RMCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCanvas.h; path = Photoconsent/RMCanvas.h; sourceTree = SOURCE_ROOT; };
 		E4F4C0ED188E62DC00B006E1 /* RMCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCanvas.m; path = Photoconsent/RMCanvas.m; sourceTree = SOURCE_ROOT; };
 		E4F4C0EE188E62DC00B006E1 /* RMCanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCanvasView.h; path = Photoconsent/RMCanvasView.h; sourceTree = SOURCE_ROOT; };
 		E4F4C0EF188E62DC00B006E1 /* RMCanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCanvasView.m; path = Photoconsent/RMCanvasView.m; sourceTree = SOURCE_ROOT; };
 		E4F4C0F0188E62DC00B006E1 /* RMPainter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMPainter.h; path = Photoconsent/RMPainter.h; sourceTree = SOURCE_ROOT; };
 		E4F4C0F1188E62DC00B006E1 /* RMPainter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMPainter.m; path = Photoconsent/RMPainter.m; sourceTree = SOURCE_ROOT; };
+		E4F64BC718F59FA8008E2A17 /* PMLogoLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMLogoLabel.h; sourceTree = "<group>"; };
+		E4F7673818EC6168006EDC1B /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Photoconsent/PhotoConsent.xcassets/Icon.png; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,7 +364,11 @@
 		E478DB3B1883EF370064E331 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E48BE26018D84C20009AAB75 /* PhotoConsent.xcassets */,
+				E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */,
+				E4EF48C419209B1D00F4FBF9 /* Default.png */,
+				E4EF48C519209B1D00F4FBF9 /* Default@2x.png */,
+				E4F7673818EC6168006EDC1B /* Icon.png */,
+				E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */,
 				E478DBE01883F2600064E331 /* iTunesArtwork */,
 				E478DB3C1883EF370064E331 /* PhotoConsent-Info.plist */,
 				E478DB3D1883EF370064E331 /* InfoPlist.strings */,
@@ -443,6 +455,7 @@
 		E478DC21188409E80064E331 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E4F64BC618F58CED008E2A17 /* Colours */,
 				E478DC181883F7520064E331 /* UIImage+iPhone5 */,
 				E426AE67189160BC0039968B /* ALAssetsLibrary+PhotoAlbum */,
 			);
@@ -503,8 +516,8 @@
 		E478DC2518840CF20064E331 /* Animators */ = {
 			isa = PBXGroup;
 			children = (
-				E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */,
 				E4756E2F18B0FAE1000A05BE /* TLTransitionAnimator.h */,
+				E4756E2E18B0FAE1000A05BE /* TLTransitionAnimator.m */,
 			);
 			name = Animators;
 			sourceTree = "<group>";
@@ -527,6 +540,8 @@
 				E478DBB41883F2100064E331 /* PMSignViewController.h */,
 				E478DBA11883F2100064E331 /* PMSignViewController.m */,
 				E4F4C0F5188E62EF00B006E1 /* TouchTracker */,
+				E41C09AD191A69FD00807C3F /* PMUsePhotoViewController.h */,
+				E41C09AE191A69FD00807C3F /* PMUsePhotoViewController.m */,
 			);
 			name = "Consent Process";
 			path = ../../PhotoConsent;
@@ -535,8 +550,6 @@
 		E478DC2718840E1D0064E331 /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
-				E478DB6E1883F20F0064E331 /* PMCameraDelegate.h */,
-				E478DB6F1883F20F0064E331 /* PMCameraDelegate.m */,
 				E478DB9C1883F2100064E331 /* PMActivityDelegate.h */,
 				E478DB9B1883F2100064E331 /* PMActivityDelegate.m */,
 				E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */,
@@ -568,14 +581,12 @@
 		E478DC2A18840EFD0064E331 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				E4F64BC718F59FA8008E2A17 /* PMLogoLabel.h */,
+				E478DB811883F20F0064E331 /* PMLogoLabel.m */,
 				E478DB7A1883F20F0064E331 /* PMFunctions.h */,
 				E478DB7B1883F20F0064E331 /* PMFunctions.m */,
-				E478DB801883F20F0064E331 /* PMLogoLabel.h */,
-				E478DB811883F20F0064E331 /* PMLogoLabel.m */,
 				E478DB8D1883F20F0064E331 /* PMTextConstants.h */,
 				E478DB8E1883F20F0064E331 /* PMTextConstants.m */,
-				E4756E2B18B0FA63000A05BE /* PMDimmableCollectionView.h */,
-				E4756E2C18B0FA63000A05BE /* PMDimmableCollectionView.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -614,6 +625,15 @@
 				E4F4C0F1188E62DC00B006E1 /* RMPainter.m */,
 			);
 			name = TouchTracker;
+			sourceTree = "<group>";
+		};
+		E4F64BC618F58CED008E2A17 /* Colours */ = {
+			isa = PBXGroup;
+			children = (
+				E4B8A84C18E6EA4900B1A92B /* UIColor+More.h */,
+				E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */,
+			);
+			name = Colours;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -700,10 +720,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E48BE26118D84C20009AAB75 /* PhotoConsent.xcassets in Resources */,
 				E478DB3F1883EF370064E331 /* InfoPlist.strings in Resources */,
+				E4D8A96A18E9665D008D58E5 /* PhotoConsent.xcassets in Resources */,
+				E4F7673A18EC6168006EDC1B /* Icon.png in Resources */,
+				E4EF48C819209B1D00F4FBF9 /* Default@2x.png in Resources */,
+				E4EF48C719209B1D00F4FBF9 /* Default.png in Resources */,
 				E478DBEE1883F2600064E331 /* iTunesArtwork in Resources */,
 				E478DBCB1883F2100064E331 /* MainStoryboard.storyboard in Resources */,
+				E4EF48C619209B1D00F4FBF9 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -727,6 +751,7 @@
 			files = (
 				E478DBDA1883F2100064E331 /* PMBasicDetailsViewController.m in Sources */,
 				E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */,
+				E41C09AF191A69FD00807C3F /* PMUsePhotoViewController.m in Sources */,
 				E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */,
 				E478DB411883EF370064E331 /* main.m in Sources */,
 				E478DBC51883F2100064E331 /* PMSignUpViewController.m in Sources */,
@@ -738,13 +763,13 @@
 				E478DBF21883F2600064E331 /* UIImage+iPhone5.m in Sources */,
 				E478DBBB1883F2100064E331 /* PMDisclaimerViewController.m in Sources */,
 				E478DBB91883F2100064E331 /* PMConsentActivity.m in Sources */,
+				E4B8A84E18E6EA4900B1A92B /* UIColor+More.m in Sources */,
 				E478DBBF1883F2100064E331 /* PMLoginViewController.m in Sources */,
 				E486BD5518D7580200635939 /* PMUpgradeViewController.m in Sources */,
 				E478DBC31883F2100064E331 /* PMReferenceDetail.m in Sources */,
 				E478DBC61883F2100064E331 /* PMTextConstants.m in Sources */,
 				E4756E3018B0FAE1000A05BE /* TLTransitionAnimator.m in Sources */,
 				E478DBB81883F2100064E331 /* PMCameraRollActivity.m in Sources */,
-				E478DBB71883F2100064E331 /* PMCameraDelegate.m in Sources */,
 				E478DBC01883F2100064E331 /* PMLogoLabel.m in Sources */,
 				E478DBC11883F2100064E331 /* PMLogoutActivity.m in Sources */,
 				E478DBBE1883F2100064E331 /* PMLoginActivity.m in Sources */,
@@ -758,7 +783,6 @@
 				E478DBD91883F2100064E331 /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				E478DBD11883F2100064E331 /* PMSignViewController.m in Sources */,
 				E478DBD01883F2100064E331 /* MyPageViewController.m in Sources */,
-				E4756E2D18B0FA63000A05BE /* PMDimmableCollectionView.m in Sources */,
 				E478DBCF1883F2100064E331 /* PMActivityDelegate.m in Sources */,
 				E478DBCD1883F2100064E331 /* PMCompleteViewController.m in Sources */,
 				E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */,
@@ -860,7 +884,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				SDKROOT = iphoneos;
@@ -893,7 +917,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "AC01F0A8-0F58-4D94-80F2-88D5BB22C942";
 				SDKROOT = iphoneos;

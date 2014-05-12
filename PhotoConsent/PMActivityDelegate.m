@@ -19,6 +19,7 @@
 #import "PMCloudContentsViewController.h"
 #import "PMDisclaimerActivity.h"
 #import "PMWorkOfflineActivity.h"
+#import "ConsentStore.h"
 
 
 @interface PMActivityDelegate ()
@@ -76,7 +77,11 @@
         _shareActivity = [[PMFeedbackActivity alloc] initWithSenderController:_senderController shareActivityType:shareActivityTypePromote];
     }
 
-    _cameraRollActivity = [[PMCameraRollActivity alloc] initWithSenderController:_senderController];
+    _cameraRollActivity = [[PMCameraRollActivity alloc] init];
+    [_cameraRollActivity setConsentDelegate:_consentDelegate];
+    [_cameraRollActivity setSenderController:_senderController];
+    [_cameraRollActivity setAlertViewDelegate:_alertviewDelegate];
+   
     
     
      NSString* messageItem = [self activityViewController:activityViewController itemForActivityType:nil];
@@ -98,16 +103,13 @@
         } else {
             //login to cloud or start/stop offline working on device
             
-           [excludedActivityTypes addObject:UIActivityTypeMail]; //string item causes it to show
-            NSNumber *imageCount = @0;
-            NSString *nameForActivity = @"View";
             _logActivity = [PMLoginActivity new];
             [_logActivity setStopOfflineDelegate:_senderController];
             [_logActivity setRefreshDelegate:_senderController];
             
-            
-            
-           
+            NSInteger  countDeviceImages = [[[ConsentStore sharedDeviceConsents] allDeviceConsents] count];
+            NSNumber *imageCount = [NSNumber numberWithInteger:countDeviceImages];
+            NSString *nameForActivity = @"View";
             _offlineActivity = [PMWorkOfflineActivity new];
             [_offlineActivity setOfflineDelegate:_senderController];
             
@@ -116,9 +118,7 @@
                 PMCloudContentsViewController* controller = (PMCloudContentsViewController*)_senderController;
                 if (controller.allImages) {
                     
-                    imageCount = [NSNumber numberWithInteger:controller.allImages.count];
-                    
-                    nameForActivity = @"Hide";
+                       nameForActivity = @"Hide";
                 } 
                 
             }
@@ -136,8 +136,10 @@
     
     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
         if ([activityType isEqualToString:@"CustomMailActivityType"]) {
-          //[(UIViewController*)_senderController dismissViewControllerAnimated:YES completion:nil];
+          [(UIViewController*)_senderController dismissViewControllerAnimated:YES completion:nil];
         }
+        
+        
     };
     
     activityViewController.completionHandler = completionBlock;

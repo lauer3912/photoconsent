@@ -39,7 +39,7 @@
         [_textview setAttributedText:[self attributedStringForText:kPMTextConstants_Publication]];
     }
     
-    [self.view setBackgroundColor:[UIColor turquoise]];
+//    [self.view setBackgroundColor:[UIColor turquoise]];
     
 }
 

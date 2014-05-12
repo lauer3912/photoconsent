@@ -10,7 +10,7 @@
 #import <StoreKit/StoreKit.h>
 #import "MBProgressHUD.h"
 #import "PMFunctions.h"
-#import "UIColor+More.h"
+
 
 @interface PMUpgradeViewController ()
 <SKProductsRequestDelegate,MBProgressHUDDelegate>
@@ -50,16 +50,16 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
 }
 
 - (void) setUpgradeButtonState{
-    [self.view setBackgroundColor:[UIColor turquoise]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     if (isPaid()) {
         [_upgradeButton setBackgroundColor:[UIColor darkGrayColor]];
-        [_upgradeButton setTitleColor:[UIColor brightOrange] forState:UIControlStateNormal];
+        [_upgradeButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
         [_upgradeButton setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
         [_upgradeButton setTitle:kPMUpgradeButtonTitleRestore forState:UIControlStateNormal];
     } else {
-        [_upgradeButton setBackgroundColor:[UIColor brightOrange]];
-        [_upgradeButton setTitleColor:[UIColor turquoise] forState:UIControlStateNormal];
-        [_upgradeButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+        [_upgradeButton setBackgroundColor:[UIColor orangeColor]];
+        [_upgradeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_upgradeButton setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
         [_upgradeButton setTitle:kPMUpgradeButtonTitleUpgrade forState:UIControlStateNormal];
         
     }

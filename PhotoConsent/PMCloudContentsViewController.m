@@ -9,17 +9,16 @@
 
 #import "PMCloudContentsViewController.h"
 #import  <iAd/iAd.h>
+#import <MobileCoreServices/UTCoreTypes.h>
 #import "MyPageViewController.h"
 #import "PMLoginViewController.h"
 #import "PMSignUpViewController.h"
 #import "PageViewControllerData.h"
 #import "PMCompleteViewController.h"
 #import "PMConsentDetailViewController.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "PMActivityDelegate.h"
 #import "PMMenuViewController.h"
 #import "TLTransitionAnimator.h"
-#import "PMCameraDelegate.h"
 #import "PMLoginActivityDelegate.h"
 #import "Consent.h"
 #import "ConsentStore.h"
@@ -28,7 +27,7 @@
 #import "PMLoginActivity.h"
 #import "PMUpgradeViewController.h"
 #import "PMFunctions.h"
-#import "UIColor+More.h"
+#import "PMUsePhotoViewController.h"
 
 
 
@@ -36,17 +35,24 @@
 typedef void(^LoadCacheDidFinish)(BOOL);
 typedef void(^LoadCacheProgress)(CGFloat);
 
+typedef void(^SmallCacheCompletion)(BOOL);
 
-@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate,PageViewControllerImageToDisplayProtocol,PMRefreshCacheProtocol>
+
+static const NSInteger showHudLimit = 20;
+static const NSInteger savingMessageTag = 46;
+static const NSInteger kImageViewTag  = 1;
+static const NSInteger kCameraBtnTag  = 27;
+
+@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate,PageViewControllerImageToDisplayProtocol,PMRefreshCacheProtocol,ConsentDelegate>
 
 @property (strong, nonatomic)  UILabel *emptyLabel;
-
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
-@property (strong, nonatomic) PMCameraDelegate* cameraDelegateInstance;
 @property (strong, nonatomic) PMLoginActivityDelegate* loginActivityDelegate;
 
+//used by camera delegate
+@property (strong, nonatomic) NSString *referenceID;
 
-- (void)loadCache:(NSCache*)cache objects:(NSArray*)allPhotos  key:(NSString*) imageKey progress:(LoadCacheProgress)progress completionHandler:(LoadCacheDidFinish)completion;
+@property (assign,nonatomic) BOOL isSaving;
 
 
 @end
@@ -62,7 +68,6 @@ typedef void(^LoadCacheProgress)(CGFloat);
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-    
         
     }
     return self;
@@ -71,16 +76,16 @@ typedef void(^LoadCacheProgress)(CGFloat);
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _allImages = [[NSMutableArray alloc] init];
     
-
-    _dataArrayDidChange = @0;
+    // register for NSNotification on subscription purchase
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDisplayAds) name:@"AppStorePurchaseNotification" object:nil];
+    
     
     if ([PFUser currentUser]) {
-        [self refreshAndCacheObjects];
-        [self titleViewWithEnableSwitch:YES];
+        
+       [self.navigationItem setTitleView:[self titleViewWithEnableSwitch:YES]];
     } else
-        [self titleViewWithEnableSwitch:NO];
+       [self.navigationItem setTitleView:[self titleViewWithEnableSwitch:NO]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,59 +98,59 @@ typedef void(^LoadCacheProgress)(CGFloat);
     
 }
 
+- (void) canDisplayAds {
+     [self setCanDisplayBannerAds:!isPaid()];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [self setCanDisplayBannerAds:!isPaid()];
+     
+    [self canDisplayAds];
     
     if (_shouldDim) {
         [self.view setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
     } else
         [self.view setTintAdjustmentMode:UIViewTintAdjustmentModeNormal];
+     
+    
    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    
-    
     if ([PFUser currentUser]) {
+        
+        
         if (!_allImages) {
             _allImages = [[NSMutableArray alloc] init];
             [self refreshAndCacheObjects];
             
             
         } else {
+            
             if (_dataArrayDidChange.boolValue == YES) {
                 
                 //rebuild smallImage cache
-                [_cachedSmallImages removeAllObjects];
-                [self loadCache:_cachedSmallImages objects:_allImages key:@"smallImageFile" progress:nil completionHandler:^(BOOL finished) {
-                     [self.collectionView reloadData];
-                }];
+               [self loadCacheWithSmallImages:_allImages completionHandler:^(BOOL completion)  {
+                   [self.collectionView reloadData];
+                   _dataArrayDidChange = @0; //= NO
+               }];
                 
                 
-                
-               
-                NSInteger delayInSeconds = 4;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    //ENABLE ACTION BUTTON WHICH HAD BEEN DISABLED TO PREVENT REFRESHING WHILE THE CLOUD WAS BEING UPDATED
-                    [self.navigationItem.rightBarButtonItem setEnabled:YES];
-    
-                });
-                
-                _dataArrayDidChange = @0; //= NO
             }
             
         }
-    } else  {
+         
+        
+    } else {
+        //not logged in
         if (_allImages.count == 0) {
             [self userDidLogout:nil];
         }
         if (_dataArrayDidChange.boolValue == YES) {
-            [self.collectionView reloadData];
+            [self refreshAndCacheObjects];
             _dataArrayDidChange = @0; //= NO
         }
         [self showEmptyLabel];
@@ -167,6 +172,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
         [cameraBtn setImage:image forState:UIControlStateNormal];
         [cameraBtn addTarget:self action:@selector(useCamera:) forControlEvents:UIControlEventTouchUpInside];
         cameraBtn.frame = CGRectMake(40.0, 0.0, 40., 40.);
+        cameraBtn.tag = kCameraBtnTag;
         [cameraBtn setEnabled:shouldEnable];
         [titleView addSubview:cameraBtn];
     } else {
@@ -189,40 +195,8 @@ typedef void(^LoadCacheProgress)(CGFloat);
     if ([UIImagePickerController isSourceTypeAvailable:
          UIImagePickerControllerSourceTypeCamera] == YES){
         
-        
-        
-        if (![PFUser currentUser]) {
-            if (!_loginActivityDelegate)
-                _loginActivityDelegate = [[PMLoginActivityDelegate alloc] init];
-            
-            
-            _activityDelegate = _loginActivityDelegate;
-            
-            if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)])
-                [_activityDelegate showActivitySheet:self];
-            
-        }
-            
-        
-        if (!_cameraDelegateInstance) {
-            _cameraDelegateInstance = [[PMCameraDelegate alloc] init];
-        }
-        _cameraDelegate = _cameraDelegateInstance;
-        
-        if ([_cameraDelegate respondsToSelector:@selector(startCamera:)]) {
-            //determine the currently selected tab on tabbar. If user is scrolling through individual photos pop back to root viewcontroller before sending the viewcontroller to the camera delegate
-            
-            UINavigationController *navController = (UINavigationController*)self.navigationController;
-            
-            if ([navController.topViewController isKindOfClass:[MyPageViewController class]]) {
-                [navController popToRootViewControllerAnimated:NO];
-            }
-            
-            
-            [_cameraDelegate startCamera:navController.topViewController];
-            
-            
-        }
+            [self startCamera];
+       
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sorry but this device does not have a camera" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
@@ -238,18 +212,21 @@ typedef void(^LoadCacheProgress)(CGFloat);
         return;
     }
     
+    
     if (_allImages) {
         
         if (_allImages.count == 0) {
+            [self clearCollectionView];
             if (!_emptyLabel) {
                 _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
                 _emptyLabel.backgroundColor = [UIColor clearColor];
                 [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
             }
             
+            
             if ([PFUser currentUser]) {
                 [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
-                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are logged in - no photos to display"]]];
+                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"Connected - No photos to display"]]];
             } else
                 [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No offline photos to display"]]];
             
@@ -266,23 +243,28 @@ typedef void(^LoadCacheProgress)(CGFloat);
             else
               [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
         }
-    } else //allImages is nil
-        //if not logged in
-        if (![PFUser currentUser]) {
-            [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
-            if (_emptyLabel) {
-                [_emptyLabel removeFromSuperview];
-            }
-            if (!_emptyLabel) {
-                _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
-                _emptyLabel.backgroundColor = self.collectionView.backgroundColor;
-                [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
-            }
+    } else { //allImages is nil
+        
+        if (_emptyLabel) {
+            [_emptyLabel removeFromSuperview];
+        } else {
             
+            _emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
+            _emptyLabel.backgroundColor = self.collectionView.backgroundColor;
+            [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
+        }
+    
+        //if not logged in
+        if ([PFUser currentUser]) {
+            [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
+            [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"Connected - No photos to display"]]];
+            [self.view addSubview:_emptyLabel];
+        } else {
+            [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
             [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"You are logged out"]]];
             [self.view addSubview:_emptyLabel];
         }
-    
+    }
 }
 
 #pragma mark - create image cache for cloud or device images and reload
@@ -296,7 +278,9 @@ typedef void(^LoadCacheProgress)(CGFloat);
     
     _allImages = [NSMutableArray arrayWithArray:[[ConsentStore sharedDeviceConsents] allDeviceConsents]];
     
-    [self loadSmallAndLargeCachesWithImages:[[ConsentStore sharedDeviceConsents] allDeviceConsents]];
+    [self loadCacheWithSmallImages:_allImages completionHandler:^(BOOL completion) {
+        [self.collectionView reloadData];
+    }];
     
 }
 
@@ -337,7 +321,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
                        
             } else if ([obj isKindOfClass:[Consent class]]) {
                 
-                NSData *data = [(Consent*)obj valueForKey:@"imageFile"];
+                NSData *data = [(Consent*)obj valueForKey:@"smallImageFile"];
                 NSNumber *index = [NSNumber numberWithInteger:idx];
                 [self cacheData:data forCache:cache atIndex:index];
                 
@@ -355,41 +339,107 @@ typedef void(^LoadCacheProgress)(CGFloat);
         
     }];
     if (completion) {
-        if (cacheCount == allPhotos.count) {
-            completion(YES);
-        } else
-            completion(NO);
+        completion(YES);
+       
     }
     
     
     
 }
+- (NSCache*) createCacheWithCountLimit:(NSUInteger)limit costLimit:(NSUInteger)costLimit {
+     NSCache* cache = [NSCache new];
+    [cache setTotalCostLimit:costLimit];
+    [cache setCountLimit:limit];
+    return cache;
+}
 
 
-- (void) loadSmallAndLargeCachesWithImages:(NSArray*)allPhotos {
+- (void) loadCacheWithSmallImages:(NSArray*)allPhotos completionHandler:(SmallCacheCompletion)completion {
     
+    
+    NSLog(@"allImages count = %d", allPhotos.count);
     
     if (allPhotos.count == 0) {
         [self showEmptyLabel];
         return;
     }
-    if (allPhotos.count > 10) {
+    
+    
+    
+    dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_async(group, queue1, ^{
+        
+        if (!_cachedSmallImages)
+            _cachedSmallImages = [self createCacheWithCountLimit:300 costLimit:(5 * 1024 * 1024)];
+        
+        [self loadCache:_cachedSmallImages objects:allPhotos key:@"smallImageFile" progress:^(CGFloat progress) {
+            
+            NSLog(@"Small cache progress = %f", progress);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                HUD.progress = progress;
+            });
+            
+        }  completionHandler:^(BOOL finished) {
+            if (finished) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"SMALL image cache finished loading");
+                    _dataArrayDidChange = @0;//= NO
+                   // [self.collectionView reloadData];
+                    [self clearHud];
+                    
+                    if (completion) {
+                        completion(YES);
+                        
+                    }
+                    
+                });
+            } else {
+                
+                if (completion) {
+                    completion(NO);
+                    
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self clearHud];
+                    
+                });
+                
+            }
+            
+            
+        }];
+        
+        
+    });
+}
+
+/*
+- (void) loadSmallAndLargeCachesWithImages:(NSArray*)allPhotos {
+    
+  //WARNING - the large image cache will require substantial memory allocation to load all images into the cach. This caused problems with over 50 images - so not using the large cache for now 9/5/14
+    NSLog(@"allImages count = %d", allPhotos.count);
+    
+    if (allPhotos.count == 0) {
+        [self showEmptyLabel];
+        return;
+    }
+    if (allPhotos.count > showHudLimit) {
         [self showHUD];
     }
     
-    [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    
     dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t group = dispatch_group_create();
     
     dispatch_group_async(group, queue1, ^{
         
-        if (!_cachedSmallImages) {
-            _cachedSmallImages = [NSCache new];
-            [_cachedSmallImages setTotalCostLimit:(5 * 1024 * 1024)];
-            [_cachedSmallImages setCountLimit:[allPhotos count]];
-        }
-        
+        if (!_cachedSmallImages)
+            _cachedSmallImages = [self createCacheWithCountLimit:300 costLimit:(5 * 1024 * 1024)];
+            
         [self loadCache:_cachedSmallImages objects:allPhotos key:@"smallImageFile" progress:^(CGFloat progress) {
             
              NSLog(@"Small cache progress = %f", progress);
@@ -404,13 +454,16 @@ typedef void(^LoadCacheProgress)(CGFloat);
                     _dataArrayDidChange = @0;//= NO
                     [self.collectionView reloadData];
                     [self clearHud];
-                    [self.navigationItem.rightBarButtonItem setEnabled:YES];
+                    
                 });
             } else {
                 
-                //did not enumerat all photos - not likely
-                [self clearHud];
-                [self.navigationItem.rightBarButtonItem setEnabled:YES];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self clearHud];
+                    
+                });
+                    
             }
             
         
@@ -421,12 +474,9 @@ typedef void(^LoadCacheProgress)(CGFloat);
     
     dispatch_group_async(group, queue2, ^{
         
-        if (!_cachedLargeImages) {
-            _cachedLargeImages = [NSCache new];
-            [_cachedLargeImages setTotalCostLimit:((int)(allPhotos.count) * 1024 * 1024)];
-            [_cachedLargeImages setCountLimit:[allPhotos count]];
-        }
-        
+        if (!_cachedLargeImages) 
+                 _cachedLargeImages = [self createCacheWithCountLimit:300 costLimit:(50 * 1024 * 1024)];
+     
         [self loadCache:_cachedLargeImages objects:allPhotos key:@"imageFile"  progress:^(CGFloat progress) {
        
             NSLog(@"Large cache progress = %f", progress);
@@ -442,6 +492,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
     
     
 }
+*/
 
 -(void)clearHud {
     
@@ -461,11 +512,24 @@ typedef void(^LoadCacheProgress)(CGFloat);
 
 - (void) refreshAndCacheObjects {
     
+   
+    if (_allImages.count > showHudLimit) {
+        [self showHUD];
+    }
+    
+    if (_emptyLabel) {
+        [_emptyLabel removeFromSuperview];
+    }
+    
+    if (!_allImages) {
+        _allImages = [NSMutableArray new];
+    }
      cloudRefresh(_allImages, dispatch_get_main_queue(), ^(NSArray *allPhotos) {
          
-         [self loadSmallAndLargeCachesWithImages:allPhotos];
-
-    });
+         [self loadCacheWithSmallImages:allPhotos completionHandler:^(BOOL completion) {
+             [self.collectionView reloadData];
+         }];
+     });
              
 }
 
@@ -479,7 +543,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
         [HUD setAnimationType:MBProgressHUDAnimationFade];
         [HUD setColor:[UIColor darkGrayColor]];
         [HUD setLabelText:@"Loading.."];
-        [HUD setLabelColor:[UIColor brightOrange]];
+        [HUD setLabelColor:[UIColor orangeColor]];
         refreshHUD = [[MBRoundProgressView alloc] initWithFrame:CGRectMake(0.f, 0.f, 37.f, 37.f)];
         if (refreshHUD) {
             
@@ -487,7 +551,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
             [self.view addSubview:HUD];
             [HUD show:YES];
             [self.view setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
-            [self showEmptyLabel];
+     //       [self showEmptyLabel];
         }
     }
     
@@ -504,11 +568,16 @@ typedef void(^LoadCacheProgress)(CGFloat);
         _cachedSmallImages = nil;
         
     }
+    
+    /*
+     //not using cachedLargeImages
     if (_cachedLargeImages) {
         [_cachedLargeImages removeAllObjects];
         _cachedLargeImages = nil;
         
     }
+     */
+     
     if (self.collectionView.visibleCells.count > 0) {
         [self.collectionView performBatchUpdates:^{
             NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:0];
@@ -517,7 +586,8 @@ typedef void(^LoadCacheProgress)(CGFloat);
             if (finished)
                 [self showEmptyLabel];
         }];
-    }
+    } else
+        [self showEmptyLabel];
 
    
     _dataArrayDidChange = @0;//= NO
@@ -544,11 +614,10 @@ typedef void(^LoadCacheProgress)(CGFloat);
     
 }
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    NSLog(@"all images count - %lu", (unsigned long)_allImages.count);
+    NSLog(@"all images count for section %d is %lu", section, (unsigned long)_allImages.count);
     return [_allImages count];
 }
 
-#define kImageViewTag 1 // the image view inside the collection view cell prototype is tagged with "1"
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -562,6 +631,15 @@ typedef void(^LoadCacheProgress)(CGFloat);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage *image = [self imageAtIndex:index forCache:_cachedSmallImages];
         imageView.image = image;
+        if (_isSaving) {
+            if (indexPath.row == _allImages.count - 1) {
+                [self addSavingMessageToImageView:imageView];
+                
+                NSLog(@"Adding saving message to cell at indexPath row %d", indexPath.row);
+            }
+            
+            
+        }
         [cell setNeedsLayout];
     });
     
@@ -573,98 +651,55 @@ typedef void(^LoadCacheProgress)(CGFloat);
 // provides image for collectionViewCell and also acts as delegate to PageviewControllerData
 - (UIImage*)imageAtIndex:(NSNumber*) index forCache:(NSCache*)imageCache {
    
-    __block  UIImage* image;
-    
-    if (!imageCache) {
-        PFObject *obj = [_allImages objectAtIndex:index.integerValue];
-        if ([obj isKindOfClass:[PFObject class]]) {
-            NSString *key = @"imageFile";
-            
-            PFFile *imageData = [obj objectForKey:key];
-            if (imageData.isDataAvailable) {
-                 NSLog(@"IMAGE NOT IN CACHE BUT DATA ISAVAILABLE - RETURNING IMAGE FOR CELL AT INDEX = %d", index.integerValue);
-                NSData *data = [imageData getData];
-                [self cacheData:data forCache:imageCache atIndex:index];
-                image = [UIImage imageWithData:data];
-                
-    //     NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
-    //      image = [UIImage imageWithData:purgeableData];
-                
-                
-                return [UIImage imageWithData:data];
-            } else {
-                
-                NSLog(@"WARNING!!! USING getDataInBackground - IMAGE NOT IN CACHE - RETURNING IMAGE FOR CELL AT INDEX = %d", index.integerValue);
-                [imageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    [self cacheData:data forCache:imageCache atIndex:index];
-                    image = [UIImage imageWithData:data];
-                }];
-            }
-        }
-    }
+    UIImage* image;
+    //note the cache name is the same as the field name in PFObjet and Consent classes
+    NSString *key = imageCache.name;
     //cache exists
-    NSPurgeableData *imageData = [imageCache objectForKey:index];
+    NSPurgeableData *cacheData = [imageCache objectForKey:index];
     
-    if (!imageData) { //image is not in the cache
+    if (!cacheData) { //image is not in the cache
         
         id eachObject = [_allImages objectAtIndex:index.integerValue];
         
         if ([eachObject isKindOfClass:[PFObject class]]) {
-            NSString *key = imageCache.name;
             
-            PFFile *imageData = [eachObject objectForKey:key];
-            if (imageData.isDataAvailable) {
-                NSLog(@"IMAGE NOT IN CACHE - BUT DATA IS AVAIALBLE RETURNING IMAGE FOR CELL AT INDEX = %d", index.integerValue);
-                NSData *data = [imageData getData];
+            PFFile *file = [eachObject valueForKey:key];
+            
+            
+            NSData *data = [file getData];
+            if (data) {
+                NSPurgeableData *purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
                 image = [UIImage imageWithData:data];
-    //     NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
+                [purgeableData endContentAccess];
                 
-        //  image = [UIImage imageWithData:purgeableData];
-        //  [purgeableData endContentAccess];
-                
-            } else {
-                
-                NSLog(@"WARNING!!! USING getDataInBackground - IMAGE NOT IN CACHE - RETURNING IMAGE FOR CELL AT INDEX = %d", index.integerValue);
-                [imageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    [self cacheData:data forCache:imageCache atIndex:index];
-                    image = [UIImage imageWithData:data];
-                }];
-                
-        //   NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
-                
-        //  image = [UIImage imageWithData:purgeableData];
-                
-        //   [purgeableData endContentAccess];
-            }
-           
-       
+                NSLog(@"IMAGE NOT IN CACHE - ADDING IMAGE TO CACHE FOR CELL AT INDEX = %ld", (long)index.integerValue);
+
+            } else
+                //placeholder
+                image = [UIImage imageNamed:@"iconwatermark"];
             
         } else if ([eachObject isKindOfClass:[Consent class]]) {
-            
-            NSData *data = [eachObject valueForKey:@"imageFile"];
-            
+            NSLog(@"CONSENT IMAGE NOT IN CACHE - FOR CELL AT INDEX = %ld", (long)index.integerValue);
+
+            NSData *data = [eachObject valueForKey:key];
+            NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
             image = [UIImage imageWithData:data];
-            
-            
-    //    NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
-       
-    //   image = [UIImage imageWithData:purgeableData];
-    // [imageData endContentAccess];
-            
-        }
-        
-        
-        
-    } else
-        //image is in cache
-        if ([imageData beginContentAccess]) {
-            NSLog(@"IMAGE IN CACHE - RETURNING IMAGE FOR CELL AT INDEX = %d", index.integerValue);
-            image = [UIImage imageWithData:imageData];
+            [purgeableData endContentAccess];
            
         }
+        return image;
+        
+    } else {
+        //image is in cache
+        [cacheData beginContentAccess];
+        NSLog(@"IMAGE IN CACHE - RETURNING IMAGE FOR CELL AT INDEX = %ld", (long)index.integerValue);
+        image = [UIImage imageWithData:cacheData];
+        [cacheData endContentAccess];
+        return image;
+    
+    }
 
-
-    return image;
+    
 }
 
 
@@ -678,8 +713,8 @@ typedef void(^LoadCacheProgress)(CGFloat);
     dispatch_async(queue, ^{
         purgeableData = [NSPurgeableData dataWithData:data];
         [cache setObject:purgeableData forKey:index cost:data.length];
-         NSLog(@"ADDING CACHED IMAGE TO CACHE %@ AT INDEX %lu",[cache name], (unsigned long)index.integerValue);
-  //      [purgeableData beginContentAccess];
+    
+         NSLog(@"ADDING IMAGE TO CACHE %@ AT INDEX %lu",[cache name], (unsigned long)index.integerValue);
         
     });
     return purgeableData;
@@ -687,17 +722,22 @@ typedef void(^LoadCacheProgress)(CGFloat);
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    //prevent the image being selected if it is still loading in the background
-    PFObject* obj = [_allImages objectAtIndex:indexPath.row];
-    NSDate* objectCreatedTime = [obj valueForKey:@"createdAt"];
-    if (objectCreatedTime == NULL) {
     
-        return NO;
+    if ([PFUser currentUser]) {
+        //prevent the image being selected if it is still loading in the background
+        PFObject* obj = [_allImages objectAtIndex:indexPath.row];
+        NSDate* objectCreatedTime = [obj valueForKey:@"createdAt"];
+        if (objectCreatedTime == NULL) {
+            
+            return NO;
+        }
     }
+    
     return YES;
     
     
 }
+
 
 #pragma mark - Segue support
 
@@ -738,11 +778,12 @@ typedef void(^LoadCacheProgress)(CGFloat);
         _delegateInstance = [[PMActivityDelegate alloc] init];
     }
     
-    _activityDelegate = _delegateInstance;
     
-    if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
-        [(PMActivityDelegate*)_activityDelegate setSenderController:self];
-        [_activityDelegate showActivitySheet:sender];
+    if ([_delegateInstance respondsToSelector:@selector(showActivitySheet:)]) {
+        [_delegateInstance setSenderController:self];
+        [_delegateInstance setConsentDelegate:self];
+        [_delegateInstance setAlertviewDelegate:self];
+        [_delegateInstance showActivitySheet:sender];
     }
     
     
@@ -764,6 +805,8 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+            
+                 NSLog(@"Count OBJECTS returned by query = %lu", (unsigned long)objects.count);
                 
                 // Retrieve existing objectIDs
                 NSMutableArray *oldCompareObjectIDArray = [NSMutableArray array];
@@ -778,6 +821,8 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                 // If there are photos, we start extracting the data
                 // Save a list of object IDs while extracting this data
                 NSMutableArray *newObjectIDArray = [NSMutableArray array];
+                
+                
                 if (objects.count > 0) {
                     for (PFObject *eachObject in objects) {
                         [newObjectIDArray addObject:[eachObject objectId]];
@@ -834,6 +879,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                     block(allImages);
                     NSLog(@"Count allImages after refresh = %lu", (unsigned long)allImages.count);
                     
+                    
                 });
             }
             
@@ -860,13 +906,10 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
         if (!_delegateInstance) {
             _delegateInstance = [[PMActivityDelegate alloc] init];
         }
-        [_delegateInstance setSenderController:self];
-        _activityDelegate = _delegateInstance;
-        
-        
-        
-        if ([_activityDelegate respondsToSelector:@selector(showActivitySheet:)]) {
-            [_activityDelegate showActivitySheet:sender];
+                
+        if ([_delegateInstance respondsToSelector:@selector(showActivitySheet:)]) {
+            [_delegateInstance setSenderController:self];
+            [_delegateInstance showActivitySheet:sender];
         }
     }];
     
@@ -940,7 +983,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 #pragma mark - AtrributedString method
 -(NSAttributedString*) attributedStringForText: (NSString*)string {
     
-    UIColor *foregroundColour = [UIColor darkGrayColor];
+    UIColor *foregroundColour = [UIColor lightGrayColor];
     
     NSMutableAttributedString *attrMutableString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", string]];
     
@@ -959,10 +1002,373 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 
 -(void)tintColorDidChange {
     if (self.view.tintAdjustmentMode == UIViewTintAdjustmentModeDimmed) {
-        [self.view setAlpha:0.40];
+        [self.view setAlpha:0.70];
     } else
         [self.view setAlpha:1.0];
 }
 
+
+#pragma mark - Camera delegate moved here
+- (void) startCamera {
+    
+    _cameraController = [UIImagePickerController new];
+    
+    // Set source to camera
+    _cameraController.sourceType =  UIImagePickerControllerSourceTypeCamera;
+    _cameraController.delegate = self;
+    _cameraController.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
+    
+    [self addOverlayViewForCameraController:_cameraController];
+    
+   [self presentViewController:_cameraController animated:YES completion:nil];
+        
+    
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+   
+    // Access the uncropped image from info dictionary
+    _image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    
+    //use overlayview to confirm use of photo
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    
+    PMUsePhotoViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"referenceIDViewController"];
+    
+    [(UIImageView*)vc.view setImage:_image];
+    
+    
+    //remove buttons
+    [[picker.view viewWithTag:27] removeFromSuperview];
+    [[picker.view viewWithTag:46] removeFromSuperview];
+    
+    [vc setAlertViewDelegate:self];
+    
+    vc.view.tag = 100;
+    
+    CGRect frame = vc.view.frame;
+    
+    frame.size.height = 70.0;
+    frame.origin.y = vc.view.frame.size.height - frame.size.height;
+    
+    
+    CGRect leftBtnFrame = CGRectMake(30.0, 20.0, 80.0, 40.0);
+    CGRect rightBtnFrame = CGRectMake(200.0, 20.0, 100.0, 40.0);
+    UIView  *overlayView = [self cameraOverlayView:frame];
+    
+    [overlayView addSubview:[self retakeBtn:[PMCloudContentsViewController standardOverlayBtn:leftBtnFrame]]];
+    [overlayView addSubview:[self usePhotoBtn:[PMCloudContentsViewController standardOverlayBtn:rightBtnFrame]]];
+    
+    [vc.view addSubview:overlayView];
+    
+    
+    [_cameraController pushViewController:vc animated:YES];
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+
+}
+
+
+#pragma mark - alertview delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+   
+    switch (alertView.tag) {
+        
+        case 1: case 2://alertview containing text for reference ID
+            if (buttonIndex != 0) {
+                _referenceID = [[alertView textFieldAtIndex:0] text];
+                
+                cloudPhoto(_image, _referenceID, dispatch_get_main_queue(), ^(id userPhoto) {
+                    
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                    
+                    PMConsentDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"consentDetail"];
+                    
+                    [vc setUserPhoto:userPhoto];
+                    [vc setConsentDelegate:self];
+                    
+                    [_cameraController setNavigationBarHidden:NO animated:YES];
+                    
+                    [_cameraController pushViewController:vc animated:YES];
+                    
+                    
+                });
+                
+                
+            } else {
+                if (alertView.tag == 2) {
+                    //coming back from consent details
+                    //cancel as it crashes if poptoRootViewController
+                    [self didCancelConsent];
+                } else
+                    [self retake];
+            }
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    
+}
+
+
+#pragma mark - consentDelegate methods
+- (void) didCompleteConsentForPhoto:(PFObject*)photo {
+    //THIS METHOD GETS CALLED WHEN THE PHOTO SAVE IS STARTED
+ 
+    _isSaving = YES;
+    
+    //Disable the action and camera buttons to prevent refresh an/or new photo being taken
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    if ([PFUser currentUser]) {
+       UIView *cameraBtn = [self.navigationItem.titleView viewWithTag:kCameraBtnTag];
+        if ([cameraBtn isKindOfClass:[UIButton class]]) {
+            [(UIButton*)cameraBtn setEnabled:NO];
+        }
+    }
+    
+    
+    //add the new photo and rebuild smallImage cache
+    
+    if (!_allImages) {
+        //need to test here as on first photo entered allImages and cache will be nil
+        _allImages = [NSMutableArray new];
+        if (_emptyLabel) {
+            [_emptyLabel removeFromSuperview];
+        }
+    }
+    
+    if (!_cachedSmallImages)
+        _cachedSmallImages = [self createCacheWithCountLimit:300 costLimit:(5 * 1024 * 1024)];
+    
+    [_allImages addObject:photo];
+    NSInteger itemIndex = _allImages.count - 1;
+    NSNumber *nextIndex = @(itemIndex);
+    NSUInteger indexes[] = {0,itemIndex};
+    NSIndexPath *indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:2];
+    
+    
+    dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t group = dispatch_group_create();
+   
+    
+    dispatch_group_async(group, queue1, ^{
+        PFFile *imageData = [(PFObject*)photo objectForKey:@"smallImageFile"];
+        
+        if (imageData.isDataAvailable) {
+            
+            
+            [self cacheData:[imageData getData] forCache:_cachedSmallImages atIndex:nextIndex];
+            
+        }
+        
+    });
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+    
+    
+    [self.collectionView performBatchUpdates:^{
+       
+        [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+        
+        
+    } completion:^(BOOL finished) {
+        if (finished) {
+             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:NO];
+        }
+       
+    }];
+        
+    
+    NSInteger delayInSeconds = 2;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if (_isSaving) {
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            UIView *savingMessage = [cell viewWithTag:savingMessageTag];
+            [savingMessage setHidden:NO];
+        }
+        
+    });
+
+    
+      [self didCancelConsent];
+    
+}
+
+- (void) didCancelConsent {
+    
+    [_cameraController dismissViewControllerAnimated:YES completion:^{
+        
+        if (_activity) {
+            [_activity activityDidFinish:YES];
+            _activity = nil;
+        }
+        
+    }];
+}
+
+- (void) didFinishSaving {
+    
+    //GETS CALLED WHEN THE PHOTO HAS BEEN SAVED
+    _isSaving = NO;
+    NSInteger delayInSeconds = 1;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+        
+        if ([PFUser currentUser]) {
+            UIView *cameraBtn = [self.navigationItem.titleView viewWithTag:kCameraBtnTag];
+            if ([cameraBtn isKindOfClass:[UIButton class]]) {
+                [(UIButton*)cameraBtn setEnabled:YES];
+            }
+        }
+
+        [self removeSavingMessage];
+        
+    });
+    
+    
+}
+
+- (void)addSavingMessageToImageView:(UIImageView*)imageView {
+
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:imageView.bounds];
+    [label setBackgroundColor:[UIColor clearColor]];
+    [label setText:@"Saving.."];
+    [label setTextColor:[UIColor lightTextColor]];
+    [label setTextAlignment:NSTextAlignmentLeft];
+    [label setHidden:YES];
+    [label setTag:savingMessageTag];
+    [imageView addSubview:label];
+    
+}
+
+- (void) removeSavingMessage {
+    
+    //remove the "saving" message
+    NSUInteger indexes[] = {0,_allImages.count - 1};
+    NSIndexPath *indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:2];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    UIView *savingMessage = [cell viewWithTag:savingMessageTag];
+    if (savingMessage) {
+        [savingMessage removeFromSuperview];
+        NSLog(@"Removed savingMessage from cell at index %d", indexPath.row);
+        
+    }
+    
+}
+
+
+#pragma mark - overlayView for camera
+//used by camera but but not with cameraRollActivity as source type must be camera
+- (void) addOverlayViewForCameraController:(UIImagePickerController*)cameraController {
+    
+    
+    CGRect frame = _cameraController.view.frame;
+    
+    frame.size.height = 70.0;
+    frame.origin.y = _cameraController.view.frame.size.height - frame.size.height;
+    
+    cameraController.showsCameraControls = NO;
+    UIView  *overlayView = [self cameraOverlayView:frame];
+    
+    CGRect leftBtnFrame = CGRectMake(30.0, 20.0, 80.0, 40.0);
+    CGRect rightBtnFrame = CGRectMake(200.0, 20.0, 100.0, 40.0);
+    
+    
+    [overlayView addSubview:[self cancelBtn:[PMCloudContentsViewController standardOverlayBtn:leftBtnFrame]]];
+    [overlayView addSubview:[self takePictureBtn:[PMCloudContentsViewController standardOverlayBtn:rightBtnFrame]]];
+    [overlayView setTag:27];
+    [_cameraController.view addSubview:overlayView];
+}
+
+
+- (UIView*)cameraOverlayView:(CGRect) frame {
+    
+    
+    UIView *overlayView = [[UIView alloc] initWithFrame:frame];
+    
+    [overlayView setBackgroundColor:[UIColor whiteColor]];
+    [overlayView setAlpha:0.85];
+    
+    return overlayView;
+}
+
++ (UIButton*)standardOverlayBtn:(CGRect) frame {
+    UIButton *stdOverlayBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [stdOverlayBtn setFrame:frame];
+    [stdOverlayBtn setBackgroundColor:[UIColor clearColor]];
+    [stdOverlayBtn setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    [stdOverlayBtn setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
+    return stdOverlayBtn;
+}
+
+- (UIButton*)takePictureBtn:(UIButton*)takePictureBtn {
+    
+    [takePictureBtn addTarget:self action:@selector(capture) forControlEvents:UIControlEventTouchUpInside];
+    [takePictureBtn setTitle:@"Capture" forState:UIControlStateNormal];
+    return takePictureBtn;
+}
+- (UIButton*)cancelBtn:(UIButton*)cancelBtn {
+
+    [cancelBtn addTarget:self action:@selector(didCancelConsent) forControlEvents:UIControlEventTouchUpInside];
+    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    return cancelBtn;
+    
+}
+
+
+- (UIButton*)usePhotoBtn:(UIButton*)usePhotoBtn {
+    
+    [usePhotoBtn addTarget:self action:@selector(usePhoto) forControlEvents:UIControlEventTouchUpInside];
+    [usePhotoBtn setTitle:@"Use photo" forState:UIControlStateNormal];
+    return usePhotoBtn;
+}
+
+
+
+- (UIButton*)retakeBtn:(UIButton*)retakeBtn {
+    
+    [retakeBtn addTarget:self action:@selector(retake) forControlEvents:UIControlEventTouchUpInside];
+    [retakeBtn setTitle:@"Retake" forState:UIControlStateNormal];
+    return retakeBtn;
+}
+
+
+
+- (void) capture {
+    
+    [_cameraController takePicture];
+}
+
+- (void) usePhoto {
+    
+    //add a reference ID
+    UIAlertView *referenceID = [[UIAlertView alloc] initWithTitle:@"Reference Identifier" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Done",nil];
+    [referenceID setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
+    UITextField *textField = [referenceID textFieldAtIndex:0];
+    [textField setTextColor:[UIColor blueColor]];
+    [textField setPlaceholder:@"Add a photo identifier"];
+    referenceID.tag = 1;
+    [referenceID show];
+   
+}
+
+- (void) retake {
+    [self addOverlayViewForCameraController:_cameraController];
+    [_cameraController popToRootViewControllerAnimated:NO];
+}
 
 @end

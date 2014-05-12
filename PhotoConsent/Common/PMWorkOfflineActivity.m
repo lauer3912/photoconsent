@@ -44,24 +44,23 @@
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
-    
-    _imageCount = 0; //initialise
+  
     if ([activityItems[0] isKindOfClass:[NSNumber class]]) {
         
         _imageCount = [(NSNumber*)activityItems[0] integerValue];
     }
+    
     
     if ([activityItems[1] isKindOfClass:[NSString class]]) {
         
         _activityName = (NSString*)activityItems[1];
     }
     
-    return YES;
+    return _imageCount != 0;
 
 }
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
-    
     
     
 }
@@ -78,7 +77,7 @@
     //check user is logged out
     if (![PFUser currentUser]) {
         //toggle between start/stop offline with same activity depending on imagecount
-        if (_imageCount == 0) {
+        if ([_activityName isEqualToString:@"View"]) {
             //Start
             if ([_offlineDelegate respondsToSelector:@selector(loadAndCacheDeviceImages:)]) {
                 [_offlineDelegate loadAndCacheDeviceImages:self];

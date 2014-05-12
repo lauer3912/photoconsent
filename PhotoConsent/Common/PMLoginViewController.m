@@ -8,6 +8,7 @@
 
 #import "PMLoginViewController.h"
 #import "PMLogoLabel.h"
+#import <Parse/Parse.h>
 
 @interface PMLoginViewController ()
 
@@ -33,6 +34,7 @@
     label.text = @"PhotoConsent";
     [label sizeToFit];
     self.logInView.logo = label;
+        
 }
 
 - (void)didReceiveMemoryWarning

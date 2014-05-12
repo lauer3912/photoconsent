@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PMRefreshActivity.h"
 
+
 @protocol PMWStopOfflineActivityProtocol <NSObject>
 
 - (void) userDidLogout:(id) sender;

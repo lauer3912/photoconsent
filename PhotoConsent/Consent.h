@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSNumber *Publication;
 @property (strong, nonatomic)  NSDate *createdAt;
 @property (strong, nonatomic)  NSData *imageFile;
+@property (strong, nonatomic)  NSData *smallImageFile;
 @property (strong, nonatomic)  NSData *consentSignature;
 @property (strong, nonatomic)  NSURL *assetURL;
 

@@ -9,19 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
-#import "PMPhotoConsentProtocol.h"
 #import "PMRefreshActivity.h"
 
-@interface PMCloudContentsViewController : UICollectionViewController <MBProgressHUDDelegate,PMRefreshActivityProtocol>
+@interface PMCloudContentsViewController : UICollectionViewController <MBProgressHUDDelegate,PMRefreshActivityProtocol,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *allImages;
 @property (strong, nonatomic) NSCache *cachedSmallImages;
 @property (strong, nonatomic) NSCache *cachedLargeImages;
-@property (weak,nonatomic) id<PMPhotoConsentProtocol> activityDelegate;
-@property (weak,nonatomic) id<PMPhotoConsentProtocol> cameraDelegate;
+@property (strong, nonatomic) UIActivity *activity;
+@property (strong, nonatomic) UIImagePickerController *cameraController;
 
 @property (strong, nonatomic) NSNumber* dataArrayDidChange;
 @property (assign, nonatomic) BOOL shouldDim;
+@property (strong, nonatomic) UIImage *image;
 
 - (IBAction)completeConsent:(UIStoryboardSegue *)segue;
 - (void) clearCollectionView;

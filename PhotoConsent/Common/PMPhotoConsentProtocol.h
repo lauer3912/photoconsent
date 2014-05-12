@@ -8,10 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
+@class PFObject;
+
+@protocol ConsentDelegate <NSObject>
+
+@required
+- (void) didCancelConsent;
+- (void) didFinishSaving;
+
+@optional
+- (void) didCompleteConsentForPhoto:(PFObject*)photo;
+
+
+@end
+
 @protocol PMPhotoConsentProtocol <NSObject>
 
 @optional
-- (void) startCamera:(id) sender;
+
 - (void) showActivitySheet:(id) sender;
 
 @end
+

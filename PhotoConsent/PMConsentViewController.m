@@ -8,7 +8,7 @@
 
 #import "PMConsentViewController.h"
 #import "PMFunctions.h"
-#import "UIColor+More.h"
+#import <Parse/Parse.h>
 
 
 @interface PMConsentViewController ()
