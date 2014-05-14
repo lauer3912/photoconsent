@@ -18,5 +18,6 @@
 @interface PMRefreshActivity : UIActivity
 
 @property (weak, nonatomic) id<PMRefreshActivityProtocol> refreshDelegate;
+@property BOOL isSaving;
 
 @end

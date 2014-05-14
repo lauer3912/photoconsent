@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface PMDisclaimerViewController : UIViewController
 
 @property (strong, nonatomic) UIActivity* activity;
+
+- (IBAction)acceptDisclaimer:(id)sender;
+- (IBAction)cancel:(id)sender;
+
 
 @end

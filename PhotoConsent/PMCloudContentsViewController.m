@@ -28,7 +28,7 @@
 #import "PMUpgradeViewController.h"
 #import "PMFunctions.h"
 #import "PMUsePhotoViewController.h"
-
+#import "PMDisclaimerViewController.h"
 
 
 
@@ -43,7 +43,7 @@ static const NSInteger savingMessageTag = 46;
 static const NSInteger kImageViewTag  = 1;
 static const NSInteger kCameraBtnTag  = 27;
 
-@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate,PageViewControllerImageToDisplayProtocol,PMRefreshCacheProtocol,ConsentDelegate>
+@interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate,PageViewControllerImageToDisplayProtocol,ConsentDelegate>
 
 @property (strong, nonatomic)  UILabel *emptyLabel;
 @property (strong, nonatomic) PMActivityDelegate* delegateInstance;
@@ -54,6 +54,8 @@ static const NSInteger kCameraBtnTag  = 27;
 
 @property (assign,nonatomic) BOOL isSaving;
 
+//PFObjects being saved
+@property (strong, nonatomic) NSMutableArray *photosBeingSaved;
 
 @end
 
@@ -76,6 +78,8 @@ static const NSInteger kCameraBtnTag  = 27;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _photosBeingSaved = [NSMutableArray new];
     
     // register for NSNotification on subscription purchase
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDisplayAds) name:@"AppStorePurchaseNotification" object:nil];
@@ -150,7 +154,7 @@ static const NSInteger kCameraBtnTag  = 27;
             [self userDidLogout:nil];
         }
         if (_dataArrayDidChange.boolValue == YES) {
-            [self refreshAndCacheObjects];
+            [self loadAndCacheDeviceImages:nil];
             _dataArrayDidChange = @0; //= NO
         }
         [self showEmptyLabel];
@@ -748,15 +752,13 @@ static const NSInteger kCameraBtnTag  = 27;
         [[PageViewControllerData sharedInstance] setDelegate:self];
         [[PageViewControllerData sharedInstance] setPhotoAssets:_allImages];
         
-//      [[PageViewControllerData sharedInstance] setLargeCachedImages:_cachedLargeImages];
-        
         // start viewing the image at the appropriate cell index
         MyPageViewController *pageViewController = [segue destinationViewController];
         
-//      [pageViewController setRefreshCacheDelegate:self];
             
         NSIndexPath *selectedCell = [self.collectionView indexPathsForSelectedItems][0];
         pageViewController.startingIndex = selectedCell.row;
+        [pageViewController setIsSaving:_isSaving];
         
     } else if ([segue.identifier isEqualToString:@"showPanel"]) {
         PMMenuViewController *controller = segue.destinationViewController;
@@ -784,6 +786,7 @@ static const NSInteger kCameraBtnTag  = 27;
         [_delegateInstance setConsentDelegate:self];
         [_delegateInstance setAlertviewDelegate:self];
         [_delegateInstance showActivitySheet:sender];
+        [_delegateInstance setIsSaving:_isSaving];
     }
     
     
@@ -952,9 +955,16 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     [self dismissViewControllerAnimated:YES completion:^{
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController: [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"]];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
+        if ([vc isKindOfClass:[PMDisclaimerViewController class]]) {
+            PMDisclaimerViewController *avc = (PMDisclaimerViewController*)vc;
+            UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:avc];
+            UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:avc action:@selector(cancel:)];
             
-        [self presentViewController:nvc animated:YES completion:nil];
+            [avc.navigationItem setRightBarButtonItem:cancelBtn];
+                
+            [self presentViewController:nc animated:YES completion:nil];
+        }
     }];
 }
 
@@ -1127,15 +1137,18 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
  
     _isSaving = YES;
     
+   
+    /*
     //Disable the action and camera buttons to prevent refresh an/or new photo being taken
     [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    
     if ([PFUser currentUser]) {
        UIView *cameraBtn = [self.navigationItem.titleView viewWithTag:kCameraBtnTag];
         if ([cameraBtn isKindOfClass:[UIButton class]]) {
             [(UIButton*)cameraBtn setEnabled:NO];
         }
     }
-    
+    */
     
     //add the new photo and rebuild smallImage cache
     
@@ -1151,11 +1164,11 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
         _cachedSmallImages = [self createCacheWithCountLimit:300 costLimit:(5 * 1024 * 1024)];
     
     [_allImages addObject:photo];
-    NSInteger itemIndex = _allImages.count - 1;
-    NSNumber *nextIndex = @(itemIndex);
-    NSUInteger indexes[] = {0,itemIndex};
-    NSIndexPath *indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:2];
+       
+    NSIndexPath *indexPath = [self indexPathForLastPhoto];
+    NSNumber *nextIndex = @(indexPath.row);
     
+    [_photosBeingSaved addObject:photo];
     
     dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t group = dispatch_group_create();
@@ -1176,6 +1189,11 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     
     
     [self.collectionView performBatchUpdates:^{
+        //make sure the collectionView has at least one section - crahes if not section which can happen as found in testing
+        if ([self.collectionView numberOfSections] == 0) {
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
+            [self.collectionView insertSections:indexSet];
+        }
        
         [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
         
@@ -1187,7 +1205,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
        
     }];
         
-    
+    //wait a few seconds before showing Saving message as with good connection might save might finish quickly
     NSInteger delayInSeconds = 2;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -1216,13 +1234,20 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     }];
 }
 
-- (void) didFinishSaving {
+- (void) didFinishSavingPhoto:(PFObject*)photo saved:(BOOL)saved {
     
     //GETS CALLED WHEN THE PHOTO HAS BEEN SAVED
-    _isSaving = NO;
+    
+    //remove the objet from the array of photos being saved and set the isSaving flag to NO if the array has 0 objects
+    [_photosBeingSaved removeObject:photo];
+    _isSaving = _photosBeingSaved.count > 0;
+    NSLog(@"isSaving = %d count of photos being saved is %d",_isSaving, _photosBeingSaved.count);
+    
+    
     NSInteger delayInSeconds = 1;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
+        /*
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
         
         if ([PFUser currentUser]) {
@@ -1231,10 +1256,22 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                 [(UIButton*)cameraBtn setEnabled:YES];
             }
         }
-
-        [self removeSavingMessage];
+       
+        */
+        
+        
+        [self removeSavingMessageAtIndexPath:[self indexPathForPhoto:photo]];
         
     });
+    
+    if (!saved) {
+        //either the save timed out or there was an error - need to delete the photo from the collectionview, allImages and the cachedSmallImages
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The photo was not saved. Please check your network connection." delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles: nil];
+        [alert show];
+        [self removePhoto:photo];
+        
+        
+    }
     
     
 }
@@ -1253,19 +1290,46 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     
 }
 
-- (void) removeSavingMessage {
+
+- (void) removeSavingMessageAtIndexPath:(NSIndexPath*)indexPath {
     
-    //remove the "saving" message
-    NSUInteger indexes[] = {0,_allImages.count - 1};
-    NSIndexPath *indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:2];
+    //remove the "saving" message from cell
     UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
     UIView *savingMessage = [cell viewWithTag:savingMessageTag];
     if (savingMessage) {
         [savingMessage removeFromSuperview];
-        NSLog(@"Removed savingMessage from cell at index %d", indexPath.row);
         
     }
+    
+}
+
+- (void)removePhoto:(PFObject*)photo {
+    
+    //either the save timed out or there was an error - need to delete the photo from the collectionview, allImages and the cachedSmallImages
+    NSIndexPath *indexPath = [self indexPathForPhoto:photo];
+    [_allImages removeObject:photo];
+    [_cachedSmallImages removeObjectForKey:@(indexPath.row)];
+    [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+    
+     
+    NSLog(@"The Save may have failed so removing photo from cache, allImages and collectionview");
+}
+
+#pragma mark - indexPath helpers
+-(NSIndexPath*)indexPathForLastPhoto {
+    NSUInteger row = _allImages.count - 1;
+    NSUInteger section = 0;
+    NSUInteger indexes[] = {section,row};
+    return [[NSIndexPath alloc] initWithIndexes:indexes length:2];
+    
+}
+
+-(NSIndexPath*)indexPathForPhoto:(PFObject*)photo {
+    NSUInteger row = [_allImages indexOfObject:photo];
+    NSUInteger section = 0;
+    NSUInteger indexes[] = {section,row};
+    return [[NSIndexPath alloc] initWithIndexes:indexes length:2];
     
 }
 
@@ -1332,7 +1396,7 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
 - (UIButton*)usePhotoBtn:(UIButton*)usePhotoBtn {
     
     [usePhotoBtn addTarget:self action:@selector(usePhoto) forControlEvents:UIControlEventTouchUpInside];
-    [usePhotoBtn setTitle:@"Use photo" forState:UIControlStateNormal];
+    [usePhotoBtn setTitle:@"Use Photo" forState:UIControlStateNormal];
     return usePhotoBtn;
 }
 

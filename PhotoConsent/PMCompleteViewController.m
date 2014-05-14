@@ -131,8 +131,9 @@
 - (void) savePhoto {
     
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
-        
+        __block  BOOL savingDidFinish = NO;
         [_userPhoto saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            savingDidFinish = YES;
             if (succeeded) {
                 
                 PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
@@ -142,22 +143,29 @@
                      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                          [self createDeviceConsentFromPFObject];
                      });
-                    
-                    
-                    
-                    
-                    
+                              
                 }];//end of parse getdata
                 
             } else
                 NSLog(@"Error: %@ %@", error, [error userInfo]);
             
-            if ([_consentDelegate respondsToSelector:@selector(didFinishSaving)]) {
-                [_consentDelegate didFinishSaving];
+            if ([_consentDelegate respondsToSelector:@selector(didFinishSavingPhoto:saved:)]) {
+                [_consentDelegate didFinishSavingPhoto:_userPhoto saved:YES];
             }
             
         }];
         
+        //put this timed check here in case the network never finishes the save
+        int delayInSeconds = 60;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    
+            if (!savingDidFinish) {
+                if ([_consentDelegate respondsToSelector:@selector(didFinishSavingPhoto:saved:)]) {
+                    [_consentDelegate didFinishSavingPhoto:_userPhoto saved:NO];
+                }
+            }
+            
+        });
         
     }
     

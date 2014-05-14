@@ -17,7 +17,6 @@
 #import "PMLoginActivity.h"
 #import <Parse/Parse.h>
 #import "PMCloudContentsViewController.h"
-#import "PMDisclaimerActivity.h"
 #import "PMWorkOfflineActivity.h"
 #import "ConsentStore.h"
 
@@ -94,6 +93,7 @@
             
             _refreshActivity = [[PMRefreshActivity alloc] init];
             [_refreshActivity setRefreshDelegate:_senderController];
+            [_refreshActivity setIsSaving:_isSaving];
             
             activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:@[_logActivity,_cameraRollActivity,_refreshActivity]];
             

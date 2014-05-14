@@ -71,6 +71,7 @@
     
     // start by viewing the photo tapped by the user
     PhotoViewController *startingPage = [PhotoViewController photoViewControllerForPageIndex:index];
+    
     if (startingPage != nil)
     {
         
@@ -85,7 +86,23 @@
                       }
           ];
          [_trashBtn setEnabled:[self canBeDeleted:index]];
-             
+        
+        //start in background to cache the before and after image data
+        int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1);
+        if (!(_isSaving && (indexMax - index) == 1)) {
+            //possible that the indexmax includes a photo being saved so don't cache if isSaving is true and the selected image index is only 1 less than the indexmax i.e. next to the image being saved
+            
+            if (index < indexMax) {
+                [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
+
+            }
+        }
+        if (index > 0) {
+            [self cacheDataInBackgroundForPhotoAtIndex:index - 1];
+        }
+        
+
+        
     }
 
 }
@@ -104,12 +121,38 @@
        
         [_trashBtn setEnabled:[self canBeDeleted:index]];
         
-         NSLog(@"VC BEFORE - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
-        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
+//         NSLog(@"VC BEFORE - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
+//        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
+        
+        //test -load in the background the 2 previous photos to the Parse data cache
+        [self cacheDataInBackgroundForPhotoAtIndex:index];
+        if (index > 0) {
+            [self cacheDataInBackgroundForPhotoAtIndex:index - 1];
+        }
+        
+        
         return [PhotoViewController photoViewControllerForPageIndex:(index)];
     }
-   
+    
+    
 
+}
+
+- (void) cacheDataInBackgroundForPhotoAtIndex:(NSUInteger)index {
+    
+    id photo = [[PageViewControllerData sharedInstance] objectAtIndex:index];
+    if ([photo isKindOfClass:[PFObject class]]) {
+        NSString *key = @"imageFile";
+        
+        PFFile *imageData = [photo objectForKey:key];
+        if (!imageData.isDataAvailable) {
+            [imageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                NSLog(@"Data returned from getDataInBackground for INDEX = %d", index);
+            }];
+        }
+        
+    }
+    
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(PhotoViewController *)vc
@@ -124,9 +167,22 @@
         index ++;
         [_trashBtn setEnabled:[self canBeDeleted:index]];
         
-         NSLog(@"VC AFTER - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
+//         NSLog(@"VC AFTER - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
         
-        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
+//        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
+        
+        
+        //test -load in the background the 2 following photos to the Parse data cache
+        [self cacheDataInBackgroundForPhotoAtIndex:index];
+        //check the second image after is not being saved
+        if (!(_isSaving && (indexMax - index) == 1)) {
+            if (index < indexMax) {
+                 [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
+            }
+           
+        }
+        
+        
         return [PhotoViewController photoViewControllerForPageIndex:(index)];
     }
     
@@ -203,37 +259,6 @@
     }
 }
 
-/*
-- (void) refreshLargeImageCache {
-    
-    
-    [[PageViewControllerData sharedInstance].photoAssets removeObjectAtIndex:_currentIndex];
-        
-    if ([_refreshCacheDelegate respondsToSelector:@selector(loadCache:objects:key:progress:completionHandler:)]) {
-        
-    //NSCache* largeCachedImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] cachedLargeImages];
-        
-        NSCache* largeCachedImages =  [[PageViewControllerData sharedInstance] largeCachedImages];
-        
-        [largeCachedImages removeAllObjects];
-        
-        NSArray* countAllImages = [(PMCloudContentsViewController*)self.navigationController.viewControllers[0] allImages];
-      
-        NSArray* allPhotos = [[PageViewControllerData sharedInstance] photoAssets];
-        [_refreshCacheDelegate loadCache:largeCachedImages objects:allPhotos key:@"imageFile" progress:nil completionHandler:^(BOOL finished) {
-            if (finished) {
-                
-                NSLog(@"count allImages = %d  count photoAssets = %d", countAllImages.count, [[PageViewControllerData sharedInstance] photoCount]  );
-                NSLog(@"CURRENTINDEX = %d", _currentIndex);
-                [self displayPrevPhoto];
-            }
-            
-            
-        }];
-        
-    }
-}
-*/
  
 - (void) displayPrevPhoto {
     

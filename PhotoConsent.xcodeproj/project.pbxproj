@@ -78,7 +78,6 @@
 		E486BD5218D7160A00635939 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E486BD5118D7160A00635939 /* iAd.framework */; };
 		E486BD5518D7580200635939 /* PMUpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E486BD5418D7580200635939 /* PMUpgradeViewController.m */; };
 		E4B8A84E18E6EA4900B1A92B /* UIColor+More.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */; };
-		E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */; };
 		E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */; };
 		E4D8A96A18E9665D008D58E5 /* PhotoConsent.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */; };
 		E4EF48C619209B1D00F4FBF9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */; };
@@ -217,8 +216,6 @@
 		E486BD5418D7580200635939 /* PMUpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMUpgradeViewController.m; sourceTree = "<group>"; };
 		E4B8A84C18E6EA4900B1A92B /* UIColor+More.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+More.h"; path = "../Photoconsent/Common/UIColor+More.h"; sourceTree = "<group>"; };
 		E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+More.m"; path = "../Photoconsent/Common/UIColor+More.m"; sourceTree = "<group>"; };
-		E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMDisclaimerActivity.h; sourceTree = "<group>"; };
-		E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMDisclaimerActivity.m; sourceTree = "<group>"; };
 		E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMLoginActivityDelegate.h; path = Photoconsent/PMLoginActivityDelegate.h; sourceTree = SOURCE_ROOT; };
 		E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMLoginActivityDelegate.m; path = Photoconsent/PMLoginActivityDelegate.m; sourceTree = SOURCE_ROOT; };
 		E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PhotoConsent.xcassets; path = Photoconsent/PhotoConsent.xcassets; sourceTree = SOURCE_ROOT; };
@@ -503,8 +500,6 @@
 				E478DB791883F20F0064E331 /* PMFeedbackActivity.m */,
 				E478DB821883F20F0064E331 /* PMLogoutActivity.h */,
 				E478DB831883F20F0064E331 /* PMLogoutActivity.m */,
-				E4BB0AF51895752800DD7D0D /* PMDisclaimerActivity.h */,
-				E4BB0AF61895752800DD7D0D /* PMDisclaimerActivity.m */,
 				E452D23B18CF10AA00EED549 /* PMRefreshActivity.h */,
 				E452D23C18CF10AA00EED549 /* PMRefreshActivity.m */,
 				E47291AA18D0BD7F00CA031B /* PMWorkOfflineActivity.h */,
@@ -752,7 +747,6 @@
 				E478DBDA1883F2100064E331 /* PMBasicDetailsViewController.m in Sources */,
 				E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */,
 				E41C09AF191A69FD00807C3F /* PMUsePhotoViewController.m in Sources */,
-				E4BB0AF71895752800DD7D0D /* PMDisclaimerActivity.m in Sources */,
 				E478DB411883EF370064E331 /* main.m in Sources */,
 				E478DBC51883F2100064E331 /* PMSignUpViewController.m in Sources */,
 				E478DBED1883F2600064E331 /* ImageScrollView.m in Sources */,

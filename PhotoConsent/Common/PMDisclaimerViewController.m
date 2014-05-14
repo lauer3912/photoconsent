@@ -39,6 +39,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    /*
+    UIBarButtonItem *acceptBtn = [[UIBarButtonItem alloc] initWithTitle:@"Accept" style:UIBarButtonItemStyleBordered target:self action:@selector(acceptDisclaimer:)];
+    
+    [self.navigationItem setRightBarButtonItem:acceptBtn];
+    
+    UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+    [self.navigationItem setLeftBarButtonItem:cancelBtn];
+    */
+    
     [_dislcaimerLabel0 setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"%@ %@", kPMTextConstants_Disclaimer0, kPMTextConstants_Disclaimer1]]];
     
     [_dislcaimerLabel1 setAttributedText:[self attributedStringForText:kPMTextConstants_Disclaimer1]];
@@ -56,7 +66,6 @@
     [_dislcaimerBtn3 setTitle:kPMTextConstants_Disclaimer5 forState:UIControlStateNormal];
     [_dislcaimerBtn3 setTag:3];
     
-//    [self.view setBackgroundColor:[UIColor turquoise]];
 
 }
 - (void)didReceiveMemoryWarning
@@ -66,15 +75,22 @@
 }
 
 
-- (IBAction)disclaimer:(id)sender {
+- (IBAction)acceptDisclaimer:(id)sender {
+    
     [self updateUserDefaults];
-    if (_activity)
-        [_activity activityDidFinish:YES];
-    else
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+    }];
+    
 }
+
+- (IBAction)cancel:(id)sender {
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    
+}
+
 
 -(void) updateUserDefaults {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];

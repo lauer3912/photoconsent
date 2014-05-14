@@ -80,7 +80,6 @@
         self.delegate = self;
         
       
-       // [self setBackgroundColor:[UIColor turquoise]];
     }
     return self;
 }

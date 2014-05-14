@@ -35,8 +35,9 @@
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
+    BOOL saving = _isSaving;
     
-    return YES;
+    return !saving;
 }
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {

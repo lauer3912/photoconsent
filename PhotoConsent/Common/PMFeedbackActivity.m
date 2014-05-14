@@ -88,7 +88,7 @@
                 [_mailComposer addAttachmentData:signatureData mimeType:@"image/jpeg" fileName:@"consent_image.jpg"];
                 [_mailComposer addAttachmentData:imageData mimeType:@"image/jpeg" fileName:@"medical_image.jpg"];
           } else if (_shareActivityType == shareActivityTypePromote) {
-                    [_mailComposer setSubject:@"Image from PhotoConsent"];
+                    [_mailComposer setSubject:@"Check Out PhotoConsent"];
                     [_mailComposer setMessageBody:activityItems[0] isHTML:NO];
                 
                 }

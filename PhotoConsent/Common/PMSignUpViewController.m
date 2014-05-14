@@ -24,14 +24,53 @@
     return self;
 }
 
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     PMLogoLabel *label = [[PMLogoLabel alloc] init];
-    label.text = @"Photoconsent";
+    label.text = @"PhotoConsent";
     [label sizeToFit];
     self.signUpView.logo = label;
+    
+    
+    
+    [self customiseSignUpAdditionalField];
+    
+}
+
+- (void)customiseSignUpAdditionalField {
+    UITextField *disclaimer = self.signUpView.additionalField;
+    
+    [disclaimer setTextColor:[UIColor lightTextColor]];
+    [disclaimer setFont:[UIFont systemFontOfSize:12.0]];
+    [disclaimer setBackgroundColor:[UIColor clearColor]];
+    [disclaimer setTextAlignment:NSTextAlignmentCenter];
+    [disclaimer setUserInteractionEnabled:NO];
+    
+    [self checkDisclaimerStatus];
+    
+}
+
+- (void)checkDisclaimerStatus {
+    UITextField *disclaimer = self.signUpView.additionalField;
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *disclaimerAcknowledged = [defaults objectForKey:@"disclaimerAcknowledged"];
+    if ([disclaimerAcknowledged boolValue] == NO)
+        [disclaimer setText:@"Sign up requires acceptance of Disclaimer"];
+    else
+        [disclaimer setText:@"Disclaimer accepted - Sign up to register"];
+    
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    [self checkDisclaimerStatus];
+    
 }
 
 - (void)didReceiveMemoryWarning

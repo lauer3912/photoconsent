@@ -11,11 +11,16 @@
 #import "PMLoginViewController.h"
 #import "PMSignUpViewController.h"
 #import <Parse/Parse.h>
-
+#import "PMDisclaimerViewController.h"
 
 @interface PMLoginActivity ()
 <PFLogInViewControllerDelegate,PFSignUpViewControllerDelegate>
-  @property NSInteger imageCount;
+
+    @property NSInteger imageCount;
+
+    @property (strong, nonatomic)  PFLogInViewController *logInViewController;
+
+
 @end
 
 
@@ -49,6 +54,7 @@
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     
+    
     _imageCount = 0;
     if ([activityItems[0] isKindOfClass:[NSNumber class]]) {
         
@@ -67,28 +73,35 @@
 
 - (UIViewController *)activityViewController {
     
+    
     // Create the log in view controller
-    PFLogInViewController *logInViewController = [[PMLoginViewController alloc] init];
-
-     
-    [logInViewController setDelegate:self];
+    _logInViewController = [[PMLoginViewController alloc] init];
+    
+    
+    [_logInViewController setDelegate:self];
     
     // Create the sign up view controller
-    PFSignUpViewController *signUpViewController = [[PMSignUpViewController alloc] init];
-
+    PMSignUpViewController *signUpViewController = [[PMSignUpViewController alloc] init];
+    
     [signUpViewController setDelegate:self];
     
-    // Assign our sign up controller to be displayed from the login controller
-    [logInViewController setSignUpController:signUpViewController];
+    PFSignUpFields fields = (PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsEmail | PFSignUpFieldsAdditional | PFSignUpFieldsSignUpButton | PFSignUpFieldsDismissButton);
     
-    return logInViewController;
+    
+    
+    [signUpViewController setFields:fields];;
+    
+    // Assign our sign up controller to be displayed from the login controller
+    [_logInViewController setSignUpController:signUpViewController];
+        
+    return _logInViewController;
 }
 
 - (void)performActivity {
     
 }
 
-#pragma mark - PFLogInViewControllerDelegate
+#pragma mark - PFLogInViewControllerDelegate methods
 
 - (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
 {
@@ -117,8 +130,7 @@
 
 // Sent to the delegate when the log in attempt fails.
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
-    NSLog(@"Failed to log in...");
-    
+       
 }
 
 // Sent to the delegate when the log in screen is dismissed.
@@ -126,56 +138,43 @@
     [self activityDidFinish:YES];
 }
 
-#pragma mark - PFSignUpViewControllerDelegate
+
+#pragma mark - PFSignUpViewControllerDelegate methods
 
 // Sent to the delegate to determine whether the sign up request should be submitted to the server.
-- (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info {
-    BOOL informationComplete = YES;
+- (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:
+   (NSDictionary *)info {
     
-    // loop through all of the submitted data
-    for (id key in info) {
-        NSString *field = [info objectForKey:key];
-        if (!field || field.length == 0) { // check completion
-            informationComplete = NO;
-            break;
+    if ([self infoComplete:info]) {
+       
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        NSNumber *disclaimerAcknowledged = [defaults objectForKey:@"disclaimerAcknowledged"];
+        // set acknowledged = YES if it is not already, otherwise leave alone
+        if ([disclaimerAcknowledged boolValue] == YES) {
+            return YES;
+        } else {
+            
+            [self presentDisclaimerForAcceptanceWithSignupController:signUpController];
+            return NO;
         }
-    }
+        
+        
+    } else
+        return NO;
     
-    // Display an alert if a field wasn't completed
-    if (!informationComplete) {
-        [[[UIAlertView alloc] initWithTitle:@"Missing Information"
-                                    message:@"Make sure you fill out all of the information!"
-                                   delegate:nil
-                          cancelButtonTitle:@"Ok"
-                          otherButtonTitles:nil] show];
-    } 
-    return informationComplete;
+   
 }
 
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
        // Dismisses the PFSignUpViewController
-    //show disclaimer again even though already acknowledged on first app use
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    UIViewController *avc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
-    
-    [avc setModalPresentationStyle:UIModalPresentationFullScreen];
-    [signUpController presentViewController:avc animated:YES completion:^{
-        
-        double delayInSeconds = 10.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self activityDidFinish:YES];
-        });
-        
-        
-    }];
+     [self activityDidFinish:YES];
     
 }
 
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
-   [self activityDidFinish:YES];
+   //don't finish the activity her - let it return to the sign up form
 }
 
 // Sent to the delegate when the sign up screen is dismissed.
@@ -184,6 +183,57 @@
     [self activityDidFinish:YES];
 }
 
+#pragma mark - Present disclaimer for acceptance
+- (void)presentDisclaimerForAcceptanceWithSignupController:(PFSignUpViewController *)signUpController {
+    
+    //show disclaimer before sign up
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"disclaimerViewController"];
+    if ([vc isKindOfClass:[PMDisclaimerViewController class]]) {
+        PMDisclaimerViewController *avc = (PMDisclaimerViewController*)vc;
+       
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:avc];
+        
+        UIBarButtonItem *acceptBtn = [[UIBarButtonItem alloc] initWithTitle:@"Accept" style:UIBarButtonItemStyleBordered target:avc action:@selector(acceptDisclaimer:)];
+        [avc.navigationItem setRightBarButtonItem:acceptBtn];
+        
+        UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:avc action:@selector(cancel:)];
+        
+        [avc.navigationItem setLeftBarButtonItem:cancelBtn];
+        
+        [avc setModalPresentationStyle:UIModalPresentationFullScreen];
+        [signUpController presentViewController:nc animated:YES completion:^{
+            
+        }];
+        
+    }
+    
+}
 
+- (BOOL)infoComplete:(NSDictionary*)info {
+    
+    BOOL informationComplete = YES;
+     
+     // loop through all of the submitted data
+     for (id key in info) {
+         NSString *field = [info objectForKey:key];
+         if (!field || field.length == 0) // check completion
+             informationComplete = NO;
+         break;
+     }
+    
+     
+     // Display an alert if a field wasn't completed
+     if (!informationComplete) {
+     
+         [[[UIAlertView alloc] initWithTitle:@"Missing Information"
+         message:@"Please enter all the information!"
+         delegate:nil
+         cancelButtonTitle:@"Ok"
+         otherButtonTitles:nil] show];
+     }
+     return informationComplete;
+         
+}
 
 @end

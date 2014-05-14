@@ -70,21 +70,9 @@
 }
 
 
-/*  this is used with _largeCachedImages
 - (UIImage *)photoAtIndex:(NSUInteger)index
 {
-    UIImage *image;
-    if ([_delegate respondsToSelector:@selector(imageAtIndex:forCache:)]) {
-        image = [_delegate imageAtIndex:[NSNumber numberWithInteger:index] forCache:_largeCachedImages];
-     }
-    return image;
     
- }
-*/
-
-- (UIImage *)photoAtIndex:(NSUInteger)index
-{
-    //used only for Device Consent i.e. offline viewing
     UIImage* image;
     id photo = [_photoAssets objectAtIndex:index];
     if ([photo isKindOfClass:[Consent class]]) {
@@ -102,6 +90,11 @@
                 NSData *data = [imageData getData];
                 
                 image = [UIImage imageWithData:data];
+                
+            } else {
+                NSData *data = [imageData getData];
+                
+                image = [UIImage imageWithData:data];
             }
         }
     
@@ -109,8 +102,6 @@
 }
 
 
-
-//not used
 - (id)objectAtIndex:(NSUInteger)index
 {
     if (index == NSNotFound) {

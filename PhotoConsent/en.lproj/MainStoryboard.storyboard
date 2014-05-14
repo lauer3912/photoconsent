@@ -73,19 +73,15 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Thank you for your consent" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="M9J-6O-Ry9">
-                                <rect key="frame" x="20" y="112" width="280" height="35"/>
+                                <rect key="frame" x="20" y="101" width="280" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
-                                <rect key="frame" x="85" y="144" width="160" height="240"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFP-9L-044">
+                                <rect key="frame" x="67" y="133" width="190" height="251"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="160" id="3Ii-2r-bPA"/>
-                                    <constraint firstAttribute="height" constant="240" id="uUv-Sn-pix"/>
-                                </constraints>
                             </imageView>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.49999999999999961" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Assessment" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5J-tc-qYE">
                                 <rect key="frame" x="125" y="164" width="120" height="21"/>
@@ -112,7 +108,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-iF-1BQ">
-                                <rect key="frame" x="55" y="438" width="220" height="44"/>
+                                <rect key="frame" x="67" y="438" width="190" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
@@ -124,7 +120,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please return the device to the healthcare professional" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Zol-Hn-fka">
-                                <rect key="frame" x="25" y="392" width="280" height="38"/>
+                                <rect key="frame" x="20" y="392" width="280" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -564,13 +560,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Disclaimer" id="iqZ-cz-y1s">
-                        <barButtonItem key="leftBarButtonItem" title="Accept" id="Ang-SB-4wk">
-                            <connections>
-                                <action selector="disclaimer:" destination="KlJ-YR-nZs" id="N4p-fb-Lv6"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Disclaimer" id="iqZ-cz-y1s"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="dislcaimerBtn0" destination="Fo6-wN-mgH" id="s5b-Ac-J9f"/>
@@ -618,56 +608,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ko7-c2-4Xb" userLabel="AssessmentSwitch">
+                            <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ko7-c2-4Xb" userLabel="AssessmentSwitch">
                                 <rect key="frame" x="29" y="131" width="51" height="31"/>
                                 <color key="onTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="mYH-gB-QSc" userLabel="EducationSwitch">
+                            <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="mYH-gB-QSc" userLabel="EducationSwitch">
                                 <rect key="frame" x="29" y="200" width="51" height="31"/>
                                 <color key="onTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Whq-2l-cDt" userLabel="PublicationSwitch">
+                            <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Whq-2l-cDt" userLabel="PublicationSwitch">
                                 <rect key="frame" x="29" y="264" width="51" height="31"/>
                                 <color key="onTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </switch>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-EU-0hD">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-EU-0hD">
                                 <rect key="frame" x="146" y="112" width="167" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="167" id="8iW-bT-Npo"/>
-                                    <constraint firstAttribute="height" constant="70" id="le3-4p-4I0"/>
-                                </constraints>
                                 <string key="text">Consent for assessment, second opinion or referral
 </string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cF-FE-sRZ">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cF-FE-sRZ">
                                 <rect key="frame" x="146" y="196" width="167" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="zKc-dE-Ozk"/>
-                                </constraints>
                                 <string key="text">Consent for Education
 </string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="krw-ce-pz5">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="krw-ce-pz5">
                                 <rect key="frame" x="146" y="251" width="167" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="EKu-w1-0TQ"/>
-                                </constraints>
                                 <string key="text">Consent for medical publication
 </string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uSs-57-osF" userLabel="AssessmentButton">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uSs-57-osF" userLabel="AssessmentButton">
                                 <rect key="frame" x="141" y="117" width="159" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="159" id="VZt-ic-NFL"/>
-                                    <constraint firstAttribute="height" constant="59" id="oKA-WW-8rs"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -680,11 +656,8 @@
                                     <action selector="onAssessment:" destination="dsl-rE-b7v" eventType="touchUpInside" id="Ri4-hi-B9z"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PZv-RZ-8d6" userLabel="EducationButton">
-                                <rect key="frame" x="141" y="200" width="159" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="59" id="BXt-aO-mKA"/>
-                                </constraints>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PZv-RZ-8d6" userLabel="EducationButton">
+                                <rect key="frame" x="141" y="186" width="159" height="60"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -697,12 +670,9 @@
                                     <action selector="onEducation:" destination="dsl-rE-b7v" eventType="touchUpInside" id="nNu-oh-cMr"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pay-nQ-zAH" userLabel="PublicationButton">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pay-nQ-zAH" userLabel="PublicationButton">
                                 <rect key="frame" x="141" y="256" width="159" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="feF-Ss-Wim"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -715,7 +685,7 @@
                                     <action selector="onPublication:" destination="dsl-rE-b7v" eventType="touchUpInside" id="wHI-Ox-lkY"/>
                                 </connections>
                             </button>
-                            <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyw-jo-HUl">
+                            <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyw-jo-HUl">
                                 <rect key="frame" x="0.0" y="366" width="320" height="175"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <string key="text">The healthcare professional taking this photo wishes to use it for assessment, education or medical publication. Touch each box for details then tap the button to consent.
@@ -723,7 +693,7 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1v-cv-hzc">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1v-cv-hzc">
                                 <rect key="frame" x="20" y="74" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Cancel">
@@ -735,25 +705,6 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="krw-ce-pz5" firstAttribute="top" secondItem="pay-nQ-zAH" secondAttribute="top" id="1xa-Xe-dSa"/>
-                            <constraint firstItem="PZv-RZ-8d6" firstAttribute="leading" secondItem="uSs-57-osF" secondAttribute="leading" id="AGn-pC-4uU"/>
-                            <constraint firstItem="PZv-RZ-8d6" firstAttribute="leading" secondItem="pay-nQ-zAH" secondAttribute="leading" id="HvZ-NX-MUK"/>
-                            <constraint firstItem="uSs-57-osF" firstAttribute="centerY" secondItem="ko7-c2-4Xb" secondAttribute="centerY" id="KnS-HY-gBC"/>
-                            <constraint firstItem="pay-nQ-zAH" firstAttribute="leading" secondItem="Whq-2l-cDt" secondAttribute="trailing" constant="63" id="NJF-Bj-Eso"/>
-                            <constraint firstItem="mYH-gB-QSc" firstAttribute="leading" secondItem="ko7-c2-4Xb" secondAttribute="leading" id="Qib-98-WKq"/>
-                            <constraint firstItem="4cF-FE-sRZ" firstAttribute="trailing" secondItem="CMD-EU-0hD" secondAttribute="trailing" id="TTB-JD-exg"/>
-                            <constraint firstItem="pay-nQ-zAH" firstAttribute="top" secondItem="CMD-EU-0hD" secondAttribute="bottom" constant="74" id="VbC-M5-EEM"/>
-                            <constraint firstItem="pay-nQ-zAH" firstAttribute="trailing" secondItem="G1v-cv-hzc" secondAttribute="trailing" id="bVs-7C-gbp"/>
-                            <constraint firstItem="mYH-gB-QSc" firstAttribute="leading" secondItem="Whq-2l-cDt" secondAttribute="leading" id="fOA-Mf-PBt"/>
-                            <constraint firstItem="4cF-FE-sRZ" firstAttribute="leading" secondItem="CMD-EU-0hD" secondAttribute="leading" id="iWI-ET-LVR"/>
-                            <constraint firstItem="krw-ce-pz5" firstAttribute="trailing" secondItem="4cF-FE-sRZ" secondAttribute="trailing" id="oa3-Jv-njc"/>
-                            <constraint firstItem="PZv-RZ-8d6" firstAttribute="centerY" secondItem="4cF-FE-sRZ" secondAttribute="centerY" id="p4R-vr-02a"/>
-                            <constraint firstItem="krw-ce-pz5" firstAttribute="leading" secondItem="4cF-FE-sRZ" secondAttribute="leading" id="qhV-9N-600"/>
-                            <constraint firstItem="pay-nQ-zAH" firstAttribute="trailing" secondItem="PZv-RZ-8d6" secondAttribute="trailing" id="sBf-Kc-ti2"/>
-                            <constraint firstItem="pay-nQ-zAH" firstAttribute="trailing" secondItem="uSs-57-osF" secondAttribute="trailing" id="xqh-04-SKa"/>
-                            <constraint firstItem="Xyw-jo-HUl" firstAttribute="top" secondItem="pay-nQ-zAH" secondAttribute="bottom" constant="40" id="yWq-nq-pB8"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Consent" id="bzO-j1-4eL">
                         <barButtonItem key="backBarButtonItem" title="Back" id="FyB-up-gdd"/>

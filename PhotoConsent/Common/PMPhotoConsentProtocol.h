@@ -14,7 +14,7 @@
 
 @required
 - (void) didCancelConsent;
-- (void) didFinishSaving;
+- (void) didFinishSavingPhoto:(PFObject*)photo saved:(BOOL)saved;
 
 @optional
 - (void) didCompleteConsentForPhoto:(PFObject*)photo;

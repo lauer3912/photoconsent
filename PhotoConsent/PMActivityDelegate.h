@@ -19,6 +19,7 @@
 @property (weak, nonatomic) id<ConsentDelegate> consentDelegate;
 //pass these delegates on to cameraRoll activity
 @property (weak, nonatomic) id<UIAlertViewDelegate> alertviewDelegate;
-
+//pass this on to refreshActivity
+@property BOOL isSaving;
 
 @end
