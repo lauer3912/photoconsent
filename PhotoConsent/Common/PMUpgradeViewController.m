@@ -22,8 +22,10 @@
 @property (weak, nonatomic) IBOutlet UIButton  *upgradeButton;
 @property (nonatomic, strong) MBProgressHUD *HUD;
 
-@end
+@property (nonatomic, weak) IBOutlet UILabel  *priceLabel;
 
+@end
+NSString *const kProductIdentifierCameraRoll = @"PhotoConsent_Camera_Roll";
 NSString *const kPMUpgradeButtonTitleUpgrade = @"Upgrade now";
 NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
 
@@ -107,7 +109,7 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
 -(void)getInAppProducts {
     
     
-    NSArray *productIdentifiers = @[@"PhotoConsent14"];
+    NSArray *productIdentifiers = @[kProductIdentifierCameraRoll];
     [self validateProductIdentifiers:productIdentifiers];
     
 }
@@ -147,7 +149,16 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
    
     [_productName setAttributedText:[self attributedStringForText:product.localizedTitle]];
     [_productDesc setText:product.localizedDescription];
-    [_productPrice setText:[self formatPriceForProduct:product]];
+    
+    
+    if (isPaid()) {
+        [_priceLabel setText:@"Purchased"];
+        [_productPrice setHidden:YES];
+    } else {
+        [_priceLabel setText:@"One-time price"];
+        [_productPrice setHidden:NO];
+        [_productPrice setText:[self formatPriceForProduct:product]];
+    }
     
 }
 

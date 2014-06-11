@@ -8,7 +8,8 @@
 
 #import "PMAppDelegate.h"
 #import "PMTextConstants.h"
-
+#import "Reachability.h"
+#import "VerifyStoreReceipt.h"
 
 @implementation PMAppDelegate
 
@@ -23,17 +24,23 @@ static  NSDateFormatter *dateFormatter;
                   clientKey:@"Tx62CaFBE2yPpmKKo8KqylOBnxhfVrSTrjO7O44f"];
     
     [self setStandardUserDefaults];
-    
-   /*
-    [[UINavigationBar appearance] setBarTintColor:[UIColor brightOrange]];
-    [[UINavigationBar appearance] setTintColor:[UIColor turquoise]];
-    [[UIBarButtonItem appearance] setTintColor:[UIColor turquoise]];
-    [[UICollectionView appearance] setBackgroundColor:[UIColor turquoise]];
-    [[UIView appearance] setTintColor:[UIColor turquoise]];
-    */
+  
+    // Use Reachability to monitor connectivity
+    [self monitorReachability];
     
     //In-App Purchase transaction queue observer
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    
+    //if the isPaid value has been set = 3 by the receipt verification then the receipt verification failed and we should request a new receipt from the app-store
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *isPaid = [defaults valueForKey:@"Paid"];
+    if (isPaid.intValue == 3) {
+        //wait a few seconds to give the reachability monitor a chance to set networkStatusu
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self requestReceipt];
+        });
+    }
+    
     
     return YES;
 }
@@ -203,6 +210,76 @@ void formatter()  {
     
 }
 
+#pragma mark - Reachability
+
+- (BOOL)isParseReachable {
+    return self.networkStatus != NotReachable;
+}
+
+- (void)monitorReachability {
+    Reachability *hostReach = [Reachability reachabilityWithHostname:@"api.parse.com"];
+    
+    hostReach.reachableBlock = ^(Reachability*reach) {
+        _networkStatus = [reach currentReachabilityStatus];
+        
+        if ([self isParseReachable] && [PFUser currentUser]) {
+            NSLog(@"Just executed hostReach reachable block");
+        }
+    };
+    
+    hostReach.unreachableBlock = ^(Reachability*reach) {
+        _networkStatus = [reach currentReachabilityStatus];
+         NSLog(@"Just executed hostReach unreachable block. _networkstatus = %d", _networkStatus);
+    };
+    
+    [hostReach startNotifier];
+}
+
+#pragma mark - Refesh receipt request
+- (void)requestReceipt {
+    if ([self isParseReachable]) {
+        
+        //our monthly user has no receipt - send ReceiptRefreshRequest
+        SKReceiptRefreshRequest *request = [[SKReceiptRefreshRequest alloc] init];
+        request.delegate = self;
+        [request start];
+
+        
+        
+    } else {
+        
+        //no connection - set Paid = NO and ask user to try again  later
+        //set Paid = NO
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setValue:@0 forKey:@"Paid"];
+
+        
+    }
+    
+}
+
+
+#pragma mark -
+#pragma mark - SKRequestDelegate Methods
+
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
+   
+    //set Paid = NO
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:@0 forKey:@"Paid"];
+    
+    
+}
+
+- (void)requestDidFinish:(SKRequest *)request {
+    
+    /*
+     we only asked for this receipt to be refreshed because we could not verify the receipt. Seems we now have a receipt so try again to set the Paid status
+     */
+    
+    localReceiptSubscriptionIsCancelled();
+        
+}
 
 
 @end

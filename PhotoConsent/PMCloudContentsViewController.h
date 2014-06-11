@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSNumber* dataArrayDidChange;
 @property (assign, nonatomic) BOOL shouldDim;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) dispatch_source_t timeoutTimer;
 
 - (IBAction)completeConsent:(UIStoryboardSegue *)segue;
 - (void) clearCollectionView;

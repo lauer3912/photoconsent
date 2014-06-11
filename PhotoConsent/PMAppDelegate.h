@@ -13,6 +13,9 @@
 @interface PMAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate, SKPaymentTransactionObserver, SKRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) NSDictionary *latestMonthlyReceipt;
+@property (nonatomic, readonly) int networkStatus;
+@property (strong, nonatomic) dispatch_source_t timeoutTimer;
+
+- (BOOL)isParseReachable;
 
 @end

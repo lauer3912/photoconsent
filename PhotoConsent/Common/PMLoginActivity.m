@@ -130,7 +130,14 @@
 
 // Sent to the delegate when the log in attempt fails.
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
-       
+    
+    //this alertview gets immediately hidden by another PARSE alertView but leaving it in as it tells the user the problem is a connection failure rather than an authentication failure
+   
+    NSNumber *errorCode = (NSNumber*)[error valueForKeyPath:@"userInfo.code"];
+    if (errorCode.intValue == 100) {
+        showConnectionError(error);
+    }
+    
 }
 
 // Sent to the delegate when the log in screen is dismissed.
@@ -174,7 +181,15 @@
 
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
-   //don't finish the activity her - let it return to the sign up form
+   
+    //this alertview gets immediately hidden by another PARSE alertView but leaving it in as it tells the user the problem is a connection failure rather than an authentication failure
+    
+    NSNumber *errorCode = (NSNumber*)[error valueForKeyPath:@"userInfo.code"];
+    if (errorCode.intValue == 100) {
+        showConnectionError(error);
+    }
+    
+    
 }
 
 // Sent to the delegate when the sign up screen is dismissed.

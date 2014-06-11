@@ -13,7 +13,7 @@
 #import "PMTextConstants.h"
 #import "PMCloudContentsViewController.h"
 #import  <Parse/Parse.h>
-
+#import "PMAppDelegate.h"
 
 
 @interface PMCompleteViewController () <UIAlertViewDelegate>
@@ -23,6 +23,8 @@
 @property (weak, nonatomic) IBOutlet UILabel* label2;
 @property (weak, nonatomic) IBOutlet UILabel* label3;
 @property (weak, nonatomic) IBOutlet UIButton* emailBtn;
+
+
 @end
 
 @implementation PMCompleteViewController
@@ -131,59 +133,64 @@
 - (void) savePhoto {
     
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
-        __block  BOOL savingDidFinish = NO;
+      
+        
         [_userPhoto saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            savingDidFinish = YES;
             if (succeeded) {
-                
-                PFFile *theImage = [_userPhoto valueForKey:@"imageFile"];
-                [theImage getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    
-                    //save copy of image and consent on the device
-                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                         [self createDeviceConsentFromPFObject];
-                     });
-                              
-                }];//end of parse getdata
+                //save the photo to the device
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [self createDeviceConsentFromPFObject];
+                });
                 
             } else
-                NSLog(@"Error: %@ %@", error, [error userInfo]);
+                showConnectionError(error);
+            
             
             if ([_consentDelegate respondsToSelector:@selector(didFinishSavingPhoto:saved:)]) {
-                [_consentDelegate didFinishSavingPhoto:_userPhoto saved:YES];
+                [_consentDelegate didFinishSavingPhoto:_userPhoto saved:succeeded];
             }
             
         }];
-        
-        //put this timed check here in case the network never finishes the save
-        int delayInSeconds = 60;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    
-            if (!savingDidFinish) {
-                if ([_consentDelegate respondsToSelector:@selector(didFinishSavingPhoto:saved:)]) {
-                    [_consentDelegate didFinishSavingPhoto:_userPhoto saved:NO];
-                }
-            }
-            
-        });
         
     }
     
 }
 
 - (IBAction)completeAndUpload:(id)sender {
-    //NOTE will always be PFObject. add the new object/photo to the allImage array in the cloud Viewcontroller
+ 
+    //NOTE will always be PFObject.
     if ([_userPhoto isKindOfClass:[PFObject class]]) {
-        /*
-        as it takes a while to save everything we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous tasks to save the data to both the cloud and the device
-        */
         
-                
-        if ([_consentDelegate respondsToSelector:@selector(didCompleteConsentForPhoto:)]) {
+        
+        /*
+         as it takes a while to save we temporarily add the cached image data in the userPhoto object to the cachedImages in PMCLOUDCONTROLLERVIEW class and also add the PFObject (userPhoto) into the allImages array before returning to the rootView Controller leaving the asynchronous task to save the data to Parse in the background
+         */
+        
+        //Test Reachability
+        PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        if (![appDelegate isParseReachable]) {
             
-            [_consentDelegate didCompleteConsentForPhoto:_userPhoto];
+            
+            //no connection give user the option to save the photo to the device
+            NSString *errorLocalizedString  = @"Do you want to save the photo and its consent details to the device?";
+            UIAlertView *showSaveOption = [[UIAlertView alloc] initWithTitle:@"The Cloud server is not reachable" message: errorLocalizedString delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
+            showSaveOption.tag = 1;
+            [showSaveOption show];
+            
+                    
+        } else {
+            //Parse is reachable so tell the delegate that the background save has started
+            //The delegate adds and displays the new photo to the images in the CollectionView
+            if ([_consentDelegate respondsToSelector:@selector(didCompleteConsentForPhoto:)]) {
+                
+                [_consentDelegate didCompleteConsentForPhoto:_userPhoto];
+                
+            }
+            //save in background using timer to bale out if takes too long
+            [self savePhoto];
+            
         }
-        [self savePhoto];
         
     }
     
@@ -241,7 +248,7 @@
         
         NSString *message = [NSString stringWithFormat:@"The photo and its consent details have been saved. The original remains in the Camera Roll"];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Copy Complete" message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Copy Complete" message:message delegate:nil cancelButtonTitle:nil otherButtonTitles:nil, nil];
         [alert show];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -262,10 +269,6 @@
     
 }
 
--(void)dismiss:(UIAlertView*)alert
-{
-    [alert dismissWithClickedButtonIndex:0 animated:YES];
-}
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -362,6 +365,34 @@
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - alertview delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    
+    switch (alertView.tag) {
+            
+        case 1:
+            if (buttonIndex != 0) {
+                //save the photo to the device
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [self createDeviceConsentFromPFObject];
+                    
+                });
+                
+                [self cancelBtn:alertView];
+                
+            }
+            break;
+                  
+    }
+}
+
+-(void)dismiss:(UIAlertView*)alert
+{
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
 }
 
 

@@ -29,7 +29,7 @@
 #import "PMFunctions.h"
 #import "PMUsePhotoViewController.h"
 #import "PMDisclaimerViewController.h"
-
+#import "PMAppDelegate.h"
 
 
 typedef void(^LoadCacheDidFinish)(BOOL);
@@ -38,7 +38,7 @@ typedef void(^LoadCacheProgress)(CGFloat);
 typedef void(^SmallCacheCompletion)(BOOL);
 
 
-static const NSInteger showHudLimit = 20;
+static const NSInteger showHudLimit = 0;
 static const NSInteger savingMessageTag = 46;
 static const NSInteger kImageViewTag  = 1;
 static const NSInteger kCameraBtnTag  = 27;
@@ -46,8 +46,9 @@ static const NSInteger kCameraBtnTag  = 27;
 @interface PMCloudContentsViewController () <shareActivityProtocol,PMWorkOfflineActivityProtocol,PMLogoutActivityProtocol, PMWStopOfflineActivityProtocol,NSCacheDelegate,PageViewControllerImageToDisplayProtocol,ConsentDelegate>
 
 @property (strong, nonatomic)  UILabel *emptyLabel;
-@property (strong, nonatomic) PMActivityDelegate* delegateInstance;
-@property (strong, nonatomic) PMLoginActivityDelegate* loginActivityDelegate;
+@property (strong, nonatomic)  PMActivityDelegate* delegateInstance;
+@property (strong, nonatomic)  PMLoginActivityDelegate* loginActivityDelegate;
+@property (strong, nonatomic)  PFQuery *query;
 
 //used by camera delegate
 @property (strong, nonatomic) NSString *referenceID;
@@ -213,6 +214,7 @@ static const NSInteger kCameraBtnTag  = 27;
         if (_emptyLabel) {
             [_emptyLabel removeFromSuperview];
         }
+        [self clearHud];
         return;
     }
     
@@ -230,7 +232,7 @@ static const NSInteger kCameraBtnTag  = 27;
             
             if ([PFUser currentUser]) {
                 [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
-                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"Connected - No photos to display"]]];
+                [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No photos available"]]];
             } else
                 [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No offline photos to display"]]];
             
@@ -258,10 +260,10 @@ static const NSInteger kCameraBtnTag  = 27;
             [_emptyLabel setTextAlignment:NSTextAlignmentCenter];
         }
     
-        //if not logged in
+       
         if ([PFUser currentUser]) {
             [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:YES]];
-            [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"Connected - No photos to display"]]];
+            [_emptyLabel setAttributedText:[self attributedStringForText:[NSString stringWithFormat:@"No photos available"]]];
             [self.view addSubview:_emptyLabel];
         } else {
             [self.navigationItem setTitleView: [self titleViewWithEnableSwitch:NO]];
@@ -517,7 +519,22 @@ static const NSInteger kCameraBtnTag  = 27;
 - (void) refreshAndCacheObjects {
     
    
-    if (_allImages.count > showHudLimit) {
+    //Reachability
+    PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    if (![appDelegate isParseReachable]) {
+        
+        NSError *error = createErrorWithMessage(@"The Cloud server is not reachable", @321);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            showConnectionError(error);
+            [self showEmptyLabel];
+        });
+        
+        return;
+    }
+
+    
+    if (_allImages.count >= showHudLimit) {
         [self showHUD];
     }
     
@@ -528,11 +545,19 @@ static const NSInteger kCameraBtnTag  = 27;
     if (!_allImages) {
         _allImages = [NSMutableArray new];
     }
-     cloudRefresh(_allImages, dispatch_get_main_queue(), ^(NSArray *allPhotos) {
+    
+    id<UIAlertViewDelegate> alertviewDelegate = self;
+    _query = refreshQuery();
+     cloudRefresh(_query,_allImages,alertviewDelegate ,^(NSArray *allPhotos, NSError *queryError) {
          
-         [self loadCacheWithSmallImages:allPhotos completionHandler:^(BOOL completion) {
-             [self.collectionView reloadData];
-         }];
+         if (!queryError) {
+             [self loadCacheWithSmallImages:allPhotos completionHandler:^(BOOL completion) {
+                 [self.collectionView reloadData];
+             }];
+         } else
+             [self clearHud];
+         
+         
      });
              
 }
@@ -542,7 +567,7 @@ static const NSInteger kCameraBtnTag  = 27;
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     if (HUD) {
         HUD.mode = MBProgressHUDModeDeterminate;
-        
+    
         HUD.delegate = self;
         [HUD setAnimationType:MBProgressHUDAnimationFade];
         [HUD setColor:[UIColor darkGrayColor]];
@@ -553,9 +578,10 @@ static const NSInteger kCameraBtnTag  = 27;
             
             [HUD addSubview:refreshHUD];
             [self.view addSubview:HUD];
+            
             [HUD show:YES];
             [self.view setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
-     //       [self showEmptyLabel];
+     
         }
     }
     
@@ -759,6 +785,7 @@ static const NSInteger kCameraBtnTag  = 27;
         NSIndexPath *selectedCell = [self.collectionView indexPathsForSelectedItems][0];
         pageViewController.startingIndex = selectedCell.row;
         [pageViewController setIsSaving:_isSaving];
+        [pageViewController setIsSavingCount:_photosBeingSaved.count];
         
     } else if ([segue.identifier isEqualToString:@"showPanel"]) {
         PMMenuViewController *controller = segue.destinationViewController;
@@ -792,20 +819,65 @@ static const NSInteger kCameraBtnTag  = 27;
     
 }
 
-void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^block)(NSMutableArray *allPhotos))
+/*
+
+PFQuery* refreshQuery() {
+    // create a PFQuery
+    PFQuery *query = [PFQuery queryWithClassName:@"UserPhoto"];
+    PFUser *user = [PFUser currentUser];
+    [query whereKey:@"user" equalTo:user];
+    [query orderByAscending:@"createdAt"];
+    query.limit = 400;
+    return query;
+    
+}
+
+void cloudRefresh(PFQuery* query,NSMutableArray* allImages, dispatch_queue_t queue, void (^block)(NSMutableArray *allPhotos, NSError *queryError))
 {
     
     
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
-        // create a PFQuery
-        PFQuery *query = [PFQuery queryWithClassName:@"UserPhoto"];
-        PFUser *user = [PFUser currentUser];
-        [query whereKey:@"user" equalTo:user];
-        [query orderByAscending:@"createdAt"];
-        query.limit = 400;
+        //Reachability
+        PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+      
+        if (![appDelegate isParseReachable]) {
+            
+            //create error object
+            NSNumber *errorCode = @321;
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey:@"The Cloud server is not reachable",@"code":errorCode};
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:321 userInfo:userInfo];
+            //main queue
+            dispatch_async(queue, ^{
+                block(allImages, error);
+                NSLog(@"Count allImages after refresh = %lu", (unsigned long)allImages.count);
+                showConnectionError(error);
+                
+            });
+            
+            return;
+        }
         
+        
+        
+        
+        
+
+          //connection is reachable so start processing the query
+         //start the timer to check every 5 seconds if save still processing
+        
+        dispatch_source_t timeoutTimer = startConnectionTimer(^{
+            
+            //no connection give user the option to cancel
+            NSString *errorLocalizedString  = @"Connection may be lost or intermittent. Do you want to continue?";
+            UIAlertView *showTimeOutOption = [[UIAlertView alloc] initWithTitle:@"The Cloud server is not reachable" message: errorLocalizedString delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+            showTimeOutOption.tag = 2;
+            [showTimeOutOption show];
+            
+            
+        });
+
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
             
@@ -877,21 +949,25 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
                         }
                     }
                 }
-                //return the array of images in the completion block
-                dispatch_async(queue, ^{
-                    block(allImages);
-                    NSLog(@"Count allImages after refresh = %lu", (unsigned long)allImages.count);
-                    
-                    
-                });
+                
+            } else {
+                //dodgy connection
+                showConnectionError(error);
+               
             }
+            //return the array of images in the completion block
+            dispatch_async(queue, ^{
+                block(allImages, error);
+                
+            });
+            
             
         }];
         
     });
     
 }
-
+*/
 
 #pragma mark - MBProgressHUDDelegate
 
@@ -1122,6 +1198,19 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
             }
             break;
             
+        case 3://timeout timer
+            
+            if (buttonIndex == 0) {
+                PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+                dispatch_source_cancel(appDelegate.timeoutTimer);
+                [_query cancel];
+                [self clearHud];
+            } else {
+                PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+                dispatch_resume(appDelegate.timeoutTimer);
+                
+            }
+            break;
         default:
             break;
     }
@@ -1241,37 +1330,21 @@ void cloudRefresh(NSMutableArray* allImages, dispatch_queue_t queue, void (^bloc
     //remove the objet from the array of photos being saved and set the isSaving flag to NO if the array has 0 objects
     [_photosBeingSaved removeObject:photo];
     _isSaving = _photosBeingSaved.count > 0;
-    NSLog(@"isSaving = %d count of photos being saved is %d",_isSaving, _photosBeingSaved.count);
-    
     
     NSInteger delayInSeconds = 1;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        /*
-        [self.navigationItem.rightBarButtonItem setEnabled:YES];
-        
-        if ([PFUser currentUser]) {
-            UIView *cameraBtn = [self.navigationItem.titleView viewWithTag:kCameraBtnTag];
-            if ([cameraBtn isKindOfClass:[UIButton class]]) {
-                [(UIButton*)cameraBtn setEnabled:YES];
-            }
-        }
-       
-        */
-        
         
         [self removeSavingMessageAtIndexPath:[self indexPathForPhoto:photo]];
+        if (!saved) {
+            //either the save timed out or there was an error - need to delete the photo from the collectionview, allImages and the cachedSmallImages
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The photo was not saved." delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles: nil];
+            [alert show];
+            [self removePhoto:photo];
+        }
+        
         
     });
-    
-    if (!saved) {
-        //either the save timed out or there was an error - need to delete the photo from the collectionview, allImages and the cachedSmallImages
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The photo was not saved. Please check your network connection." delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles: nil];
-        [alert show];
-        [self removePhoto:photo];
-        
-        
-    }
     
     
 }

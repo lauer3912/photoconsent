@@ -7,11 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VerifyStoreReceipt.h"
 
 #import "PMAppDelegate.h"
 
 int main(int argc, char *argv[])
 {
+    
+    /*
+     if the local receipt is found and the transaction has not been cancelled
+     the function will set the user defualt
+     
+    */
+    localReceiptSubscriptionIsCancelled();
+    
+    
+    
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([PMAppDelegate class]));
     }

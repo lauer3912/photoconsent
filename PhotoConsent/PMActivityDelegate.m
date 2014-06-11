@@ -136,7 +136,7 @@
     
     UIActivityViewControllerCompletionHandler completionBlock = ^(NSString *activityType, BOOL completed) {
         if ([activityType isEqualToString:@"CustomMailActivityType"]) {
-          [(UIViewController*)_senderController dismissViewControllerAnimated:YES completion:nil];
+         // [(UIViewController*)_senderController dismissViewControllerAnimated:YES completion:nil];
         }
         
         
@@ -173,7 +173,7 @@
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
     
-    return @"PhotoConsent is good";
+    return @"PhotoConsent";
 }
 
 

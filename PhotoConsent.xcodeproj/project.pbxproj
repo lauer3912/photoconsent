@@ -19,6 +19,7 @@
 		E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3218B0FBF0000A05BE /* PMMenuViewController.m */; };
 		E4756E3618B0FF3C000A05BE /* ATDismissModalSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3418B0FF3C000A05BE /* ATDismissModalSegue.m */; };
 		E4756E3918B102E8000A05BE /* RMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E4756E3718B102E8000A05BE /* RMCustomSegue.m */; };
+		E4765FC5193873B2004BD75F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E4765FC4193873B2004BD75F /* Reachability.m */; };
 		E478DB351883EF370064E331 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB341883EF370064E331 /* Foundation.framework */; };
 		E478DB371883EF370064E331 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB361883EF370064E331 /* CoreGraphics.framework */; };
 		E478DB391883EF370064E331 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DB381883EF370064E331 /* UIKit.framework */; };
@@ -77,6 +78,10 @@
 		E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1F1883FCF70064E331 /* QuartzCore.framework */; };
 		E486BD5218D7160A00635939 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E486BD5118D7160A00635939 /* iAd.framework */; };
 		E486BD5518D7580200635939 /* PMUpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E486BD5418D7580200635939 /* PMUpgradeViewController.m */; };
+		E49CFDF51940467B00C1D437 /* VerifyStoreReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = E49CFDF41940467B00C1D437 /* VerifyStoreReceipt.m */; };
+		E49CFDF819409CEB00C1D437 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E49CFDF619409CEB00C1D437 /* libcrypto.a */; };
+		E49CFDF919409CEB00C1D437 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E49CFDF719409CEB00C1D437 /* libssl.a */; };
+		E49CFDFB1940A2B100C1D437 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = E49CFDFA1940A2B100C1D437 /* AppleIncRootCertificate.cer */; };
 		E4B8A84E18E6EA4900B1A92B /* UIColor+More.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */; };
 		E4D5C44C188ACE7B009F2BA2 /* PMLoginActivityDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D5C44B188ACE7B009F2BA2 /* PMLoginActivityDelegate.m */; };
 		E4D8A96A18E9665D008D58E5 /* PhotoConsent.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D8A96918E9665D008D58E5 /* PhotoConsent.xcassets */; };
@@ -118,6 +123,8 @@
 		E4756E3518B0FF3C000A05BE /* ATDismissModalSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATDismissModalSegue.h; sourceTree = "<group>"; };
 		E4756E3718B102E8000A05BE /* RMCustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMCustomSegue.m; sourceTree = "<group>"; };
 		E4756E3818B102E8000A05BE /* RMCustomSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMCustomSegue.h; sourceTree = "<group>"; };
+		E4765FC3193873B2004BD75F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		E4765FC4193873B2004BD75F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		E478DB311883EF370064E331 /* PhotoConsent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoConsent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E478DB341883EF370064E331 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E478DB361883EF370064E331 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -214,6 +221,11 @@
 		E486BD5118D7160A00635939 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		E486BD5318D7580200635939 /* PMUpgradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMUpgradeViewController.h; sourceTree = "<group>"; };
 		E486BD5418D7580200635939 /* PMUpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMUpgradeViewController.m; sourceTree = "<group>"; };
+		E49CFDF31940467B00C1D437 /* VerifyStoreReceipt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyStoreReceipt.h; sourceTree = "<group>"; };
+		E49CFDF41940467B00C1D437 /* VerifyStoreReceipt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyStoreReceipt.m; sourceTree = "<group>"; };
+		E49CFDF619409CEB00C1D437 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
+		E49CFDF719409CEB00C1D437 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = lib/libssl.a; sourceTree = "<group>"; };
+		E49CFDFA1940A2B100C1D437 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = AppleIncRootCertificate.cer; path = Photoconsent/AppleIncRootCertificate.cer; sourceTree = SOURCE_ROOT; };
 		E4B8A84C18E6EA4900B1A92B /* UIColor+More.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+More.h"; path = "../Photoconsent/Common/UIColor+More.h"; sourceTree = "<group>"; };
 		E4B8A84D18E6EA4900B1A92B /* UIColor+More.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+More.m"; path = "../Photoconsent/Common/UIColor+More.m"; sourceTree = "<group>"; };
 		E4D5C44A188ACE7B009F2BA2 /* PMLoginActivityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMLoginActivityDelegate.h; path = Photoconsent/PMLoginActivityDelegate.h; sourceTree = SOURCE_ROOT; };
@@ -237,6 +249,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E49CFDF819409CEB00C1D437 /* libcrypto.a in Frameworks */,
+				E49CFDF919409CEB00C1D437 /* libssl.a in Frameworks */,
 				E486BD5218D7160A00635939 /* iAd.framework in Frameworks */,
 				E47291A518D0698500CA031B /* Parse.framework in Frameworks */,
 				E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */,
@@ -298,6 +312,24 @@
 			name = ReferenceViewControllers;
 			sourceTree = "<group>";
 		};
+		E4765FC119387368004BD75F /* 3rdParty */ = {
+			isa = PBXGroup;
+			children = (
+				E4765FC2193873B2004BD75F /* Reachability */,
+			);
+			name = 3rdParty;
+			sourceTree = "<group>";
+		};
+		E4765FC2193873B2004BD75F /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				E4765FC3193873B2004BD75F /* Reachability.h */,
+				E4765FC4193873B2004BD75F /* Reachability.m */,
+			);
+			name = Reachability;
+			path = Photoconsent/Reachability;
+			sourceTree = SOURCE_ROOT;
+		};
 		E478DB281883EF370064E331 = {
 			isa = PBXGroup;
 			children = (
@@ -321,6 +353,8 @@
 		E478DB331883EF370064E331 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E49CFDF619409CEB00C1D437 /* libcrypto.a */,
+				E49CFDF719409CEB00C1D437 /* libssl.a */,
 				E486BD5118D7160A00635939 /* iAd.framework */,
 				E452D24818CF6A8800EED549 /* StoreKit.framework */,
 				E478DC1F1883FCF70064E331 /* QuartzCore.framework */,
@@ -361,6 +395,7 @@
 		E478DB3B1883EF370064E331 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E49CFDFA1940A2B100C1D437 /* AppleIncRootCertificate.cer */,
 				E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */,
 				E4EF48C419209B1D00F4FBF9 /* Default.png */,
 				E4EF48C519209B1D00F4FBF9 /* Default@2x.png */,
@@ -399,6 +434,7 @@
 		E478DB6B1883F20F0064E331 /* General */ = {
 			isa = PBXGroup;
 			children = (
+				E4765FC119387368004BD75F /* 3rdParty */,
 				E478DC2418840CAA0064E331 /* Activities */,
 				E478DC2918840EBD0064E331 /* Segues */,
 				E478DC2518840CF20064E331 /* Animators */,
@@ -576,6 +612,8 @@
 		E478DC2A18840EFD0064E331 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				E49CFDF31940467B00C1D437 /* VerifyStoreReceipt.h */,
+				E49CFDF41940467B00C1D437 /* VerifyStoreReceipt.m */,
 				E4F64BC718F59FA8008E2A17 /* PMLogoLabel.h */,
 				E478DB811883F20F0064E331 /* PMLogoLabel.m */,
 				E478DB7A1883F20F0064E331 /* PMFunctions.h */,
@@ -680,7 +718,7 @@
 				ORGANIZATIONNAME = PM;
 				TargetAttributes = {
 					E478DB301883EF370064E331 = {
-						DevelopmentTeam = EC35S3QLS3;
+						DevelopmentTeam = BEM2ZZ588G;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 1;
@@ -716,6 +754,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E478DB3F1883EF370064E331 /* InfoPlist.strings in Resources */,
+				E49CFDFB1940A2B100C1D437 /* AppleIncRootCertificate.cer in Resources */,
 				E4D8A96A18E9665D008D58E5 /* PhotoConsent.xcassets in Resources */,
 				E4F7673A18EC6168006EDC1B /* Icon.png in Resources */,
 				E4EF48C819209B1D00F4FBF9 /* Default@2x.png in Resources */,
@@ -784,10 +823,12 @@
 				E47291AC18D0BD7F00CA031B /* PMWorkOfflineActivity.m in Sources */,
 				E478DBF41883F2600064E331 /* MBProgressHUD.m in Sources */,
 				E4756E3318B0FBF0000A05BE /* PMMenuViewController.m in Sources */,
+				E4765FC5193873B2004BD75F /* Reachability.m in Sources */,
 				E478DBBD1883F2100064E331 /* PMFunctions.m in Sources */,
 				E478DBD81883F2100064E331 /* Consent.m in Sources */,
 				E4F4C0F3188E62DC00B006E1 /* RMCanvasView.m in Sources */,
 				E478DBD31883F2100064E331 /* PMConsentDetailViewController.m in Sources */,
+				E49CFDF51940467B00C1D437 /* VerifyStoreReceipt.m in Sources */,
 				E478DBEC1883F2600064E331 /* PhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -849,7 +890,7 @@
 		E478DB5B1883EF380064E331 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -888,7 +929,7 @@
 		E478DB5C1883EF380064E331 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -922,18 +963,32 @@
 		E478DB5E1883EF380064E331 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/alexrafferty/PhotoConsent,
+					/Users/alexrafferty/PhotoConsent/include/openssl/,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/alexrafferty/PhotoConsent/include,
+				);
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -943,18 +998,32 @@
 		E478DB5F1883EF380064E331 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/alexrafferty/PhotoConsent,
+					/Users/alexrafferty/PhotoConsent/include/openssl/,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PhotoConsent/PhotoConsent-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/alexrafferty/PhotoConsent/include,
+				);
 				INFOPLIST_FILE = "PhotoConsent/PhotoConsent-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

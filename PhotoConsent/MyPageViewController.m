@@ -24,7 +24,7 @@
 #import "PMFunctions.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "PMFeedbackActivity.h"
-
+#import "PMAppDelegate.h"
 
 
 
@@ -88,15 +88,14 @@
          [_trashBtn setEnabled:[self canBeDeleted:index]];
         
         //start in background to cache the before and after image data
-        int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1);
-        if (!(_isSaving && (indexMax - index) == 1)) {
-            //possible that the indexmax includes a photo being saved so don't cache if isSaving is true and the selected image index is only 1 less than the indexmax i.e. next to the image being saved
-            
-            if (index < indexMax) {
-                [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
+        int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1 - _isSavingCount);
+        
+        //we deduct the number of photos being saved (usually 0 but could be 1 or even 2 on a really slow connection) from the indexMax as we cannot cache an image that is not yet saved
+        if (index < indexMax) {
+            [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
 
-            }
         }
+        
         if (index > 0) {
             [self cacheDataInBackgroundForPhotoAtIndex:index - 1];
         }
@@ -160,27 +159,22 @@
     NSUInteger index = vc.pageIndex;
     _currentIndex = index;
     
-    int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1);
+    int indexMax = ([PageViewControllerData sharedInstance].photoCount - 1 - _isSavingCount);
     if (index == indexMax) {
         return nil;
     } else {
         index ++;
         [_trashBtn setEnabled:[self canBeDeleted:index]];
         
-//         NSLog(@"VC AFTER - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
-        
-//        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
-        
-        
-        //test -load in the background the 2 following photos to the Parse data cache
+        //load in the background the next following photo to the Parse data cache
         [self cacheDataInBackgroundForPhotoAtIndex:index];
-        //check the second image after is not being saved
-        if (!(_isSaving && (indexMax - index) == 1)) {
-            if (index < indexMax) {
-                 [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
-            }
-           
+        
+        //check the second image after is not being saved        
+        if (index < indexMax - 1) {
+             [self cacheDataInBackgroundForPhotoAtIndex:index + 1];
         }
+        
+       
         
         
         return [PhotoViewController photoViewControllerForPageIndex:(index)];
@@ -231,7 +225,18 @@
     
     if ([selectedObject isKindOfClass:[PFObject class]]) {
         
-         [(PFObject*)selectedObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        //Test Reachability
+        PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        if (![appDelegate isParseReachable]) {
+            
+            NSError *error = createErrorWithMessage(@"DELETE The Cloud server is not reachable", @321);
+            showConnectionError(error);
+            return;
+         }
+        
+        [(PFObject*)selectedObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
          
              if (succeeded) {
                  //remove the object from allImages in the presenting viewController and also the cache
@@ -243,7 +248,7 @@
              
              } else {
              
-                 NSLog(@"Error = %@", [error.userInfo valueForKey:NSLocalizedDescriptionKey] );
+                 showConnectionError(error);
              }
          
          }];
@@ -371,7 +376,10 @@ void imageDataForEmailActivity(id currentObj, NSString* key, void (^block)(id em
             UIImage *image = [UIImage imageWithData:data];
             NSData *lessData;
             if ([key isEqualToString:@"imageFile"]) {
-               lessData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(320.0, 480.0)), 0.5f);
+                if (!isPaid()) {
+                    image = generateWatermarkForImage(image);
+                }
+                lessData = UIImageJPEGRepresentation(resizeImage(image, CGSizeMake(320.0, 480.0)), 0.5f);
                 block(lessData);
             } else
                 block(data);

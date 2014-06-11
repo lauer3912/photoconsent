@@ -57,5 +57,6 @@ typedef void(^LoadCacheProgress)(CGFloat);
 @property NSInteger startingIndex;
 @property NSInteger currentIndex;
 @property BOOL isSaving;
+@property NSInteger isSavingCount;
 
 @end
