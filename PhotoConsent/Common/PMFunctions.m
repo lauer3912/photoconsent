@@ -86,6 +86,27 @@ BOOL isPaid() {
     
 }
 
+
+BOOL reachable() {
+    
+    //Reachability
+    PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    if ([appDelegate isParseReachable]) {
+        return YES;
+    } else {
+    
+        NSError *error = createErrorWithMessage(@"The server is not reachable", @300);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            showConnectionError(error);
+            
+        });
+        
+        return NO;
+    }
+}
+
+
 void showConnectionError(NSError* error) {
 
     NSString *errorLocalizedString  = [error localizedDescription];

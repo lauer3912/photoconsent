@@ -21,6 +21,8 @@ extern UIImage* generateWatermarkForImage(UIImage *mainImg);
 
 extern BOOL isPaid();
 
+extern BOOL reachable();
+
 extern void showConnectionError(NSError* error);
 
 extern dispatch_source_t startConnectionTimer (void (^handlerBlock)());

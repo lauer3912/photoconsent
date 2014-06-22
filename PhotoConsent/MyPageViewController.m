@@ -225,16 +225,9 @@
     
     if ([selectedObject isKindOfClass:[PFObject class]]) {
         
-        
-        //Test Reachability
-        PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
-        
-        if (![appDelegate isParseReachable]) {
-            
-            NSError *error = createErrorWithMessage(@"DELETE The Cloud server is not reachable", @321);
-            showConnectionError(error);
+        if (!reachable()) {
             return;
-         }
+        }
         
         [(PFObject*)selectedObject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
          

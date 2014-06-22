@@ -534,77 +534,78 @@ BOOL localReceiptSubscriptionIsCancelled() {
     
     //check the receipt CancelDate to validate if the subscription is valid
     NSBundle *bundle = [NSBundle mainBundle];
-    if (![bundle respondsToSelector:@selector(appStoreReceiptURL)]) {
-        
-        //Receipts only became available in iOS 7 -  iOS 6.1 not supported
-        
-        
-        
-    } else { //>iOS6
-        // check the local receipt on the device
-        
-        NSURL *receiptURL;
-        
-        receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
-        NSString *receiptPath = [receiptURL path];
-        BOOL receiptVerified = verifyReceiptAtPath(receiptPath);
-        if (receiptVerified) {
+    
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        // Load resources for iOS 6.1 or earlier
+    } else {
+        // Load resources for iOS 7 or later
+        if ([bundle respondsToSelector:@selector(appStoreReceiptURL)]) {
             
-            NSDictionary *receipt = dictionaryWithAppStoreReceipt(receiptPath);
-            if (receipt) {
-                NSString *originalVersion = [receipt valueForKey:kReceiptOriginalVersion];
+            // check the local receipt on the device
+            
+            NSURL *receiptURL;
+            
+            receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+            NSString *receiptPath = [receiptURL path];
+            BOOL receiptVerified = verifyReceiptAtPath(receiptPath);
+            if (receiptVerified) {
                 
-                if ([originalVersion isEqualToString:@"1.0"]) {
+                NSDictionary *receipt = dictionaryWithAppStoreReceipt(receiptPath);
+                if (receipt) {
+                    NSString *originalVersion = [receipt valueForKey:kReceiptOriginalVersion];
                     
-                    // the app was purchased before the introduction of In-App purchase in version 2.0 so set Paid = YES
+                    if ([originalVersion isEqualToString:@"1.0"]) {
+                        
+                        // the app was purchased before the introduction of In-App purchase in version 2.0 so set Paid = YES
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        [defaults setValue:@1 forKey:@"Paid"];
+
+                        
+                    } else  {
+                        //in-app puchase introduced in version 2.0 - check purchases
+                        NSArray *purchases = obtainInAppPurchases(receiptPath);
+                        if (purchases) {
+                            
+                            for (NSDictionary *purchase in purchases) {
+                                
+                                
+                                // if there's any Cancel date value (but an empty string) then the transaction has been cancelled by the app-store
+                                if (![[purchase valueForKey:@"CancelDate"] isEqualToString:@""]) {
+                                    
+                                    
+                                    //the app store has cancelled the transaction so set Paid setting to NO
+                                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                    [defaults setValue:@0 forKey:@"Paid"];
+                                    
+                                    hasCancelled = YES;
+                                    
+                                } else if ([[purchase valueForKey:kReceiptInAppProductIdentifier] isEqualToString:@"PhotoConsent (Unrestricted)"]) {
+                                    
+                                    //set Paid = YES
+                                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                    [defaults setValue:@1 forKey:@"Paid"];
+
+                                    
+                                }
+                                
+                                break;
+                            
+                            } //end for loop
+                            
+                        }// end if purchases
+                     }// end if version
+                } else {
+                    
+                    // there's a receipt but unable to get the purchase data dictionary from it so set
+                    // Paid = 3 and the app delegate will request a receipt from the app-store
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                    [defaults setValue:@1 forKey:@"Paid"];
-
+                    [defaults setValue:@3 forKey:@"Paid"];
                     
-                } else  {
-                    //in-app puchase introduced in version 2.0 - check purchases
-                    NSArray *purchases = obtainInAppPurchases(receiptPath);
-                    if (purchases) {
-                        
-                        for (NSDictionary *purchase in purchases) {
-                            
-                            
-                            // if there's any Cancel date value (but an empty string) then the transaction has been cancelled by the app-store
-                            if (![[purchase valueForKey:@"CancelDate"] isEqualToString:@""]) {
-                                
-                                
-                                //the app store has cancelled the transaction so set Paid setting to NO
-                                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                                [defaults setValue:@0 forKey:@"Paid"];
-                                
-                                hasCancelled = YES;
-                                
-                            } else if ([[purchase valueForKey:kReceiptInAppProductIdentifier] isEqualToString:@"PhotoConsent (Unrestricted)"]) {
-                                
-                                //set Paid = YES
-                                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                                [defaults setValue:@1 forKey:@"Paid"];
-
-                                
-                            }
-                            
-                            break;
-                        
-                        } //end for loop
-                        
-                    }// end if purchases
-                 }// end if version
-            } else {
-                
-                // there's a receipt but unable to get the purchase data dictionary from it so set
-                // Paid = 3 and the app delegate will request a receipt from the app-store
-                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                [defaults setValue:@3 forKey:@"Paid"];
+                    
+                }
                 
                 
             }
-            
-            
         }
     }
     return hasCancelled;

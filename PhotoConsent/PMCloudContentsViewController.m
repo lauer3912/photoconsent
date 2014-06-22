@@ -518,18 +518,8 @@ static const NSInteger kCameraBtnTag  = 27;
 
 - (void) refreshAndCacheObjects {
     
-   
-    //Reachability
-    PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    if (![appDelegate isParseReachable]) {
-        
-        NSError *error = createErrorWithMessage(@"The Cloud server is not reachable", @321);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            showConnectionError(error);
-            [self showEmptyLabel];
-        });
-        
+    if (!reachable()) {
+        [self showEmptyLabel];
         return;
     }
 
@@ -819,155 +809,6 @@ static const NSInteger kCameraBtnTag  = 27;
     
 }
 
-/*
-
-PFQuery* refreshQuery() {
-    // create a PFQuery
-    PFQuery *query = [PFQuery queryWithClassName:@"UserPhoto"];
-    PFUser *user = [PFUser currentUser];
-    [query whereKey:@"user" equalTo:user];
-    [query orderByAscending:@"createdAt"];
-    query.limit = 400;
-    return query;
-    
-}
-
-void cloudRefresh(PFQuery* query,NSMutableArray* allImages, dispatch_queue_t queue, void (^block)(NSMutableArray *allPhotos, NSError *queryError))
-{
-    
-    
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
-        //Reachability
-        PMAppDelegate *appDelegate = (PMAppDelegate*)[[UIApplication sharedApplication] delegate];
-      
-        if (![appDelegate isParseReachable]) {
-            
-            //create error object
-            NSNumber *errorCode = @321;
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey:@"The Cloud server is not reachable",@"code":errorCode};
-            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:321 userInfo:userInfo];
-            //main queue
-            dispatch_async(queue, ^{
-                block(allImages, error);
-                NSLog(@"Count allImages after refresh = %lu", (unsigned long)allImages.count);
-                showConnectionError(error);
-                
-            });
-            
-            return;
-        }
-        
-        
-        
-        
-        
-
-          //connection is reachable so start processing the query
-         //start the timer to check every 5 seconds if save still processing
-        
-        dispatch_source_t timeoutTimer = startConnectionTimer(^{
-            
-            //no connection give user the option to cancel
-            NSString *errorLocalizedString  = @"Connection may be lost or intermittent. Do you want to continue?";
-            UIAlertView *showTimeOutOption = [[UIAlertView alloc] initWithTitle:@"The Cloud server is not reachable" message: errorLocalizedString delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
-            showTimeOutOption.tag = 2;
-            [showTimeOutOption show];
-            
-            
-        });
-
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-            
-                 NSLog(@"Count OBJECTS returned by query = %lu", (unsigned long)objects.count);
-                
-                // Retrieve existing objectIDs
-                NSMutableArray *oldCompareObjectIDArray = [NSMutableArray array];
-                for (PFObject *currentObject in allImages) {
-                    
-                    [oldCompareObjectIDArray addObject:[currentObject objectId]];
-                    
-                }
-                
-                NSMutableArray *oldCompareObjectIDArray2 = [NSMutableArray arrayWithArray:oldCompareObjectIDArray];
-                
-                // If there are photos, we start extracting the data
-                // Save a list of object IDs while extracting this data
-                NSMutableArray *newObjectIDArray = [NSMutableArray array];
-                
-                
-                if (objects.count > 0) {
-                    for (PFObject *eachObject in objects) {
-                        [newObjectIDArray addObject:[eachObject objectId]];
-                    }
-                }
-                
-                // Compare the old and newLY refreshed object IDs
-                NSMutableArray *newCompareObjectIDArray = [NSMutableArray arrayWithArray:newObjectIDArray];
-                NSMutableArray *newCompareObjectIDArray2 = [NSMutableArray arrayWithArray:newObjectIDArray];
-                if (oldCompareObjectIDArray.count > 0) {
-                    // New objects
-                    [newCompareObjectIDArray removeObjectsInArray:oldCompareObjectIDArray];
-                    // Remove old objects that have been deleted using the web browser
-                    [oldCompareObjectIDArray removeObjectsInArray:newCompareObjectIDArray2];
-                    if (oldCompareObjectIDArray.count > 0) {
-                        // Check the position in the objectIDArray and remove
-                        NSMutableArray *listOfToRemove = [[NSMutableArray alloc] init];
-                        for (NSString *objectID in oldCompareObjectIDArray){
-                            int i = 0;
-                            for (NSString *oldObjectID in oldCompareObjectIDArray2){
-                                if ([objectID isEqualToString:oldObjectID]) {
-                                    // Make list of all that you want to remove and remove at the end
-                                    [listOfToRemove addObject:[NSNumber numberWithInt:i]];
-                                }
-                                i++;
-                            }
-                        }
-                        
-                        // Remove from the back
-                        NSSortDescriptor *highestToLowest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO];
-                        [listOfToRemove sortUsingDescriptors:[NSArray arrayWithObject:highestToLowest]];
-                        
-                        for (NSNumber *index in listOfToRemove){
-                            [allImages removeObjectAtIndex:[index intValue]];
-                        }
-                    }
-                }
-                
-                // Add new objects
-                for (NSString *objectID in newCompareObjectIDArray){
-                    for (PFObject *eachObject in objects){
-                        if ([[eachObject objectId] isEqualToString:objectID]) {
-                            NSMutableArray *selectedPhotoArray = [[NSMutableArray alloc] init];
-                            [selectedPhotoArray addObject:eachObject];
-                            
-                            if (selectedPhotoArray.count > 0) {
-                                [allImages addObjectsFromArray:selectedPhotoArray];
-                            }
-                        }
-                    }
-                }
-                
-            } else {
-                //dodgy connection
-                showConnectionError(error);
-               
-            }
-            //return the array of images in the completion block
-            dispatch_async(queue, ^{
-                block(allImages, error);
-                
-            });
-            
-            
-        }];
-        
-    });
-    
-}
-*/
 
 #pragma mark - MBProgressHUDDelegate
 
@@ -1156,7 +997,9 @@ void cloudRefresh(PFQuery* query,NSMutableArray* allImages, dispatch_queue_t que
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
     [picker dismissViewControllerAnimated:YES completion:nil];
+    
 
 }
 
@@ -1226,18 +1069,6 @@ void cloudRefresh(PFQuery* query,NSMutableArray* allImages, dispatch_queue_t que
  
     _isSaving = YES;
     
-   
-    /*
-    //Disable the action and camera buttons to prevent refresh an/or new photo being taken
-    [self.navigationItem.rightBarButtonItem setEnabled:NO];
-    
-    if ([PFUser currentUser]) {
-       UIView *cameraBtn = [self.navigationItem.titleView viewWithTag:kCameraBtnTag];
-        if ([cameraBtn isKindOfClass:[UIButton class]]) {
-            [(UIButton*)cameraBtn setEnabled:NO];
-        }
-    }
-    */
     
     //add the new photo and rebuild smallImage cache
     
@@ -1315,6 +1146,7 @@ void cloudRefresh(PFQuery* query,NSMutableArray* allImages, dispatch_queue_t que
     
     [_cameraController dismissViewControllerAnimated:YES completion:^{
         
+       
         if (_activity) {
             [_activity activityDidFinish:YES];
             _activity = nil;

@@ -146,9 +146,27 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
 - (void)updateLabels {
     
     SKProduct *product = [_products objectAtIndex:0];
+    
+    NSString *identifier = product.productIdentifier;
+    
+    
+    if ([identifier isEqualToString:kProductIdentifierCameraRoll]) {
+        NSLog(@"product identifier is a match");
+    }
    
-    [_productName setAttributedText:[self attributedStringForText:product.localizedTitle]];
-    [_productDesc setText:product.localizedDescription];
+    if (product) {
+        NSString *name = product.localizedTitle;
+        NSString *desc = product.localizedDescription;
+        
+        
+        if (name) {
+          [_productName setAttributedText:[self attributedStringForText:name]];
+          [_productDesc setText:desc];
+        }
+    
+    }
+    
+    
     
     
     if (isPaid()) {

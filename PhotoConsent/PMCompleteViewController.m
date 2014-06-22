@@ -174,7 +174,7 @@
             
             //no connection give user the option to save the photo to the device
             NSString *errorLocalizedString  = @"Do you want to save the photo and its consent details to the device?";
-            UIAlertView *showSaveOption = [[UIAlertView alloc] initWithTitle:@"The Cloud server is not reachable" message: errorLocalizedString delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
+            UIAlertView *showSaveOption = [[UIAlertView alloc] initWithTitle:@"The server is not reachable" message: errorLocalizedString delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
             showSaveOption.tag = 1;
             [showSaveOption show];
             

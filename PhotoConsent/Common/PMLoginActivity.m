@@ -13,6 +13,7 @@
 #import <Parse/Parse.h>
 #import "PMDisclaimerViewController.h"
 
+
 @interface PMLoginActivity ()
 <PFLogInViewControllerDelegate,PFSignUpViewControllerDelegate>
 
@@ -105,6 +106,12 @@
 
 - (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password
 {
+   
+    if (!reachable()) {
+        return NO;
+    }
+    
+    
     // Check if both fields are completed
     if (username && password && username.length != 0 && password.length != 0) {
         return YES; // Begin login process
@@ -152,6 +159,10 @@
 - (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:
    (NSDictionary *)info {
     
+    if (!reachable()) {
+        return NO;
+    }
+
     if ([self infoComplete:info]) {
        
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
