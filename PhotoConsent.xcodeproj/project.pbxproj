@@ -78,6 +78,7 @@
 		E478DC201883FCF70064E331 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E478DC1F1883FCF70064E331 /* QuartzCore.framework */; };
 		E486BD5218D7160A00635939 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E486BD5118D7160A00635939 /* iAd.framework */; };
 		E486BD5518D7580200635939 /* PMUpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E486BD5418D7580200635939 /* PMUpgradeViewController.m */; };
+		E48F73B61949825C00E662C0 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E48F73B51949825C00E662C0 /* Icon@2x.png */; };
 		E49CFDF51940467B00C1D437 /* VerifyStoreReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = E49CFDF41940467B00C1D437 /* VerifyStoreReceipt.m */; };
 		E49CFDF819409CEB00C1D437 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E49CFDF619409CEB00C1D437 /* libcrypto.a */; };
 		E49CFDF919409CEB00C1D437 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E49CFDF719409CEB00C1D437 /* libssl.a */; };
@@ -221,6 +222,7 @@
 		E486BD5118D7160A00635939 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		E486BD5318D7580200635939 /* PMUpgradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMUpgradeViewController.h; sourceTree = "<group>"; };
 		E486BD5418D7580200635939 /* PMUpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMUpgradeViewController.m; sourceTree = "<group>"; };
+		E48F73B51949825C00E662C0 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Photoconsent/PhotoConsent.xcassets/Icon@2x.png"; sourceTree = SOURCE_ROOT; };
 		E49CFDF31940467B00C1D437 /* VerifyStoreReceipt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyStoreReceipt.h; sourceTree = "<group>"; };
 		E49CFDF41940467B00C1D437 /* VerifyStoreReceipt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyStoreReceipt.m; sourceTree = "<group>"; };
 		E49CFDF619409CEB00C1D437 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 		E478DB3B1883EF370064E331 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E48F73B51949825C00E662C0 /* Icon@2x.png */,
 				E49CFDFA1940A2B100C1D437 /* AppleIncRootCertificate.cer */,
 				E4EF48C319209B1D00F4FBF9 /* Default-568h@2x.png */,
 				E4EF48C419209B1D00F4FBF9 /* Default.png */,
@@ -762,6 +765,7 @@
 				E478DBEE1883F2600064E331 /* iTunesArtwork in Resources */,
 				E478DBCB1883F2100064E331 /* MainStoryboard.storyboard in Resources */,
 				E4EF48C619209B1D00F4FBF9 /* Default-568h@2x.png in Resources */,
+				E48F73B61949825C00E662C0 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,7 +946,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vroom Mobile Apps Limited (EC35S3QLS3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -967,6 +971,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/alexrafferty/PhotoConsent/include/openssl/,
