@@ -223,13 +223,13 @@ void formatter()  {
         _networkStatus = [reach currentReachabilityStatus];
         
         if ([self isParseReachable] && [PFUser currentUser]) {
-            NSLog(@"Just executed hostReach reachable block");
+            // executed hostReach reachable block
         }
     };
     
     hostReach.unreachableBlock = ^(Reachability*reach) {
         _networkStatus = [reach currentReachabilityStatus];
-         NSLog(@"Just executed hostReach unreachable block. _networkstatus = %d", _networkStatus);
+        
     };
     
     [hostReach startNotifier];

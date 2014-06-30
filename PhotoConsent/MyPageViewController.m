@@ -119,9 +119,7 @@
         index--;
        
         [_trashBtn setEnabled:[self canBeDeleted:index]];
-        
-//         NSLog(@"VC BEFORE - RETURNED FOR INDEX = %d CURRENTINDEX = %d", index, _currentIndex);
-//        NSLog(@"Count in photoAssets = %d", [[PageViewControllerData sharedInstance] photoCount]);
+
         
         //test -load in the background the 2 previous photos to the Parse data cache
         [self cacheDataInBackgroundForPhotoAtIndex:index];
@@ -146,7 +144,7 @@
         PFFile *imageData = [photo objectForKey:key];
         if (!imageData.isDataAvailable) {
             [imageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                NSLog(@"Data returned from getDataInBackground for INDEX = %d", index);
+               
             }];
         }
         

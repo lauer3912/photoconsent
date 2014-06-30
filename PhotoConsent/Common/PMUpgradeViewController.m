@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel  *productDesc;
 @property (weak, nonatomic) IBOutlet UILabel  *productPrice;
 @property (weak, nonatomic) IBOutlet UIButton  *upgradeButton;
+@property (weak, nonatomic) IBOutlet UIButton  *restoreButton;
 @property (nonatomic, strong) MBProgressHUD *HUD;
 
 @property (nonatomic, weak) IBOutlet UILabel  *priceLabel;
@@ -27,7 +28,8 @@
 @end
 NSString *const kProductIdentifierCameraRoll = @"PhotoConsent_Camera_Roll";
 NSString *const kPMUpgradeButtonTitleUpgrade = @"Upgrade now";
-NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
+NSString *const kPMUpgradeButtonTitlePurchased = @"Purchased";
+NSString *const kPMRestoreButtonTitle = @"Restore purchase";
 
 @implementation PMUpgradeViewController
 
@@ -54,11 +56,18 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
 - (void) setUpgradeButtonState{
     [self.view setBackgroundColor:[UIColor whiteColor]];
     if (isPaid()) {
-        [_upgradeButton setBackgroundColor:[UIColor darkGrayColor]];
-        [_upgradeButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-        [_upgradeButton setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
-        [_upgradeButton setTitle:kPMUpgradeButtonTitleRestore forState:UIControlStateNormal];
+        [_restoreButton setHidden:YES];
+        [_upgradeButton setEnabled:NO];
+        [_upgradeButton setBackgroundColor:[UIColor clearColor]];
+        [_upgradeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+        [_upgradeButton setTitle:kPMUpgradeButtonTitlePurchased forState:UIControlStateDisabled];
+        
     } else {
+        [_restoreButton setHidden:NO];
+        [_restoreButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [_restoreButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        
+        
         [_upgradeButton setBackgroundColor:[UIColor orangeColor]];
         [_upgradeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_upgradeButton setTitleColor:[UIColor lightTextColor] forState:UIControlStateHighlighted];
@@ -136,9 +145,11 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
     
     [self updateLabels];
     
-    for (NSString * invalidProductIdentifier in response.invalidProductIdentifiers) {
-        // Handle any invalid product identifiers.
-        NSLog(@"Invalid product id: %@" , invalidProductIdentifier);
+    if (response.invalidProductIdentifiers.count > 0) {
+    
+        
+            // Handle any invalid product identifiers.
+           
     }
     
 }
@@ -151,7 +162,7 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
     
     
     if ([identifier isEqualToString:kProductIdentifierCameraRoll]) {
-        NSLog(@"product identifier is a match");
+        
     }
    
     if (product) {
@@ -166,17 +177,9 @@ NSString *const kPMUpgradeButtonTitleRestore = @"Restore purchase";
     
     }
     
+    [_priceLabel setText:@"One-time price"];
+    [_productPrice setText:[self formatPriceForProduct:product]];
     
-    
-    
-    if (isPaid()) {
-        [_priceLabel setText:@"Purchased"];
-        [_productPrice setHidden:YES];
-    } else {
-        [_priceLabel setText:@"One-time price"];
-        [_productPrice setHidden:NO];
-        [_productPrice setText:[self formatPriceForProduct:product]];
-    }
     
 }
 

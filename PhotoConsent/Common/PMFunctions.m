@@ -180,7 +180,7 @@ void cloudRefresh(PFQuery* query,NSMutableArray* allImages,id<UIAlertViewDelegat
             dispatch_source_cancel(timeoutTimer);
             if (!error) {
                 
-                NSLog(@"Count OBJECTS returned by query = %lu", (unsigned long)objects.count);
+               
                 
                 // Retrieve existing objectIDs
                 NSMutableArray *oldCompareObjectIDArray = [NSMutableArray array];

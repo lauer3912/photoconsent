@@ -322,7 +322,10 @@
     NSRange range = [[attrMutableString string] rangeOfString:string];
     [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour1, NSFontAttributeName:[UIFont systemFontOfSize:19.0], NSTextEffectAttributeName:NSTextEffectLetterpressStyle} range:range];
     
-    NSURL *emailAddress = [NSURL URLWithString:subString];
+    
+    
+    
+    NSURL *emailAddress = [NSURL URLWithString:[subString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     range = [[attrMutableString string] rangeOfString:subString];
     [attrMutableString addAttributes:@{NSForegroundColorAttributeName: foregroundColour2,NSFontAttributeName:[UIFont systemFontOfSize:14.0], NSLinkAttributeName:emailAddress} range:range];
     [attrMutableString removeAttribute:NSTextEffectAttributeName range:range];

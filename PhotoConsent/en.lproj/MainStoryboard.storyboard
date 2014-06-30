@@ -751,6 +751,17 @@
                                     <action selector="didPressUpgradeButton:" destination="IMY-3R-x5O" eventType="touchUpInside" id="Dr4-ri-E30"/>
                                 </connections>
                             </button>
+                            <button appearanceType="aqua" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UsK-X7-rf4">
+                                <rect key="frame" x="20" y="386" width="280" height="44"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Restore purchase">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didPressUpgradeButton:" destination="IMY-3R-x5O" eventType="touchUpInside" id="CJo-F0-2Ln"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <navigationItem key="navigationItem" title="Upgrade" id="ZcQ-nf-qrx">
@@ -766,6 +777,7 @@
                         <outlet property="productDesc" destination="ZLb-jA-K2U" id="eI1-9o-Pva"/>
                         <outlet property="productName" destination="VaJ-fI-BCl" id="Bxw-Ga-GuI"/>
                         <outlet property="productPrice" destination="iHe-zw-pD3" id="NUm-ZP-P0w"/>
+                        <outlet property="restoreButton" destination="UsK-X7-rf4" id="RAF-IF-3lL"/>
                         <outlet property="upgradeButton" destination="NhN-h0-FzE" id="XeA-PI-tPS"/>
                     </connections>
                 </viewController>

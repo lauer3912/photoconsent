@@ -64,7 +64,7 @@
 
     switch (paintGesture.state) {
         case UIGestureRecognizerStatePossible:
-            NSLog(@"A gesture recognizer should never fire in state possible");
+            //A gesture recognizer should never fire in state possible
             break;
         case UIGestureRecognizerStateBegan:
             _previousPoint = location;

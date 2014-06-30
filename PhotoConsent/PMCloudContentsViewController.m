@@ -97,7 +97,7 @@ static const NSInteger kCameraBtnTag  = 27;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-    NSLog(@"DID RECEIVE MEMORY WARNING!");
+   
     [_cachedLargeImages removeAllObjects];
     _cachedLargeImages = nil;
     
@@ -363,8 +363,6 @@ static const NSInteger kCameraBtnTag  = 27;
 - (void) loadCacheWithSmallImages:(NSArray*)allPhotos completionHandler:(SmallCacheCompletion)completion {
     
     
-    NSLog(@"allImages count = %d", allPhotos.count);
-    
     if (allPhotos.count == 0) {
         [self showEmptyLabel];
         return;
@@ -383,7 +381,7 @@ static const NSInteger kCameraBtnTag  = 27;
         
         [self loadCache:_cachedSmallImages objects:allPhotos key:@"smallImageFile" progress:^(CGFloat progress) {
             
-            NSLog(@"Small cache progress = %f", progress);
+           
             dispatch_async(dispatch_get_main_queue(), ^{
                 HUD.progress = progress;
             });
@@ -391,7 +389,7 @@ static const NSInteger kCameraBtnTag  = 27;
         }  completionHandler:^(BOOL finished) {
             if (finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"SMALL image cache finished loading");
+                    
                     _dataArrayDidChange = @0;//= NO
                    // [self.collectionView reloadData];
                     [self clearHud];
@@ -634,7 +632,7 @@ static const NSInteger kCameraBtnTag  = 27;
     
 }
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    NSLog(@"all images count for section %d is %lu", section, (unsigned long)_allImages.count);
+   
     return [_allImages count];
 }
 
@@ -655,7 +653,7 @@ static const NSInteger kCameraBtnTag  = 27;
             if (indexPath.row == _allImages.count - 1) {
                 [self addSavingMessageToImageView:imageView];
                 
-                NSLog(@"Adding saving message to cell at indexPath row %d", indexPath.row);
+               
             }
             
             
@@ -692,14 +690,13 @@ static const NSInteger kCameraBtnTag  = 27;
                 image = [UIImage imageWithData:data];
                 [purgeableData endContentAccess];
                 
-                NSLog(@"IMAGE NOT IN CACHE - ADDING IMAGE TO CACHE FOR CELL AT INDEX = %ld", (long)index.integerValue);
-
+               
             } else
                 //placeholder
                 image = [UIImage imageNamed:@"iconwatermark"];
             
         } else if ([eachObject isKindOfClass:[Consent class]]) {
-            NSLog(@"CONSENT IMAGE NOT IN CACHE - FOR CELL AT INDEX = %ld", (long)index.integerValue);
+           
 
             NSData *data = [eachObject valueForKey:key];
             NSPurgeableData* purgeableData = [self cacheData:data forCache:imageCache atIndex:index];
@@ -712,7 +709,7 @@ static const NSInteger kCameraBtnTag  = 27;
     } else {
         //image is in cache
         [cacheData beginContentAccess];
-        NSLog(@"IMAGE IN CACHE - RETURNING IMAGE FOR CELL AT INDEX = %ld", (long)index.integerValue);
+       
         image = [UIImage imageWithData:cacheData];
         [cacheData endContentAccess];
         return image;
@@ -734,8 +731,7 @@ static const NSInteger kCameraBtnTag  = 27;
         purgeableData = [NSPurgeableData dataWithData:data];
         [cache setObject:purgeableData forKey:index cost:data.length];
     
-         NSLog(@"ADDING IMAGE TO CACHE %@ AT INDEX %lu",[cache name], (unsigned long)index.integerValue);
-        
+                
     });
     return purgeableData;
 }
@@ -787,7 +783,7 @@ static const NSInteger kCameraBtnTag  = 27;
 #pragma mark - Unwind
 - (IBAction)completeConsent:(UIStoryboardSegue *)segue
 {
-    //    NSLog(@"Consent completed");
+   
 }
 
 
@@ -923,7 +919,7 @@ static const NSInteger kCameraBtnTag  = 27;
 #pragma mark - NSCache delegate protocol
 - (void)cache:(NSCache *)cache willEvictObject:(id)obj {
     
-    NSLog(@"Will evict this object from cache %@ with length %@", cache.name, [obj valueForKey:@"length"]);
+   
 }
 
 
@@ -1218,8 +1214,7 @@ static const NSInteger kCameraBtnTag  = 27;
     [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
     
      
-    NSLog(@"The Save may have failed so removing photo from cache, allImages and collectionview");
-}
+   }
 
 #pragma mark - indexPath helpers
 -(NSIndexPath*)indexPathForLastPhoto {
